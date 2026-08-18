@@ -189,17 +189,17 @@
     <script>
         // Inyectar traducciones y configuraciones
         window.translations = {
-            confirmPayment: '@Localizer["ConfirmPayment"]',
-            confirmPaymentMessage: '@Localizer["ConfirmPaymentMessage"]',
-            cancel: '@Localizer["Cancel"]',
-            confirm: '@Localizer["Confirm"]',
-            paymentSuccess: '@Localizer["PaymentSuccess"]',
-            paymentBlocked: '@Localizer["PaymentBlocked"]',
-            paymentError: '@Localizer["PaymentError"]',
-            connectionError: '@Localizer["ConnectionError"]',
-            markAsPaid: '@Localizer["MarkAsPaid"]',
-            paid: '@Localizer["Paid"]',
-            dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
+        confirmPayment: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["ConfirmPayment"].Value)),
+        confirmPaymentMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["ConfirmPaymentMessage"].Value)),
+        cancel: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["Cancel"].Value)),
+        confirm: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["Confirm"].Value)),
+        paymentSuccess: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["PaymentSuccess"].Value)),
+        paymentBlocked: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["PaymentBlocked"].Value)),
+        paymentError: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["PaymentError"].Value)),
+        connectionError: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["ConnectionError"].Value)),
+        markAsPaid: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["MarkAsPaid"].Value)),
+        paid: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["Paid"].Value)),
+        dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
         };
         window.locale = '@langCode';
 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SGSWC.UI.Models;
 using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace SGSWC.UI.Controllers
 {
@@ -514,62 +515,69 @@ namespace SGSWC.UI.Controllers
 
         [Seguridad]
         [HttpGet]
-        public IActionResult ReportePersonalizado(
-            string? fechaDesde = null,
-            string? fechaHasta = null,
-            int? idServicio = null,
-            string? estadoPago = null,
-            int? idEstado = null,
-            bool generado = false)
+        public async Task<IActionResult> ReportePersonalizado(string? fechaDesde, string? fechaHasta, string? estadoPago, int? idEstado, bool generado = false)
         {
-            // Escenario 2: ningún filtro seleccionado
-            if (generado &&
-                string.IsNullOrEmpty(fechaDesde) &&
-                string.IsNullOrEmpty(fechaHasta) &&
-                idServicio == null &&
-                string.IsNullOrEmpty(estadoPago) &&
-                idEstado == null)
-            {
-                ViewBag.Error = "Debe seleccionar al menos un parámetro para generar el reporte.";
-                return View(new List<ReporteServiciosModel>());
-            }
-
-            var resultados = new List<ReporteServiciosModel>();
-
-            if (generado)
+            try
             {
                 using var client = _http.CreateClient();
-                client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer",
-                        HttpContext.Session.GetString("Token"));
+                var token = HttpContext.Session.GetString("Token");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
 
-                var parametros = new List<string> { "generado=true" };
-                if (!string.IsNullOrEmpty(fechaDesde)) parametros.Add($"fechaDesde={fechaDesde}");
-                if (!string.IsNullOrEmpty(fechaHasta)) parametros.Add($"fechaHasta={fechaHasta}");
-                if (idServicio.HasValue) parametros.Add($"idServicio={idServicio}");
-                if (!string.IsNullOrEmpty(estadoPago)) parametros.Add($"estadoPago={estadoPago}");
-                if (idEstado.HasValue) parametros.Add($"idEstado={idEstado}");
+                // CORREGIDO: La ruta correcta es CRM/ReportePersonalizado
+                var urlApi = _configuration["Valores:UrlAPI"] + "CRM/ReportePersonalizado";
+                var parametros = new List<string>();
 
-                var url = _configuration["Valores:UrlAPI"] + "CRM/ReportePersonalizado?" +
-                          string.Join("&", parametros);
-                var respuesta = client.GetAsync(url).Result;
+                if (!string.IsNullOrEmpty(fechaDesde))
+                    parametros.Add($"fechaDesde={fechaDesde}");
+                if (!string.IsNullOrEmpty(fechaHasta))
+                    parametros.Add($"fechaHasta={fechaHasta}");
+                if (!string.IsNullOrEmpty(estadoPago))
+                    parametros.Add($"estadoPago={estadoPago}");
+                if (idEstado.HasValue && idEstado.Value > 0)
+                    parametros.Add($"idEstado={idEstado.Value}");
+
+                if (parametros.Any())
+                    urlApi += "?" + string.Join("&", parametros);
+
+                ViewBag.FechaDesde = fechaDesde;
+                ViewBag.FechaHasta = fechaHasta;
+                ViewBag.EstadoPago = estadoPago;
+                ViewBag.IdEstado = idEstado;
+                ViewBag.Generado = generado;
+
+                var respuesta = await client.GetAsync(urlApi);
 
                 if (respuesta.IsSuccessStatusCode)
-                    resultados = respuesta.Content
-                        .ReadFromJsonAsync<List<ReporteServiciosModel>>().Result
-                        ?? new List<ReporteServiciosModel>();
+                {
+                    var json = await respuesta.Content.ReadAsStringAsync();
+                    var datos = JsonSerializer.Deserialize<List<ReporteServiciosModel>>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (datos != null && datos.Any())
+                    {
+                        return View(datos);
+                    }
+
+                    ViewBag.Error = "No se encontraron servicios con los filtros seleccionados.";
+                    return View(new List<ReporteServiciosModel>());
+                }
                 else
-                    ViewBag.Error = "Error al procesar el reporte. Intente más tarde.";
+                {
+                    ViewBag.Error = "No se pudo cargar el reporte en este momento. Por favor, intente más tarde.";
+                    return View(new List<ReporteServiciosModel>());
+                }
             }
-
-            ViewBag.FechaDesde = fechaDesde;
-            ViewBag.FechaHasta = fechaHasta;
-            ViewBag.IdServicio = idServicio;
-            ViewBag.EstadoPago = estadoPago;
-            ViewBag.IdEstado = idEstado;
-            ViewBag.Generado = generado;
-
-            return View(resultados);
+            catch (Exception)
+            {
+                ViewBag.Error = "No se pudo conectar con el servidor. Por favor, intente más tarde.";
+                ViewBag.Generado = generado;
+                return View(new List<ReporteServiciosModel>());
+            }
         }
 
         #endregion

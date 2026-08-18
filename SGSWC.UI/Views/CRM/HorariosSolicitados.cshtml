@@ -62,38 +62,33 @@
                     <h5 class="mb-0">@Localizer["SchedulesByFrequency"]</h5>
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>@Localizer["Position"]</th>
-                                <th>@Localizer["Time"]</th>
-                                <th>@Localizer["TotalBookings"]</th>
-                                <th>@Localizer["Percentage"]</th>
-                                <th>@Localizer["RelativeFrequency"]</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                int pos = 1;
-                            }
-                            @foreach (var item in Model)
-                            {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
                                 <tr>
-                                    <td><strong>#@pos</strong></td>
-                                    <td>@item.Hora_Inicio:00 — @(item.Hora_Inicio + 1):00</td>
-                                    <td><span class="badge bg-label-primary">@item.Total_Reservas</span></td>
-                                    <td>@item.Porcentaje.ToString("N2")%</td>
-                                    <td>
-                                        <div class="progress" style="height:20px;">
-                                            <div class="progress-bar bg-primary" role="progressbar"
-                                                 style="width:@item.Porcentaje%"></div>
-                                        </div>
-                                    </td>
+                                    <th>@Localizer["Position"]</th>
+                                    <th>@Localizer["Time"]</th>
+                                    <th>@Localizer["TotalBookings"]</th>
+                                    <th>@Localizer["Percentage"]</th>
                                 </tr>
-                                pos++;
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int pos = 1;
+                                }
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td><strong>#@pos</strong></td>
+                                        <td>@item.Hora_Inicio:00 — @(item.Hora_Inicio + 1):00</td>
+                                        <td>@item.Total_Reservas</td>
+                                        <td>@item.Porcentaje.ToString("N2")%</td>
+                                    </tr>
+                                    pos++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         }
@@ -104,27 +99,27 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         @if (Model != null && Model.Any())
-        {
-            <text>
-                const bookingsPerHourLabel = '@Localizer["BookingsPerHour"]';
-                new Chart(document.getElementById('graficoHorarios'), {
-                type: 'bar',
-                data: {
-                labels: [@Html.Raw(string.Join(",", Model.Select(h => $"'{h.Hora_Inicio}:00'")))],
-                datasets: [{
-                label: bookingsPerHourLabel,
-                data: [@Html.Raw(string.Join(",", Model.Select(h => h.Total_Reservas)))],
-                backgroundColor: 'rgba(3,169,244,0.8)',
-                borderRadius: 6
-                }]
-                },
-                options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-                }
-                });
-            </text>
+            {
+                <text>
+                        const bookingsPerHourLabel = '@Localizer["BookingsPerHour"]';
+                        new Chart(document.getElementById('graficoHorarios'), {
+                            type: 'bar',
+                        data: {
+                            labels: [@Html.Raw(string.Join(",", Model.Select(h => $"'{h.Hora_Inicio}:00'")))],
+                        datasets: [{
+                            label: bookingsPerHourLabel,
+                        data: [@Html.Raw(string.Join(",", Model.Select(h => h.Total_Reservas)))],
+                        backgroundColor: 'rgba(3,169,244,0.8)',
+                        borderRadius: 6
+                                }]
+                                },
+                        options: {
+                            responsive: true,
+                        plugins: {legend: {display: false } },
+                        scales: {y: {beginAtZero: true, ticks: {stepSize: 1 } } }
+                                }
+                                });
+                </text>
         }
     </script>
 }

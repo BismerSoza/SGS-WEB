@@ -12,7 +12,6 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
 
 <style>
-    /* Compacta el form de fechas para que quepa en la fila de controles de DataTables */
     #formFiltroFechas {
         display: flex;
         flex-wrap: wrap;
@@ -50,7 +49,6 @@
             <div class="alert alert-danger text-center fw-bold">@ViewBag.Error</div>
         }
 
-        @* Este form se "teletransporta" con JS hacia el slot dentro de la barra de DataTables *@
         <form id="formFiltroFechas" method="get" asp-action="AccessLog" asp-controller="Users" class="d-none">
             <label class="form-label">@Localizer["StartDate"]</label>
             <input type="date" class="form-control form-control-sm" name="fechaInicio" value="@ViewBag.FechaInicio" />
@@ -72,7 +70,7 @@
                 <table id="tablaAccesos" class="table table-hover align-middle w-100">
                     <thead class="table-primary">
                         <tr>
-                            <th>@Localizer["Id"]</th>
+                            <th>#</th>
                             <th>@Localizer["User"]</th>
                             <th>@Localizer["Email"]</th>
                             <th>@Localizer["Event"]</th>
@@ -89,8 +87,8 @@
                                 <td>@item.Correo</td>
                                 <td>
                                     <span class="badge @(item.Tipo_Evento == "Login" ? "bg-success" :
-                                                                                                                          item.Tipo_Evento == "Login fallido" ? "bg-danger" :
-                                                                                                                          item.Tipo_Evento == "Logout" ? "bg-secondary" : "bg-info")">
+                                                                                                  item.Tipo_Evento == "Login fallido" ? "bg-danger" :
+                                                                                                  item.Tipo_Evento == "Logout" ? "bg-secondary" : "bg-info")">
                                         @(item.Tipo_Evento == "Login" ? Localizer["Login"] :
                                           item.Tipo_Evento == "Login fallido" ? Localizer["LoginFailed"] :
                                           item.Tipo_Evento == "Logout" ? Localizer["Logout"] :
@@ -103,7 +101,6 @@
                                     </span>
                                 </td>
                                 <td>@item.Fecha</td>
-                                <td>@(string.IsNullOrEmpty(item.Ip) ? Localizer["NotAvailable"] : item.Ip)</td>
                             </tr>
                         }
                     </tbody>
@@ -118,7 +115,6 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
-    // Inyectar traducciones y configuración de idioma
     window.translations = {
         dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
     };
@@ -129,16 +125,14 @@
             language: {
                 url: window.translations.dataTableLanguageUrl
             },
-            order: [[5, 'desc']], // Ordenar por fecha (columna índice 5) descendente
+            order: [[5, 'desc']], // Ordena por Fecha/Hora (columna índice 5) de más nuevo a más antiguo
             pageLength: 10,
-            // Reservamos una columna extra en medio de "length" y "search" para el filtro de fechas
             dom: '<"row mb-2 align-items-center"' +
                 '<"col-md-3"l>' +
                 '<"#dtDateFilterSlot.col-md-6">' +
                 '<"col-md-3"f>' +
                 '>rtip',
             initComplete: function() {
-                // Movemos el form de fechas (que estaba oculto en el card-body) hacia el slot recién creado
                 $('#formFiltroFechas')
                     .removeClass('d-none')
                     .appendTo('#dtDateFilterSlot');

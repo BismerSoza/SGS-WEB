@@ -118,8 +118,9 @@ namespace SGSWC.UI.Controllers
         }
 
         #endregion
+
+        #region Actions de Recuperar Acceso (comentado)
         /*
-        #region Actions de Recuperar Acceso
         [HttpGet]
         public IActionResult RecuperarAcceso()
         {
@@ -146,8 +147,8 @@ namespace SGSWC.UI.Controllers
                 return View();
             }
         }
-        #endregion
         */
+        #endregion
 
         [Seguridad]
         [HttpGet]
@@ -178,7 +179,8 @@ namespace SGSWC.UI.Controllers
         public IActionResult CerrarSesion()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("Index", "Home");
+            // REDIRIGE AL LANDING PAGE (Usuarios/Index) EN LUGAR DEL LOGIN
+            return RedirectToAction("Index", "Usuarios");
         }
 
         #region HU-C-008 CAMBIAR CORREO
@@ -200,7 +202,6 @@ namespace SGSWC.UI.Controllers
             }
 
             //Validar que el correo no sea el mismo
-
             var correoActual = ObtenerCorreo(idUsuario);
             if (correoActual != null && String.Equals(correoActual, nuevoCorreo, StringComparison.OrdinalIgnoreCase))
             {
@@ -224,13 +225,13 @@ namespace SGSWC.UI.Controllers
             TempData["Error"] = "No se pudo actualizar el correo. Intente más tarde.";
             return RedirectToAction("Index", "Inicio");
         }
-        //-----------------------------------
+
         static bool ValidarCorreo(string correo)
         {
             string patron = @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$";
             return Regex.IsMatch(correo, patron);
         }
-        //-----------------------------------
+
         private string? ObtenerCorreo(int idUsuario)
         {
             using var client = _http.CreateClient();
@@ -245,13 +246,9 @@ namespace SGSWC.UI.Controllers
         #endregion
 
         #region HU-SA-003 MANTENER SESIÓN ACTIVA
-        //Este metodo no afecta en nada, solo es para
-        //hacer ping y con esto indicar al server que el usuario
-        //está activo
         [HttpGet]
         public IActionResult RenovarSesion()
         {
-            //Console.WriteLine("HACIENDO PING");
             HttpContext.Session.SetString(
                 "LastPing",
                 DateTime.Now.ToString());
@@ -268,7 +265,6 @@ namespace SGSWC.UI.Controllers
 
             using var context = _http.CreateClient();
 
-            // ← EscapeDataString convierte + en %2B, = en %3D, etc.
             var urlComparar = _configuration["Valores:UrlAPI"] +
                 $"Usuario/CompararContrasenia?idUsuario={idUsuario}&contraseniaActual={Uri.EscapeDataString(contraseniaActualHash)}";
 
@@ -292,11 +288,9 @@ namespace SGSWC.UI.Controllers
         #endregion
 
         #region HU-C-010 Recuperar Contraseña
-        // Mostrar formulario de recuperación
         [HttpGet]
         public IActionResult RecuperarAcceso() => View();
 
-        // Enviar solicitud
         [HttpPost]
         public IActionResult RecuperarAcceso(string correo)
         {
@@ -313,11 +307,8 @@ namespace SGSWC.UI.Controllers
                 return Ok(mensaje);
             }
 
-            /*TempData["Error"] = "Correo no registrado.";
-            return RedirectToAction("Index", "Home");*/
             return BadRequest(mensaje);
         }
-
 
         [HttpGet]
         public IActionResult CambiarIdioma(string culture, string returnUrl)
@@ -370,6 +361,4 @@ namespace SGSWC.UI.Controllers
 
         #endregion
     }
-
-
 }

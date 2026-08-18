@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<SGSWC.UI.Models.ServicioModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
 @{
     ViewData["Title"] = Localizer["HomeClientTitle"];
     Layout = "_LayoutInterno";
 }
-@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
 
 <style>
     .hero-webclean {
@@ -73,7 +73,7 @@
                         <div class="card-body text-center">
                             <h5 class="card-title">@servicio.Nombre</h5>
                             <p class="card-text">@servicio.Descripcion</p>
-                            <p class="fw-bold text-primary mb-0">@($"₡{servicio.Precio_Base:N2}")</p>
+                            <p class="fw-bold text-primary mb-0">@($"${(servicio.Precio_Base / 500):N2}")</p>
                             <a asp-action="ReservarServicio"
                                asp-controller="Inicio"
                                asp-route-idServicio="@servicio.Id_Servicio"

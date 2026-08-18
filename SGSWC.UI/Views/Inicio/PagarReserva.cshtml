@@ -1,11 +1,12 @@
 ﻿@model SGSWC.UI.Models.EstadoPagoUIModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
 @{
     Layout = "_LayoutInterno";
-    ViewData["Title"] = "Pagar Reservación";
+    ViewData["Title"] = Localizer["PayBookingTitle"];
 }
 
 <section class="mb-5">
-    <h2 class="text-primary text-center mb-4">Pagar Reservación</h2>
+    <h2 class="text-primary text-center mb-4">@Localizer["PayBookingTitle"]</h2>
 
     @if (TempData["Error"] != null)
     {
@@ -14,13 +15,13 @@
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
-            <h5 class="card-title">Reservación #@Model?.Id_Reservacion</h5>
+            <h5 class="card-title">@string.Format(Localizer["BookingNumber"], Model?.Id_Reservacion)</h5>
             <p class="card-text">
-                <strong>Fecha:</strong> @Model?.Fecha<br />
-                <strong>Total a pagar:</strong> $@Model?.Total.ToString("N2") USD<br />
-                <strong>Estado de pago:</strong>
+                <strong>@Localizer["Date"]:</strong> @Model?.Fecha<br />
+                <strong>@Localizer["TotalToPay"]:</strong> $@((Model?.Total / 500 ?? 0).ToString("N2")) USD<br />
+                <strong>@Localizer["PaymentStatus"]:</strong>
                 <span class="badge @(Model?.Estado_Pago == "pagado" ? "bg-success" : "bg-warning text-dark")">
-                    @(Model?.Estado_Pago == "pagado" ? "Pagado" : "Pendiente")
+                    @(Model?.Estado_Pago == "pagado" ? Localizer["Paid"] : Localizer["PendingPayment"])
                 </span>
             </p>
         </div>
@@ -30,20 +31,30 @@
     {
         <div class="card shadow-sm border-0">
             <div class="card-body text-center">
-                <h5 class="mb-3">Selecciona tu método de pago</h5>
-                <p class="text-muted mb-4">Serás redirigido a PayPal para completar el pago de forma segura.</p>
+                <h5 class="mb-3">@Localizer["SelectPaymentMethod"]</h5>
+                <p class="text-muted mb-4">@Localizer["PayPalRedirectMessage"]</p>
 
                 <form asp-action="IniciarPagoPayPal" asp-controller="Inicio" method="post">
                     <input type="hidden" name="idReservacion" value="@Model?.Id_Reservacion" />
-                    <input type="hidden" name="monto" value="@Model?.Total" />
+                    <input type="hidden" name="monto" value="@((Model?.Total / 500 ?? 0).ToString("N2"))" />
                     <button type="submit" class="btn btn-warning btn-lg px-5">
-                        <i class="bx bxl-paypal me-2"></i> Pagar con PayPal
+                        <i class="bx bxl-paypal me-2"></i> @Localizer["PayWithPayPal"]
                     </button>
                 </form>
 
                 <p class="text-muted mt-3 small">
-                    <i class="bx bx-lock me-1"></i> Pago seguro procesado por PayPal
+                    <i class="bx bx-lock me-1"></i> @Localizer["SecurePayment"]
                 </p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <div class="alert alert-success">
+                    <i class="bx bx-check-circle me-2"></i> @Localizer["PaymentAlreadyCompleted"]
+                </div>
             </div>
         </div>
     }
@@ -51,7 +62,7 @@
     <div class="mt-4 text-center">
         <a asp-action="DetalleReserva" asp-controller="Inicio"
            asp-route-id="@Model?.Id_Reservacion" class="btn btn-secondary">
-            Volver al Detalle
+            @Localizer["BackToDetail"]
         </a>
     </div>
 </section>

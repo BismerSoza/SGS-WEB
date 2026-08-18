@@ -32,6 +32,19 @@
             color: #3a3b95 !important;
             text-decoration: underline;
         }
+
+    /* Botón volver al landing */
+    .btn-back-home {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: #fff !important;
+    }
+
+        .btn-back-home:hover {
+            background-color: #5a6268 !important;
+            border-color: #545b62 !important;
+            color: #fff !important;
+        }
 </style>
 
 <div class="authentication-wrapper authentication-basic container-p-y">
@@ -69,6 +82,12 @@
                     </div>
                     <button type="submit" class="btn btn-custom-primary w-100">@Localizer["LoginButton"]</button>
                 </form>
+
+                <div class="text-center mt-3">
+                    <a asp-controller="Usuarios" asp-action="Index" class="btn btn-back-home w-100">
+                        <i class="bx bx-home me-1"></i> @Localizer["BackToHome"]
+                    </a>
+                </div>
 
                 <p class="text-center mt-3">
                     <span>@Localizer["ForgotPassword"]</span>

@@ -24,7 +24,7 @@
                 <strong>@Localizer["Date"]:</strong> @Model.Fecha<br />
                 <strong>@Localizer["Time"]:</strong> @Model.Hora<br />
                 <strong>@Localizer["Address"]:</strong> @Model.Direccion_Servicio<br />
-                <strong>@Localizer["Total"]:</strong> ₡@Model.Total.ToString("N2")<br />
+                <strong>@Localizer["Total"]:</strong> $@((Model.Total / 500).ToString("N2"))<br />
                 <strong>@Localizer["Status"]:</strong>
                 <span class="badge @(Model.Estado == "Pendiente" ? "bg-warning text-dark" :
                                                                                                        Model.Estado == "Completada" ? "bg-success" :
@@ -35,9 +35,14 @@
                       Model.Estado == "Cancelada" ? Localizer["Cancelled"] :
                       Model.Estado)
                 </span>
+                <br />
+                <strong>@Localizer["PaymentStatus"]:</strong>
+                <span class="badge @(Model.Estado_Pago == "pagado" ? "bg-success" : "bg-warning text-dark")">
+                    @(Model.Estado_Pago == "pagado" ? Localizer["Paid"] : Localizer["PendingPayment"])
+                </span>
             </p>
 
-            @if (Model.Estado == "Pendiente")
+            @if (Model.Estado == "Pendiente" && Model.Estado_Pago != "pagado")
             {
                 <hr />
                 <h6 class="text-secondary">@Localizer["CancelBooking"]</h6>
@@ -95,20 +100,29 @@
     </div>
 
     <div class="mt-4 text-center">
-        @if (Model.Estado != "Cancelada")
+        @if (Model.Estado != "Cancelada" && Model.Estado_Pago != "pagado")
         {
             <a asp-action="PagarReserva" asp-controller="Inicio"
                asp-route-id="@Model.Id_Reservacion"
-               class="btn btn-success me-2">
-                <i class="bx bxl-paypal me-1"></i> @Localizer["PayBooking"]
+               class="btn btn-success btn-lg">
+                <i class="bx bxl-paypal me-2"></i> @Localizer["PayWithPayPal"]
             </a>
         }
-        <a asp-action="MisReservas" asp-controller="Inicio" class="btn btn-secondary">
-            @Localizer["BackToMyBookings"]
-        </a>
-        <a asp-action="Index" asp-controller="Inicio" class="btn btn-outline-secondary ms-2">
-            @Localizer["BackToHome"]
-        </a>
+        else if (Model.Estado_Pago == "pagado")
+        {
+            <div class="alert alert-success d-inline-block">
+                <i class="bx bx-check-circle me-2"></i> @Localizer["PaymentAlreadyCompleted"]
+            </div>
+        }
+
+        <div class="mt-3">
+            <a asp-action="MisReservas" asp-controller="Inicio" class="btn btn-secondary">
+                @Localizer["BackToMyBookings"]
+            </a>
+            <a asp-action="Index" asp-controller="Inicio" class="btn btn-outline-secondary ms-2">
+                @Localizer["BackToHome"]
+            </a>
+        </div>
     </div>
 </section>
 

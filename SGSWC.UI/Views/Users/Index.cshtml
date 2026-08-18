@@ -12,7 +12,6 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
 
 <style>
-    /* Botón personalizado con paleta Sneat */
     .btn-outline-custom {
         color: #696cff !important;
         border-color: #696cff !important;
@@ -112,29 +111,21 @@
                     <div class="mb-3">
                         <label class="form-label">@Localizer["SelectRole"]</label>
                         <select id="rolModal-select" name="Rol" class="form-select">
-                            <option value="0">@Localizer["SelectRoleDefault"]</option>
-                            <option value="1">@Localizer["RoleAdmin"]</option>
-                            <option value="2">@Localizer["RoleSupervisor"]</option>
-                            <option value="3">@Localizer["RoleOperative"]</option>
-                            <option value="4">@Localizer["RoleClient"]</option>
+                            <option value="1">@Localizer["Administrator"]</option>
+                            <option value="2">@Localizer["User"]</option>
                         </select>
                     </div>
-                    <div class="modal-footer px-0 pb-0">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
-                        <button type="submit" class="btn btn-primary">@Localizer["Save"]</button>
-                    </div>
+                    <button type="submit" class="btn btn-primary w-100">@Localizer["Assign"]</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-@* DataTables JS *@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
-    // Inyectar traducciones y configuración de idioma
     window.translations = {
         dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
     };
@@ -145,20 +136,23 @@
             language: {
                 url: window.translations.dataTableLanguageUrl
             },
+            order: [[0, 'asc']],
+            pageLength: 10,
             columnDefs: [
-                { orderable: false, targets: -1 } // última columna (acciones) no ordenable
-            ],
-            order: [[0, 'asc']], // ordenar por ID ascendente
-            pageLength: 10
+                { orderable: false, targets: -1 }
+            ]
         });
-    });
 
-    // Modal: asignar rol
-    var modalAsignarRol = document.getElementById('modalAsignarRol');
-    modalAsignarRol.addEventListener('show.bs.modal', function(event) {
-        var button = event.relatedTarget;
-        document.getElementById('rolModal-id').value = button.getAttribute('data-id');
-        document.getElementById('rolModal-nombre').textContent = button.getAttribute('data-nombre');
-        document.getElementById('rolModal-select').value = button.getAttribute('data-rol');
+        $('#modalAsignarRol').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var nombre = button.data('nombre');
+            var rol = button.data('rol');
+
+            var modal = $(this);
+            modal.find('#rolModal-id').val(id);
+            modal.find('#rolModal-nombre').text(nombre);
+            modal.find('#rolModal-select').val(rol);
+        });
     });
 </script>

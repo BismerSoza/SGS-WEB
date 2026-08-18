@@ -107,42 +107,34 @@
     </div>
 </div>
 
+@* DataTables JS *@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
-    // Inyectar traducciones y configuración de idioma
+    // Inyectar traducciones
     window.translations = {
-            activateUser: '@Localizer["ActivateUser"]',
-            deactivateUser: '@Localizer["DeactivateUser"]',
-            confirmAction: '@Localizer["ConfirmAction"]',
-            confirmChangeStatus: '@Localizer["ConfirmChangeStatus"]',
-            activate: '@Localizer["Activate"]',
-            deactivate: '@Localizer["Deactivate"]',
-            cancel: '@Localizer["Cancel"]',
-            confirm: '@Localizer["Confirm"]',
-            userActivated: '@Localizer["UserActivated"]',
-            userDeactivated: '@Localizer["UserDeactivated"]',
-            errorChangeStatus: '@Localizer["ErrorChangeStatus"]',
-            connectionError: '@Localizer["ConnectionError"]',
-            activateTooltip: '@Localizer["ActivateTooltip"]',
-            deactivateTooltip: '@Localizer["DeactivateTooltip"]',
-            dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
-        };
+        activateUser: '@Localizer["ActivateUser"]',
+        deactivateUser: '@Localizer["DeactivateUser"]',
+        confirmAction: '@Localizer["ConfirmAction"]',
+        confirmChangeStatus: '@Localizer["ConfirmChangeStatus"]',
+        activate: '@Localizer["Activate"]',
+        deactivate: '@Localizer["Deactivate"]',
+        cancel: '@Localizer["Cancel"]',
+        confirm: '@Localizer["Confirm"]',
+        userActivated: '@Localizer["UserActivated"]',
+        userDeactivated: '@Localizer["UserDeactivated"]',
+        errorChangeStatus: '@Localizer["ErrorChangeStatus"]',
+        connectionError: '@Localizer["ConnectionError"]',
+        activateTooltip: '@Localizer["ActivateTooltip"]',
+        deactivateTooltip: '@Localizer["DeactivateTooltip"]',
+        dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
+    };
     window.locale = '@langCode';
 
-        $(document).ready(function() {
-            $('#tablaUsuarios').DataTable({
-                language: {
-                    url: window.translations.dataTableLanguageUrl
-                },
-                columnDefs: [
-                    { orderable: false, targets: -1 } // última columna (acciones) no ordenable
-                ],
-                order: [[0, 'asc']], // ordenar por ID ascendente
-                pageLength: 10
-            });
-        });
-
-        // El resto del código (manejo de modal, toggle, etc.) está en GestionUsuarios.js
+    // LA INICIALIZACIÓN DE DATATABLES SE HACE EN GestionUsuarios.js
+    // NO inicializar aquí para evitar el error "Cannot reinitialize"
 </script>
+
+@* Cargar el JavaScript principal que maneja los toggles *@
+<script src="~/js/GestionUsuarios.js" asp-append-version="true"></script>

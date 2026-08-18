@@ -40,10 +40,10 @@
                                 <strong>@Localizer["Date"]:</strong> @r.Fecha<br />
                                 <strong>@Localizer["Time"]:</strong> @r.Hora<br />
                                 <strong>@Localizer["Address"]:</strong> @r.Direccion_Servicio<br />
-                                <strong>@Localizer["Total"]:</strong> ₡@r.Total.ToString("N2")<br />
+                                <strong>@Localizer["Total"]:</strong> $@((r.Total / 500).ToString("N2"))<br />
                                 <strong>@Localizer["Status"]:</strong>
                                 <span class="badge @(r.Estado == "Pendiente" ? "bg-warning text-dark" :
-                                                                                                     r.Estado == "Completada" ? "bg-success" : "bg-danger")">
+                                                                                                                                         r.Estado == "Completada" ? "bg-success" : "bg-danger")">
                                     @(r.Estado == "Pendiente" ? Localizer["Pending"] :
                                       r.Estado == "Completada" ? Localizer["Completed"] :
                                       r.Estado == "Confirmada" ? Localizer["Confirmed"] :

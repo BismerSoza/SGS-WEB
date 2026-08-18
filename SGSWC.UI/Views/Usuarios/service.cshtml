@@ -2,7 +2,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
 @{
     Layout = "_LayoutLanding";
-    ViewData["Title"] = "Web Clean | " + Localizer["ServicesTitle"];
+    ViewData["Title"] = "Web Clean | " + Localizer["OurServicesTitle"];
 }
 
 <style>
@@ -10,32 +10,26 @@
         height: 220px;
         object-fit: cover;
     }
-</style>
 
-<div class="container-fluid pb-5 bg-primary hero-header">
-    <div class="container py-5">
-        <div class="row g-3 align-items-center">
-            <div class="col-lg-6 text-center text-lg-start">
-                <h1 class="display-1 mb-0 animated slideInLeft">@Localizer["ServicesHeroTitle"]</h1>
-            </div>
-        </div>
-    </div>
-</div>
+    .service-card-landing .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .service-card-landing .card-text {
+        flex-grow: 1;
+    }
+</style>
 
 <div class="container-fluid py-5">
     <div class="container py-5">
-        <div class="row g-5 align-items-center mb-5">
-            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                <h1 class="mb-4">
-                    @Localizer["OurServicesTitle"] <span class="text-uppercase text-primary bg-light px-2">@Localizer["OurServicesHighlight"]</span>
-                </h1>
-                <p>
-                    @Localizer["ServicesDesc1"]
-                </p>
-                <p class="mb-0">
-                    @Localizer["ServicesDesc2"]
-                </p>
-            </div>
+        <div class="text-center mb-5 wow fadeIn" data-wow-delay="0.1s">
+            <h1 class="mb-4">
+                @Localizer["OurServicesTitle"] <span class="text-uppercase text-primary bg-light px-2">@Localizer["OurServicesHighlight"]</span>
+            </h1>
+            <p class="w-75 mx-auto">
+                @Localizer["OurServicesDesc"]
+            </p>
         </div>
 
         @if (Model == null || !Model.Any())
@@ -44,7 +38,7 @@
         }
         else
         {
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
                 @foreach (var servicio in Model)
                 {
                     <div class="col wow fadeIn" data-wow-delay="0.2s">
@@ -53,22 +47,10 @@
                                  class="card-img-top"
                                  loading="lazy"
                                  alt="@servicio.Nombre" />
-                            <div class="card-body text-center d-flex flex-column">
+                            <div class="card-body text-center">
                                 <h5 class="card-title">@servicio.Nombre</h5>
-                                <p class="card-text flex-grow-1">@servicio.Descripcion</p>
-                                <p class="fw-bold text-primary mb-3">@($"₡{servicio.Precio_Base:N2}")</p>
-                                <div class="d-flex gap-2 justify-content-center">
-                                    <a asp-controller="Usuarios" asp-action="Details"
-                                       asp-route-id="@servicio.Id_Servicio"
-                                       class="btn btn-outline-primary">
-                                        @Localizer["ViewDetail"]
-                                    </a>
-                                    <a asp-controller="Home" asp-action="Index"
-                                       asp-route-returnUrl="@Url.Action("ReservarServicio", "Inicio", new { idServicio = servicio.Id_Servicio })"
-                                       class="btn btn-primary">
-                                        @Localizer["BookButton"]
-                                    </a>
-                                </div>
+                                <p class="card-text">@servicio.Descripcion</p>
+                                <p class="fw-bold text-primary mb-0">@($"${(servicio.Precio_Base / 500):N2}")</p>
                             </div>
                         </div>
                     </div>

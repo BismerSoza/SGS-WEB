@@ -65,22 +65,16 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6 col-lg-4 mb-3 mb-lg-0">
+                <div class="col-md-6 col-lg-6 mb-3 mb-lg-0">
                     <div class="info-group">
                         <label class="text-muted small text-uppercase">@Localizer["Email"]</label>
                         <p class="mb-0 fw-semibold"><i class="bx bx-envelope me-1"></i> @Model.Cliente.Correo</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 mb-3 mb-lg-0">
+                <div class="col-md-6 col-lg-6">
                     <div class="info-group">
-                        <label class="text-muted small text-uppercase">@Localizer["Phone"]</label>
-                        <p class="mb-0 fw-semibold"><i class="bx bx-phone me-1"></i> @(Model.Cliente.Telefono ?? "-")</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="info-group">
-                        <label class="text-muted small text-uppercase">@Localizer["Address"]</label>
-                        <p class="mb-0 fw-semibold"><i class="bx bx-map me-1"></i> @(Model.Cliente.Direccion_Principal ?? "-")</p>
+                        <label class="text-muted small text-uppercase">@Localizer["RegistrationDate"]</label>
+                        <p class="mb-0 fw-semibold"><i class="bx bx-calendar me-1"></i> @Model.Cliente.Fecha_Creacion.ToString("dd/MM/yyyy")</p>
                     </div>
                 </div>
             </div>
@@ -199,7 +193,7 @@
                                         }
                                         <span class="badge @estadoClass">@estadoTraducido</span>
                                     </td>
-                                    <td>@Localizer["CurrencySymbol"]@item.Total.ToString("N2")</td>
+                                    <td>$@((item.Total / 500).ToString("N2"))</td>
                                 </tr>
                             }
                         </tbody>
@@ -239,7 +233,7 @@
         }
             });
 
-    // Lógica de análisis de historial (sin cambios)
+    // Lógica de análisis de historial
     const textos = {
         notEnoughData: '@Localizer["NotEnoughDataForAnalysis"]',
         genericError: '@Localizer["AnalysisError"]',
@@ -274,7 +268,7 @@
 
                 document.getElementById('valTotalServicios').textContent = data.totalServiciosContratados;
                 document.getElementById('valMontoTotal').textContent =
-                    '₡' + Number(data.montoTotalGenerado).toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    '$' + Number(data.montoTotalGenerado / 500).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 document.getElementById('valFrecuencia').textContent =
                     Number(data.frecuenciaContratacionDias).toFixed(1) + ' @Localizer["Days"]';
                 document.getElementById('valServicioTop').textContent = data.servicioMasSolicitado || textos.na;

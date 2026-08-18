@@ -10,6 +10,15 @@
         height: 220px;
         object-fit: cover;
     }
+
+    .service-card-landing .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .service-card-landing .card-text {
+        flex-grow: 1;
+    }
 </style>
 
 <div class="container-fluid pb-5 hero-header bg-light mb-5">
@@ -175,15 +184,10 @@
                                  class="card-img-top"
                                  loading="lazy"
                                  alt="@servicio.Nombre" />
-                            <div class="card-body text-center d-flex flex-column">
+                            <div class="card-body text-center">
                                 <h5 class="card-title">@servicio.Nombre</h5>
-                                <p class="card-text flex-grow-1">@servicio.Descripcion</p>
-                                <p class="fw-bold text-primary mb-3">@($"₡{servicio.Precio_Base:N2}")</p>
-                                <a asp-controller="Home" asp-action="Index"
-                                   asp-route-returnUrl="@Url.Action("ReservarServicio", "Inicio", new { idServicio = servicio.Id_Servicio })"
-                                   class="btn btn-primary mt-auto">
-                                    @Localizer["BookButton"]
-                                </a>
+                                <p class="card-text">@servicio.Descripcion</p>
+                                <p class="fw-bold text-primary mb-0">@($"${(servicio.Precio_Base / 500):N2}")</p>
                             </div>
                         </div>
                     </div>
