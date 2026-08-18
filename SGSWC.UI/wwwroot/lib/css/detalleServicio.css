@@ -1,0 +1,72 @@
+.stepper-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.stepper-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+    .stepper-item:not(:last-child):before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        left: calc(50% + 20px);
+        width: calc(100% - 40px);
+        height: 2px;
+        background: #e9ecef;
+        z-index: 1;
+    }
+
+    .stepper-item.completed:not(:last-child):before,
+    .stepper-item.active:not(:last-child):before {
+        background: #696cff;
+    }
+
+.step-counter {
+    position: relative;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.stepper-item.completed .step-counter {
+    background: #696cff;
+    color: white;
+}
+
+.stepper-item.active .step-counter {
+    background: #696cff;
+    color: white;
+    border: 3px solid rgba(105, 108, 255, 0.3);
+}
+
+.step-name {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.stepper-item.completed .step-name,
+.stepper-item.active .step-name {
+    color: #696cff;
+    font-weight: 500;
+}
+
+.info-group label {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+

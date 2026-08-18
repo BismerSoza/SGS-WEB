@@ -1,0 +1,97 @@
+﻿@using System.Globalization
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>@Localizer["ExternalLayoutTitle"]</title>
+    <meta name="description" content="" />
+
+    @* Sección CSS *@
+    <link rel="stylesheet" href="~/lib/css/boxicons.css" />
+    <link rel="stylesheet" href="~/lib/css/core.css" />
+    <link rel="stylesheet" href="~/lib/css/theme-default.css" />
+    <link rel="stylesheet" href="~/lib/css/demo.css" />
+    <link rel="stylesheet" href="~/lib/css/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="~/lib/css/page-auth.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    @* Sección JS *@
+    <script src="~/lib/js/helpers.js"></script>
+    <script src="~/lib/js/config.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <style>
+        .language-switcher-external {
+        position: fixed;
+        top: 1rem;
+        right: 1.25rem;
+        z-index: 1050;
+        }
+
+        .language-switcher-external .btn {
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid #dee2e6;
+        font-size: 0.875rem;
+        padding: 0.4rem 0.75rem;
+        }
+
+        @@media (max-width: 575.98px) {
+        .language-switcher-external {
+        top: 0.5rem;
+        right: 0.5rem;
+        }
+        }
+    </style>
+</head>
+
+<body>
+
+    @* Selector de Idioma flotante *@
+    <div class="language-switcher-external dropdown">
+        <button class="btn btn-sm dropdown-toggle d-flex align-items-center gap-1 shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bx bx-globe"></i>
+            <span>@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper()</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+                <a class="dropdown-item" asp-action="CambiarIdioma" asp-controller="Home"
+                   asp-route-culture="es"
+                   asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                    🇪🇸 Español
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-action="CambiarIdioma" asp-controller="Home"
+                   asp-route-culture="en"
+                   asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                    🇺🇸 English
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container-xxl">
+        @RenderBody()
+    </div>
+
+    @* Sección JS - SIN popper.js ni bootstrap.js locales, ya vienen en el bundle del <head> *@
+    <script src="~/lib/js/perfect-scrollbar.js"></script>
+    <script src="~/lib/js/menu.js"></script>
+    <script src="~/lib/js/main.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <script>
+        window.addEventListener("pageshow", function (event) {
+        if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+        window.location.reload(true);
+        }
+        });
+    </script>
+
+</body>
+</html>

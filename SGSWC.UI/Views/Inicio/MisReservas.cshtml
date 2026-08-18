@@ -1,0 +1,63 @@
+﻿@model List<SGSWC.UI.Models.ReservaModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["MyBookingsTitle"];
+    Layout = "_LayoutInterno";
+}
+
+<section class="mb-5">
+    <div class="mb-3">
+        <a asp-action="Index" asp-controller="Inicio" class="btn btn-secondary">
+            <i class='bx bx-arrow-back'></i> @Localizer["BackToHome"]
+        </a>
+    </div>
+
+    <h2 class="text-primary text-center mb-4">@Localizer["MyBookingsTitle"]</h2>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success text-center fw-bold">@TempData["Mensaje"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger text-center fw-bold">@TempData["Error"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <p class="text-center text-muted">@Localizer["NoBookings"]</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var r in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">@string.Format(Localizer["BookingNumber"], r.Id_Reservacion)</h5>
+                            <p class="card-text">
+                                <strong>@Localizer["Date"]:</strong> @r.Fecha<br />
+                                <strong>@Localizer["Time"]:</strong> @r.Hora<br />
+                                <strong>@Localizer["Address"]:</strong> @r.Direccion_Servicio<br />
+                                <strong>@Localizer["Total"]:</strong> ₡@r.Total.ToString("N2")<br />
+                                <strong>@Localizer["Status"]:</strong>
+                                <span class="badge @(r.Estado == "Pendiente" ? "bg-warning text-dark" :
+                                                                                                     r.Estado == "Completada" ? "bg-success" : "bg-danger")">
+                                    @(r.Estado == "Pendiente" ? Localizer["Pending"] :
+                                      r.Estado == "Completada" ? Localizer["Completed"] :
+                                      r.Estado == "Confirmada" ? Localizer["Confirmed"] :
+                                      r.Estado == "Cancelada" ? Localizer["Cancelled"] :
+                                      r.Estado)
+                                </span>
+                            </p>
+                            <a asp-action="DetalleReserva" asp-controller="Inicio"
+                               asp-route-id="@r.Id_Reservacion"
+                               class="btn btn-outline-info btn-sm">@Localizer["ViewDetail"]</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

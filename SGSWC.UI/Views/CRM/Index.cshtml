@@ -1,0 +1,452 @@
+﻿@model DashboardModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["DashboardTitle"];
+    var periodoTexto = $"{Model.PeriodoDesde:dd/MM/yyyy} – {Model.PeriodoHasta:dd/MM/yyyy}";
+
+    // Nombres de meses para usar en el gráfico y en los selects
+    var culture = System.Globalization.CultureInfo.CurrentCulture;
+    var monthNames = Enumerable.Range(1, 12)
+        .Select(m => culture.DateTimeFormat.GetMonthName(m))
+        .ToArray();
+    var monthAbbr = Enumerable.Range(1, 12)
+        .Select(m => culture.DateTimeFormat.GetAbbreviatedMonthName(m))
+        .ToArray();
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    @* ── Escenario 2: sin datos ──────────────────────────────────── *@
+    @if (Model.TotalServiciosMes == 0 && Model.TotalIngresosMes == 0)
+    {
+        <div class="alert alert-info mb-4">
+            <i class="bx bx-info-circle me-1"></i>
+            @Localizer["NoRecordsForPeriod", periodoTexto]
+        </div>
+    }
+
+    @* ── Fila 1: KPIs principales ────────────────────────────────── *@
+    <div class="row">
+
+        @* Total servicios del mes *@
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title d-flex align-items-start justify-content-between">
+                        <div class="avatar flex-shrink-0">
+                            <img src="~/lib/img/icons/unicons/chart-success.png"
+                                 alt="servicios" class="rounded" />
+                        </div>
+                    </div>
+                    <span class="fw-semibold d-block mb-1">@Localizer["ServicesThisMonth"]</span>
+                    <h3 class="card-title mb-2">@Model.TotalServiciosMes</h3>
+                    @if (Model.VariacionServicios >= 0)
+                    {
+                        <small class="text-success fw-semibold">
+                            <i class="bx bx-up-arrow-alt"></i> +@Model.VariacionServicios%
+                        </small>
+                    }
+                    else
+                    {
+                        <small class="text-danger fw-semibold">
+                            <i class="bx bx-down-arrow-alt"></i> @Model.VariacionServicios%
+                        </small>
+                    }
+                    <small class="text-muted ms-1">@Localizer["VsPreviousMonth"]</small>
+                </div>
+            </div>
+        </div>
+
+        @* Total ingresos del mes *@
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title d-flex align-items-start justify-content-between">
+                        <div class="avatar flex-shrink-0">
+                            <img src="~/lib/img/icons/unicons/wallet-info.png"
+                                 alt="ingresos" class="rounded" />
+                        </div>
+                    </div>
+                    <span class="fw-semibold d-block mb-1">@Localizer["IncomeThisMonth"]</span>
+                    <h3 class="card-title mb-2">₡@Model.TotalIngresosMes.ToString("N2")</h3>
+                    @if (Model.VariacionIngresos >= 0)
+                    {
+                        <small class="text-success fw-semibold">
+                            <i class="bx bx-up-arrow-alt"></i> +@Model.VariacionIngresos%
+                        </small>
+                    }
+                    else
+                    {
+                        <small class="text-danger fw-semibold">
+                            <i class="bx bx-down-arrow-alt"></i> @Model.VariacionIngresos%
+                        </small>
+                    }
+                    <small class="text-muted ms-1">@Localizer["VsPreviousMonth"]</small>
+                </div>
+            </div>
+        </div>
+
+        @* Servicios pendientes *@
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title d-flex align-items-start justify-content-between">
+                        <div class="avatar flex-shrink-0">
+                            <img src="~/lib/img/icons/unicons/paypal.png"
+                                 alt="pendientes" class="rounded" />
+                        </div>
+                    </div>
+                    <span class="fw-semibold d-block mb-1">@Localizer["PendingServices"]</span>
+                    <h3 class="card-title mb-2">@Model.ServiciosPendientes</h3>
+                    <small class="text-warning fw-semibold">
+                        <i class="bx bx-time"></i> @Localizer["PendingServicesSubtext"]
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        @* Clientes frecuentes *@
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title d-flex align-items-start justify-content-between">
+                        <div class="avatar flex-shrink-0">
+                            <img src="~/lib/img/icons/unicons/cc-primary.png"
+                                 alt="clientes" class="rounded" />
+                        </div>
+                    </div>
+                    <span class="fw-semibold d-block mb-1">@Localizer["FrequentCustomers"]</span>
+                    <h3 class="card-title mb-2">@Model.ClientesFrecuentes</h3>
+                    <small class="text-success fw-semibold">
+                        <i class="bx bx-up-arrow-alt"></i> @Localizer["FrequentCustomersSubtext"]
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ── Fila 2: Gráfico + Distribución de estados ───────────────── *@
+    <div class="row">
+
+        @* Gráfico servicios por mes *@
+        <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
+            <div class="card h-100">
+                <div class="row row-bordered g-0 h-100">
+
+                    @* Columna izquierda: título + gráfico *@
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center justify-content-between card-header pb-3">
+                            <h5 class="m-0">@Localizer["ServicesByMonth"]</h5>
+                            <div class="d-flex gap-2">
+                                <select id="yearSelector" class="form-select form-select-sm" style="width:auto">
+                                    @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 2; y--)
+                                    {
+                                        if (y == DateTime.Now.Year)
+                                        {
+                                            <option value="@y" selected>@y</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@y">@y</option>
+                                        }
+                                    }
+                                </select>
+                                <select id="monthSelector" class="form-select form-select-sm" style="width:auto">
+                                    <option value="0">@Localizer["AllMonths"]</option>
+                                    @for (int m = 1; m <= 12; m++)
+                                    {
+                                        var mes = monthNames[m - 1];
+                                        if (m == DateTime.Now.Month)
+                                        {
+                                            <option value="@m" selected>@mes</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@m">@mes</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div id="serviciosChart"
+                             class="px-2"
+                             data-series='@ViewBag.ServiciosPorMes'
+                             data-month-abbr='@Html.Raw(Json.Serialize(monthAbbr))'>
+                        </div>
+                    </div>
+
+                    @* Columna derecha: sparkline + indicadores *@
+                    <div class="col-md-4 d-flex flex-column justify-content-between">
+
+                        <div class="px-3 pt-3">
+                            <p class="mb-0 text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:.5px">
+                                @Localizer["Trend"]
+                            </p>
+                            <div class="d-flex gap-2 mt-1 mb-1">
+                                <select id="trendYearSelector" class="form-select form-select-sm" style="width:auto;font-size:11px">
+                                    @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 2; y--)
+                                    {
+                                        if (y == DateTime.Now.Year)
+                                        {
+                                            <option value="@y" selected>@y</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@y">@y</option>
+                                        }
+                                    }
+                                </select>
+                                <select id="trendMonthSelector" class="form-select form-select-sm" style="width:auto;font-size:11px">
+                                    <option value="0">@Localizer["Last6Months"]</option>
+                                    @for (int m = 1; m <= 12; m++)
+                                    {
+                                        var mes = monthNames[m - 1];
+                                        if (m == DateTime.Now.Month)
+                                        {
+                                            <option value="@m" selected>@mes</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@m">@mes</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="growthChart"></div>
+
+                        @{
+                            var tasaTexto = Model.TasaCancelacion > 0
+                                ? string.Format(Localizer["CancellationRateText"], Model.TasaCancelacion)
+                                : Localizer["NoCancellationsThisMonth"];
+                            var tasaClase = Model.TasaCancelacion > 20 ? "text-danger" : "text-success";
+                        }
+                        <div class="text-center fw-semibold pt-3 mb-2 @tasaClase">
+                            @tasaTexto
+                        </div>
+
+                        <div class="d-flex px-xxl-4 px-lg-2 p-4 gap-xxl-3 gap-lg-1 gap-3 justify-content-between">
+                            <div class="d-flex">
+                                <div class="me-2">
+                                    <span class="badge bg-label-primary p-2">
+                                        <i class="bx bx-wrench text-primary"></i>
+                                    </span>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <small>@Localizer["TopService"]</small>
+                                    <h6 class="mb-0">@Model.ServicioTop</h6>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <div class="me-2">
+                                    <span class="badge bg-label-success p-2">
+                                        <i class="bx bx-dollar text-success"></i>
+                                    </span>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <small>@Localizer["Average"]</small>
+                                    <h6 class="mb-0">₡@Model.PromedioIngresoPorServicio.ToString("N0")</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @* Distribución de estados *@
+        <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                    <div class="card-title mb-0">
+                        <h5 class="m-0 me-2">@Localizer["ServiceDistribution"]</h5>
+                        <small class="text-muted">@Localizer["ServiceDistributionSubtext"]</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex flex-column align-items-center gap-1">
+                            <h2 class="mb-2">@Model.TotalServiciosMes</h2>
+                            <span>@Localizer["ThisMonth"]</span>
+                        </div>
+
+                        @{
+                            var completados = Model.TotalServiciosMes
+                                              - Model.ServiciosPendientes
+                                              - Model.CanceladosMes;
+                            completados = completados < 0 ? 0 : completados;
+                        }
+                        <div id="orderStatisticsChart"
+                             data-completados="@completados"
+                             data-pendientes="@Model.ServiciosPendientes"
+                             data-cancelados="@Model.CanceladosMes"
+                             data-total="@Model.TotalServiciosMes"
+                             data-translations='@Html.Raw(Json.Serialize(new
+                             {
+                                 Completed = Localizer["Completed"].Value,
+                                 Pending = Localizer["Pending"].Value,
+                                 Cancelled = Localizer["Cancelled"].Value,
+                                 Total = Localizer["Total"].Value
+                             }))'>
+                        </div>
+                    </div>
+                    <ul class="p-0 m-0">
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-success">
+                                    <i class="bx bx-check-circle"></i>
+                                </span>
+                            </div>
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">@Localizer["Completed"]</h6>
+                                    <small class="text-muted">@Localizer["CompletedSubtext"]</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">@completados</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-warning">
+                                    <i class="bx bx-time-five"></i>
+                                </span>
+                            </div>
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">@Localizer["Pending"]</h6>
+                                    <small class="text-muted">@Localizer["PendingSubtext"]</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">@Model.ServiciosPendientes</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-danger">
+                                    <i class="bx bx-x-circle"></i>
+                                </span>
+                            </div>
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">@Localizer["Cancelled"]</h6>
+                                    <small class="text-muted">@Localizer["CancelledSubtext"]</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">@Model.CanceladosMes</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex">
+                            <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-info">
+                                    <i class="bx bx-user-check"></i>
+                                </span>
+                            </div>
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">@Localizer["FrequentCustomers"]</h6>
+                                    <small class="text-muted">@Localizer["FrequentCustomersSubtext"]</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">@Model.ClientesFrecuentes</small>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ── Fila 3: KPIs secundarios ─────────────────────────────────── *@
+    <div class="row mb-4">
+
+        @* Tasa de cancelación *@
+        <div class="col-12 col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">@Localizer["CancellationRate"]</p>
+                    <h4 class="fw-bold @(Model.TasaCancelacion > 20 ? "text-danger" : "text-success")">
+                        @Model.TasaCancelacion%
+                    </h4>
+                    <p class="text-muted small mb-2">
+                        @string.Format(Localizer["CancelledThisMonth"], Model.CanceladosMes)
+                    </p>
+                    <div class="progress" style="height:8px">
+                        <div class="progress-bar @(Model.TasaCancelacion > 20 ? "bg-danger" : "bg-success")"
+                             style="width:@Math.Min((double)Model.TasaCancelacion, 100)%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Servicio más solicitado *@
+        <div class="col-12 col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <span class="avatar-initial rounded bg-label-primary p-3">
+                        <i class="bx bx-star fs-4"></i>
+                    </span>
+                    <div>
+                        <p class="text-muted mb-0 small">@Localizer["MostRequestedService"]</p>
+                        <h5 class="fw-bold mb-0">@Model.ServicioTop</h5>
+                        <small class="text-muted">@Localizer["MostRequestedSubtext"]</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Promedio de ingreso por servicio *@
+        <div class="col-12 col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <span class="avatar-initial rounded bg-label-success p-3">
+                        <i class="bx bx-calculator fs-4"></i>
+                    </span>
+                    <div>
+                        <p class="text-muted mb-0 small">@Localizer["AveragePerService"]</p>
+                        <h4 class="fw-bold mb-0">
+                            ₡@Model.PromedioIngresoPorServicio.ToString("N2")
+                        </h4>
+                        <small class="text-muted">@Localizer["AveragePerServiceSubtext"]</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Traducciones para los gráficos (inyectadas desde el servidor)
+    window.translations = {
+        services: '@Localizer["Services"]',
+        completed: '@Localizer["Completed"]',
+        pending: '@Localizer["Pending"]',
+        cancelled: '@Localizer["Cancelled"]',
+        total: '@Localizer["Total"]',
+        growth: '@Localizer["Growth"]',
+        trend: '@Localizer["Trend"]',
+        tooltipServices: '@Localizer["ServicesTooltip"]'
+    };
+
+    // Nombres de meses abreviados según la cultura actual
+    window.monthAbbr = @Html.Raw(Json.Serialize(monthAbbr));
+
+    // Traducciones para el gráfico de dona
+    window.donutTranslations = {
+        Completed: '@Localizer["Completed"]',
+        Pending: '@Localizer["Pending"]',
+        Cancelled: '@Localizer["Cancelled"]',
+        Total: '@Localizer["Total"]'
+    };
+</script>
+<script src="~/js/KPIs.js" asp-append-version="true"></script>
+

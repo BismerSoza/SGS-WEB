@@ -1,0 +1,82 @@
+﻿@model List<SGSWC.UI.Models.ReservaConResenaModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["ReviewsTitle"];
+    Layout = "_LayoutInterno";
+}
+
+<section class="mb-5">
+    <h2 class="text-primary text-center mb-4">@Localizer["MyReviews"]</h2>
+    <p class="text-center text-muted mb-4">
+        @Localizer["ReviewIntro"]
+    </p>
+
+    @if (Model.Count == 0)
+    {
+        <p class="text-center text-muted">
+            @Localizer["NoCompletedServices"]
+        </p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var r in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <p class="fw-bold mb-1">@string.Format(Localizer["BookingNumber"], r.Id_Reservacion)</p>
+                            <p class="text-muted mb-2">
+                                @r.Fecha &mdash; @r.Direccion_Servicio
+                            </p>
+
+                            @if (r.TieneResena)
+                            {
+                                <p class="mb-1 fw-bold" style="color:gold; font-size:1.2rem;">
+                                    @(new string('★', r.Calificacion ?? 0))@(new string('☆', 5 - (r.Calificacion ?? 0)))
+                                </p>
+                                @if (!string.IsNullOrEmpty(r.Comentario))
+                                {
+                                    <p class="mb-2">@r.Comentario</p>
+                                }
+                                @if (!string.IsNullOrEmpty(r.Respuesta_Admin))
+                                {
+                                    <div class="alert alert-light border mt-2 mb-0">
+                                        <small class="text-muted">@Localizer["TeamResponse"]</small>
+                                        <p class="mb-0">@r.Respuesta_Admin</p>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <form asp-action="AgregarResena" asp-controller="Inicio" method="post">
+                                    <input type="hidden" name="idReservacion" value="@r.Id_Reservacion" />
+
+                                    <div class="mb-2">
+                                        <label class="form-label">@Localizer["Rating"]</label>
+                                        <select class="form-select" name="calificacion" required>
+                                            <option value="5">★★★★★ - @Localizer["Excellent"]</option>
+                                            <option value="4">★★★★☆ - @Localizer["VeryGood"]</option>
+                                            <option value="3">★★★☆☆ - @Localizer["Good"]</option>
+                                            <option value="2">★★☆☆☆ - @Localizer["Average"]</option>
+                                            <option value="1">★☆☆☆☆ - @Localizer["Poor"]</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <label class="form-label">@Localizer["Comment"]</label>
+                                        <textarea class="form-control" name="comentario" rows="3" required></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        @Localizer["SubmitReview"]
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

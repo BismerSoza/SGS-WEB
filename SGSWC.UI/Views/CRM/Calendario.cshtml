@@ -1,0 +1,903 @@
+﻿@{
+    Layout = "_LayoutInterno";
+    var culture = System.Globalization.CultureInfo.CurrentCulture;
+    var dayNames = culture.DateTimeFormat.AbbreviatedDayNames; // Dom, Lun, Mar...
+    var monthNames = culture.DateTimeFormat.MonthNames; // Enero, Febrero...
+    var locale = culture.Name; // "es-CR" o "en-US", etc.
+}
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+
+<!doctype html>
+<html lang="@culture.TwoLetterISOLanguageName">
+<head>
+    <title>@Localizer["CalendarTitle"]</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/lib/cssCalendar/style.css">
+
+    <style>
+            /* ── Variables con paleta personalizada (sin cambios) ── */
+            :root {
+                --cal-primary: #7477ff;
+                --cal-secondary: #b3b4ff;
+                --cal-secondary2: #8789ff;
+                --cal-bg: #edeef9;
+                --cal-text-info: #5a6e82;
+                --cal-text-muted: #7e8d9d;
+                --cal-white: #ffffff;
+                --cal-radius: 10px;
+                --cal-shadow: 0 4px 24px rgba(116,119,255,.15);
+            }
+
+            td.has-events {
+                position: relative;
+                cursor: pointer;
+                font-weight: 600;
+            }
+
+                td.has-events .event-chip {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-width: 18px;
+                    height: 18px;
+                    padding: 0 4px;
+                    background: var(--cal-primary);
+                    color: #fff;
+                    border-radius: 9px;
+                    font-size: 0.62rem;
+                    font-weight: 700;
+                    line-height: 1;
+                    margin-left: 3px;
+                    vertical-align: middle;
+                    letter-spacing: 0;
+                }
+
+                td.has-events:hover {
+                    background-color: var(--cal-bg);
+                    border-radius: 6px;
+                }
+
+            td.today {
+                font-weight: 800;
+                color: var(--cal-primary);
+            }
+
+            .wrap-header .head-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .wrap-header .head-month {
+                font-size: 0.85rem;
+                font-weight: 600;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                color: rgba(255,255,255,.85);
+            }
+
+            .wrap-header .head-day {
+                font-size: 2.4rem;
+                font-weight: 700;
+                color: #fff;
+                line-height: 1.1;
+            }
+
+            #panelDia {
+                position: fixed;
+                top: 0;
+                right: -420px;
+                width: 420px;
+                max-width: 95vw;
+                height: 100%;
+                background: var(--cal-bg);
+                box-shadow: var(--cal-shadow);
+                z-index: 1055;
+                display: flex;
+                flex-direction: column;
+                transition: right .28s cubic-bezier(.4,0,.2,1);
+                border-radius: var(--cal-radius) 0 0 var(--cal-radius);
+            }
+
+                #panelDia.abierto {
+                    right: 0;
+                }
+
+            #panelBackdrop {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(116,119,255,.25);
+                z-index: 1054;
+                backdrop-filter: blur(2px);
+            }
+
+                #panelBackdrop.activo {
+                    display: block;
+                }
+
+            .panel-header {
+                background: var(--cal-primary);
+                color: #fff;
+                padding: 18px 20px 14px;
+                border-radius: var(--cal-radius) 0 0 0;
+                flex-shrink: 0;
+            }
+
+                .panel-header h5 {
+                    font-size: .95rem;
+                    font-weight: 700;
+                    margin: 0 0 2px;
+                    color: #fff;
+                }
+
+                .panel-header .panel-subtitle {
+                    font-size: .78rem;
+                    opacity: .85;
+                    margin: 0;
+                    color: rgba(255,255,255,.9);
+                }
+
+            .panel-close {
+                position: absolute;
+                top: 14px;
+                right: 16px;
+                background: rgba(255,255,255,.2);
+                border: none;
+                color: #fff;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background .2s;
+            }
+
+                .panel-close:hover {
+                    background: rgba(255,255,255,.4);
+                }
+
+            .panel-search {
+                padding: 10px 16px;
+                border-bottom: 1px solid var(--cal-text-muted);
+                flex-shrink: 0;
+                background: var(--cal-bg);
+            }
+
+                .panel-search input {
+                    width: 100%;
+                    border: 1px solid #d0d3e0;
+                    border-radius: 20px;
+                    padding: 5px 14px 5px 32px;
+                    font-size: .82rem;
+                    outline: none;
+                    background: var(--cal-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237e8d9d' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") 10px center / 14px no-repeat;
+                    transition: border-color .2s, box-shadow .2s;
+                }
+
+                    .panel-search input:focus {
+                        border-color: var(--cal-primary);
+                        box-shadow: 0 0 0 3px rgba(116,119,255,.2);
+                    }
+
+            .panel-body {
+                flex: 1;
+                overflow-y: auto;
+                padding: 10px 0;
+                background: var(--cal-bg);
+            }
+
+            .res-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 10px 16px;
+                cursor: pointer;
+                border-left: 3px solid transparent;
+                transition: background .15s, border-color .15s;
+                background: var(--cal-white);
+                margin: 4px 8px;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,.04);
+            }
+
+                .res-item:hover,
+                .res-item.activo {
+                    background: var(--cal-bg);
+                    border-left-color: var(--cal-primary);
+                    box-shadow: 0 2px 8px rgba(116,119,255,.08);
+                }
+
+                .res-item + .res-item {
+                    margin-top: 2px;
+                }
+
+            .res-hora {
+                font-size: .78rem;
+                font-weight: 700;
+                color: var(--cal-primary);
+                min-width: 40px;
+                padding-top: 2px;
+            }
+
+            .res-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .res-servicio {
+                font-size: .85rem;
+                font-weight: 600;
+                color: var(--cal-primary);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .res-cliente {
+                font-size: .78rem;
+                color: var(--cal-text-info);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .res-badge {
+                font-size: .68rem;
+                padding: 2px 7px;
+                border-radius: 10px;
+                font-weight: 600;
+                white-space: nowrap;
+                flex-shrink: 0;
+                margin-top: 3px;
+            }
+
+            .badge-estado-pendiente {
+                background: #fff3cd;
+                color: #856404;
+            }
+
+            .badge-estado-confirmado,
+            .badge-estado-programado {
+                background: #cff4fc;
+                color: #055160;
+            }
+
+            .badge-estado-completado,
+            .badge-estado-finalizado {
+                background: #d1e7dd;
+                color: #0a3622;
+            }
+
+            .badge-estado-cancelado {
+                background: #f8d7da;
+                color: #842029;
+            }
+
+            .badge-estado-default {
+                background: #e2e3e5;
+                color: #41464b;
+            }
+
+            #panelDetalle {
+                border-top: 1px solid var(--cal-text-muted);
+                flex-shrink: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height .3s ease;
+                background: var(--cal-white);
+                border-radius: 0 0 var(--cal-radius) var(--cal-radius);
+            }
+
+                #panelDetalle.visible {
+                    max-height: 70vh;
+                    overflow-y: auto;
+                }
+
+            .detalle-inner {
+                padding: 14px 16px 16px;
+                overflow-y: auto;
+                max-height: 70vh;
+            }
+
+            .detalle-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+                .detalle-header span {
+                    font-size: .75rem;
+                    color: var(--cal-text-muted);
+                    text-transform: uppercase;
+                    letter-spacing: .5px;
+                    font-weight: 600;
+                }
+
+            .detalle-cerrar {
+                background: none;
+                border: none;
+                font-size: .8rem;
+                color: var(--cal-text-muted);
+                cursor: pointer;
+                padding: 0;
+            }
+
+                .detalle-cerrar:hover {
+                    color: var(--cal-primary);
+                }
+
+            .detalle-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px 12px;
+            }
+
+            .detalle-campo {
+                display: flex;
+                flex-direction: column;
+            }
+
+                .detalle-campo.full {
+                    grid-column: 1 / -1;
+                }
+
+            .detalle-label {
+                font-size: .68rem;
+                color: var(--cal-text-muted);
+                text-transform: uppercase;
+                letter-spacing: .5px;
+                font-weight: 700;
+                margin-bottom: 1px;
+            }
+
+            .detalle-valor {
+                font-size: .82rem;
+                color: var(--cal-text-info);
+                font-weight: 500;
+            }
+
+            .detalle-total {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--cal-primary);
+            }
+
+            .panel-empty {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 48px 24px;
+                color: var(--cal-text-muted);
+                text-align: center;
+            }
+
+                .panel-empty i {
+                    font-size: 2rem;
+                    margin-bottom: 10px;
+                    color: var(--cal-secondary);
+                }
+
+                .panel-empty p {
+                    font-size: .88rem;
+                    margin: 0;
+                    color: var(--cal-text-info);
+                }
+
+            #alertaConflicto {
+                display: none;
+            }
+    </style>
+</head>
+<body>
+
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">@Localizer["CalendarTitle"]</h2>
+                </div>
+            </div>
+
+            <!-- Escenario 2: sin servicios en el mes -->
+            @if (ViewBag.ServiciosJson == "[]")
+            {
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="alert alert-info text-center">
+                            <i class="fa fa-calendar-o mr-2"></i>
+                            @Localizer["NoServicesThisMonth"]
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="elegant-calencar d-md-flex">
+                        <div class="wrap-header d-flex align-items-center img"
+                             style="background-image: url(/lib/img/bg.jpg);">
+                            <p id="reset">@Localizer["Today"]</p>
+                            <div id="header" class="p-0">
+                                <div class="head-info">
+                                    <div class="head-month"></div>
+                                    <div class="head-day"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calendar-wrap">
+                            <div class="w-100 button-wrap">
+                                <div class="pre-button d-flex align-items-center justify-content-center">
+                                    <i class="fa fa-chevron-left"></i>
+                                </div>
+                                <div class="next-button d-flex align-items-center justify-content-center">
+                                    <i class="fa fa-chevron-right"></i>
+                                </div>
+                            </div>
+                            <table id="calendar">
+                                <thead>
+                                    <tr>
+                                        @foreach (var day in dayNames)
+                                        {
+                                            <th>@day</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Backdrop ── -->
+    <div id="panelBackdrop" onclick="cerrarPanel()"></div>
+
+    <!-- ── Panel lateral de reservas del día ── -->
+    <div id="panelDia">
+        <div class="panel-header" style="position:relative;">
+            <h5 id="panelTitulo"><i class="fa fa-calendar mr-2"></i>@Localizer["ServicesOfTheDay"]</h5>
+            <p class="panel-subtitle" id="panelSubtitulo">—</p>
+            <button class="panel-close" onclick="cerrarPanel()" title="@Localizer["Close"]">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <div class="panel-search">
+            <input type="text" id="panelBusqueda" placeholder="@Localizer["SearchPlaceholder"]"
+                   oninput="filtrarLista(this.value)" />
+        </div>
+
+        <div class="panel-body" id="panelLista">
+            <!-- tarjetas compactas generadas por JS -->
+        </div>
+
+        <!-- Detalle expandido al hacer click en una tarjeta -->
+        <div id="panelDetalle">
+            <div class="detalle-inner">
+                <div class="detalle-header">
+                    <span>@Localizer["BookingDetail"]</span>
+                    <button class="detalle-cerrar" onclick="cerrarDetalle()">
+                        <i class="fa fa-chevron-down"></i> @Localizer["Hide"]
+                    </button>
+                </div>
+                <div class="detalle-grid" id="detalleGrid">
+                    <!-- se rellena por JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Alerta de conflicto (Escenario 3) ── -->
+    <div id="alertaConflicto"
+         class="alert alert-warning alert-dismissible fade show fixed-bottom mx-3 mb-3"
+         role="alert" style="z-index:9999; display:none;">
+        <i class="fa fa-exclamation-triangle mr-2"></i>
+        <strong>@Localizer["ScheduleConflict"]</strong>
+        @Localizer["ConflictMessage"]
+        <button type="button" class="close" onclick="ocultarAlertaConflicto()">
+            <span>&times;</span>
+        </button>
+    </div>
+
+    <!-- ── Scripts ── -->
+    <script src="~/lib/jsCalendar/jquery.min.js"></script>
+    <script src="~/lib/jsCalendar/popper.js"></script>
+    <script src="~/lib/jsCalendar/bootstrap.min.js"></script>
+
+    <script>
+        // Configuración global con datos y traducciones
+        window.__calendarioData = {
+        servicios: @Html.Raw(ViewBag.ServiciosJson ?? "[]"),
+        anio: @ViewBag.AnioActual,
+        mes: @ViewBag.MesActual,
+        urlBase: "@Url.Action("Calendario", "Crm")",
+        locale: "@locale",
+        translations: {
+        servicesOfTheDay: "@Localizer["ServicesOfTheDay"]",
+        bookingDetail: "@Localizer["BookingDetail"]",
+        hide: "@Localizer["Hide"]",
+        noServicesForDay: "@Localizer["NoServicesForDay"]",
+        hour: "@Localizer["Hour"]",
+        total: "@Localizer["Total"]",
+        status: "@Localizer["Status"]",
+        estimatedDuration: "@Localizer["EstimatedDuration"]",
+        service: "@Localizer["Service"]",
+        client: "@Localizer["Client"]",
+        employees: "@Localizer["Employees"]",
+        address: "@Localizer["Address"]",
+        observations: "@Localizer["Observations"]",
+        assignEmployee: "@Localizer["AssignEmployee"]",
+        loadingAvailability: "@Localizer["LoadingAvailability"]",
+        errorLoadingEmployees: "@Localizer["ErrorLoadingEmployees"]",
+        noActiveEmployees: "@Localizer["NoActiveEmployees"]",
+        saveAssignment: "@Localizer["SaveAssignment"]",
+        startTime: "@Localizer["StartTime"]",
+        durationMinutes: "@Localizer["DurationMinutes"]",
+        assignmentStatus: "@Localizer["AssignmentStatus"]",
+        employee: "@Localizer["Employee"]",
+        unassigned: "@Localizer["Unassigned"]",
+        pending: "@Localizer["Pending"]",
+        confirmed: "@Localizer["Confirmed"]",
+        completed: "@Localizer["Completed"]",
+        cancelled: "@Localizer["Cancelled"]",
+        oneBooking: "@Localizer["OneBooking"]",
+        multipleBookings: "@Localizer["MultipleBookings"]",
+        scheduleConflict: "@Localizer["ScheduleConflict"]",
+        conflictMessage: "@Localizer["ConflictMessage"]",
+        saveSuccess: "@Localizer["SaveSuccess"]",
+        saveError: "@Localizer["SaveError"]",
+        networkError: "@Localizer["NetworkError"]"
+        }
+        };
+    </script>
+
+    <!-- Panel lateral: funciones globales -->
+    <script>
+        /* ── helpers ── */
+        function _estadoClase(estado) {
+        const e = (estado || '').toLowerCase();
+        if (e.includes('pendiente') || e.includes('pending')) return 'badge-estado-pendiente';
+        if (e.includes('confirmado') || e.includes('confirmed') || e.includes('programado')) return 'badge-estado-confirmado';
+        if (e.includes('completado') || e.includes('completed') || e.includes('finalizado')) return 'badge-estado-completado';
+        if (e.includes('cancelado') || e.includes('cancelled')) return 'badge-estado-cancelado';
+        return 'badge-estado-default';
+        }
+
+        // Obtener traducciones
+        const t = window.__calendarioData.translations || {};
+
+        function _renderLista(lista) {
+        const cont = document.getElementById('panelLista');
+        if (!lista || !lista.length) {
+        cont.innerHTML = `
+        <div class="panel-empty">
+        <i class="fa fa-inbox"></i>
+        <p>${t.noServicesForDay || 'No hay servicios programados para este día.'}</p>
+        </div>`;
+        cont._lista = [];
+        return;
+        }
+        cont.innerHTML = lista.map(function (s, i) {
+        const hora = s.hora ? s.hora.substring(0, 5) : '--:--';
+        const empleados = s.nombreEmpleado
+        ? s.nombreEmpleado.split(',').map(function (e) { return e.trim(); }).join(', ')
+        : (t.unassigned || 'Sin asignar');
+        return '<div class="res-item" data-idx="' + i + '" onclick="mostrarDetalle(' + i + ')">' +
+        '<span class="res-hora">' + hora + '</span>' +
+        '<div class="res-info">' +
+        '<div class="res-servicio" title="' + (s.nombreServicio || '') + '">' + (s.nombreServicio || 'Sin servicio') + '</div>' +
+        '<div class="res-cliente">' + (s.nombreCliente || '') + ' · ' + empleados + '</div>' +
+        '</div>' +
+        '<span class="res-badge ' + _estadoClase(s.estado) + '">' + (s.estado || '') + '</span>' +
+        '</div>';
+        }).join('');
+        cont._lista = lista;
+        }
+
+        /* ── API pública del panel ── */
+        window.abrirPanel = function (fechaStr) {
+        const lista = window.__getServiciosPorFecha ? window.__getServiciosPorFecha(fechaStr) : [];
+        const fecha = new Date(fechaStr + 'T00:00:00');
+        const locale = window.__calendarioData.locale || 'es-CR';
+        const titulo = fecha.toLocaleDateString(locale, {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+        });
+
+        document.getElementById('panelTitulo').innerHTML =
+        '<i class="fa fa-calendar mr-2"></i>' +
+        titulo.charAt(0).toUpperCase() + titulo.slice(1);
+        const count = lista.length;
+        const subtitle = count === 1 ? t.oneBooking || '1 reserva' : (t.multipleBookings || '{0} reservas').replace('{0}', count);
+        document.getElementById('panelSubtitulo').textContent = subtitle;
+        document.getElementById('panelBusqueda').value = '';
+
+        _renderLista(lista);
+        window.cerrarDetalle();
+
+        document.getElementById('panelDia').classList.add('abierto');
+        document.getElementById('panelBackdrop').classList.add('activo');
+        document.body.style.overflow = 'hidden';
+        };
+
+        window.mostrarDetalle = function (idx) {
+        const cont = document.getElementById('panelLista');
+        const lista = cont._lista || [];
+        const s = lista[idx];
+        if (!s) return;
+
+        cont.querySelectorAll('.res-item').forEach(function (el) { el.classList.remove('activo'); });
+        const activo = cont.querySelector('.res-item[data-idx="' + idx + '"]');
+        if (activo) activo.classList.add('activo');
+
+        const empleados = s.nombreEmpleado
+        ? s.nombreEmpleado.split(',').map(function (e) { return e.trim(); }).join(', ')
+        : (t.unassigned || 'Sin asignar');
+
+        const estadoLabel = s.estado || '—';
+        const estadoClase = _estadoClase(s.estado);
+
+        document.getElementById('detalleGrid').innerHTML =
+        '<div class="detalle-campo">' +
+        '<span class="detalle-label">' + (t.hour || 'Hora') + '</span>' +
+        '<span class="detalle-valor">' + (s.hora ? s.hora.substring(0,5) : '--') + ' hs</span>' +
+        '</div>' +
+        '<div class="detalle-campo">' +
+        '<span class="detalle-label">' + (t.total || 'Total') + '</span>' +
+        '<span class="detalle-valor detalle-total">₡' + ((s.total || 0).toLocaleString(locale)) + '</span>' +
+        '</div>' +
+        '<div class="detalle-campo">' +
+        '<span class="detalle-label">' + (t.status || 'Estado') + '</span>' +
+        '<span class="detalle-valor"><span class="res-badge ' + estadoClase + '">' + estadoLabel + '</span></span>' +
+        '</div>' +
+        '<div class="detalle-campo">' +
+        '<span class="detalle-label">' + (t.estimatedDuration || 'Duración est.') + '</span>' +
+        '<span class="detalle-valor">' + (s.duracionEstimadaMin ? s.duracionEstimadaMin + ' min' : '—') + '</span>' +
+        '</div>' +
+        '<div class="detalle-campo full">' +
+        '<span class="detalle-label">' + (t.service || 'Servicio') + '</span>' +
+        '<span class="detalle-valor">' + (s.nombreServicio || '—') + '</span>' +
+        '</div>' +
+        '<div class="detalle-campo full">' +
+        '<span class="detalle-label">' + (t.client || 'Cliente') + '</span>' +
+        '<span class="detalle-valor">' + (s.nombreCliente || '—') + '</span>' +
+        '</div>' +
+        '<div class="detalle-campo full">' +
+        '<span class="detalle-label">' + (t.employees || 'Empleado(s)') + '</span>' +
+        '<span class="detalle-valor">' + empleados + '</span>' +
+        '</div>' +
+        '<div class="detalle-campo full">' +
+        '<span class="detalle-label">' + (t.address || 'Dirección') + '</span>' +
+        '<span class="detalle-valor">' + (s.direccionServicio || '—') + '</span>' +
+        '</div>' +
+        (s.observacionesCliente
+        ? '<div class="detalle-campo full">' +
+        '<span class="detalle-label">' + (t.observations || 'Observaciones') + '</span>' +
+        '<span class="detalle-valor font-italic">&ldquo;' + s.observacionesCliente + '&rdquo;</span>' +
+        '</div>'
+        : '');
+
+        document.getElementById('detalleGrid').insertAdjacentHTML('beforeend', `
+        <div class="detalle-campo full" id="seccionAsignacion">
+        <span class="detalle-label">${t.assignEmployee || 'Asignar empleado'}</span>
+        <div id="asignacionContenido">
+        <span style="font-size:.78rem; color:var(--cal-text-muted);">
+        <i class="fa fa-spinner fa-spin"></i> ${t.loadingAvailability || 'Cargando disponibilidad…'}
+        </span>
+        </div>
+        <div id="formAsignacionInline" style="display:none; margin-top:8px;">
+        <div class="row">
+        <div class="col-6">
+        <label class="detalle-label">${t.startTime || 'Hora inicio'}</label>
+        <input type="time" class="form-control form-control-sm" id="horaInicioInline" />
+        </div>
+        <div class="col-6">
+        <label class="detalle-label">${t.durationMinutes || 'Duración (min)'}</label>
+        <input type="number" class="form-control form-control-sm" id="duracionInline" min="1" />
+        </div>
+        </div>
+        <div class="row mt-2">
+        <div class="col-6">
+        <label class="detalle-label">${t.assignmentStatus || 'Estado asignación'}</label>
+        <select class="form-control form-control-sm" id="estadoInline">
+        <option value="pendiente">${t.pending || 'Pendiente'}</option>
+        <option value="confirmada">${t.confirmed || 'Confirmada'}</option>
+        <option value="completada">${t.completed || 'Completada'}</option>
+        <option value="cancelada">${t.cancelled || 'Cancelada'}</option>
+        </select>
+        </div>
+        <div class="col-6">
+        <label class="detalle-label">${t.employee || 'Empleado'}</label>
+        <select class="form-control form-control-sm" id="empleadoInline">
+        <option value="">— ${t.unassigned || 'Sin asignar'} —</option>
+        </select>
+        </div>
+        </div>
+        <div class="row mt-2">
+        <div class="col-12">
+        <label class="detalle-label">${t.observations || 'Observaciones'}</label>
+        <textarea class="form-control form-control-sm" id="observacionesInline" rows="2"></textarea>
+        </div>
+        </div>
+        <button class="btn btn-sm btn-primary mt-2 w-100" id="btnGuardarAsignacion">
+        <i class="fa fa-save mr-1"></i> ${t.saveAssignment || 'Guardar asignación'}
+        </button>
+        </div>
+        </div>
+        `);
+
+        _cargarEmpleados(s);
+
+        document.getElementById('panelDetalle').classList.add('visible');
+        if (activo) activo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        };
+
+        window.cerrarDetalle = function () {
+        document.getElementById('panelDetalle').classList.remove('visible');
+        document.querySelectorAll('.res-item').forEach(function (el) { el.classList.remove('activo'); });
+        };
+
+        window.cerrarPanel = function () {
+        document.getElementById('panelDia').classList.remove('abierto');
+        document.getElementById('panelBackdrop').classList.remove('activo');
+        document.body.style.overflow = '';
+        window.cerrarDetalle();
+        };
+
+        window.filtrarLista = function (q) {
+        const cont = document.getElementById('panelLista');
+        const lista = cont._lista || [];
+        const filtrado = q.trim()
+        ? lista.filter(function (s) {
+        return (s.nombreCliente || '').toLowerCase().includes(q.toLowerCase()) ||
+        (s.nombreServicio || '').toLowerCase().includes(q.toLowerCase());
+        })
+        : lista;
+        _renderLista(filtrado);
+        window.cerrarDetalle();
+        };
+
+        /* ── MutationObserver: inyectar chips cuando Calendario.js pueble el tbody ── */
+        document.addEventListener('DOMContentLoaded', function () {
+        const calBody = document.querySelector('#calendar tbody');
+        if (!calBody) return;
+
+        new MutationObserver(function () {
+        calBody.querySelectorAll('td.has-events').forEach(function (td) {
+        const fecha = td.dataset.fecha;
+        if (!fecha) return;
+        td.querySelectorAll('.event-chip').forEach(function (el) { el.remove(); });
+        const count = window.__getServiciosPorFecha
+        ? window.__getServiciosPorFecha(fecha).length : 1;
+        const chip = document.createElement('span');
+        chip.className   = 'event-chip';
+        chip.textContent = count;
+        td.appendChild(chip);
+        });
+        }).observe(calBody, { childList: true });
+        });
+
+        /* ESC cierra el panel */
+        document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') window.cerrarPanel();
+        });
+
+        /* ── Funciones de asignación inline ── */
+
+        function _cargarEmpleados(reserva) {
+        const duracion = reserva.duracionEstimadaMin || 60;
+        const url = `/Crm/ObtenerEmpleadosConDisponibilidad`
+        + `?fecha=${reserva.fecha}`
+        + `&hora=${reserva.hora}`
+        + `&duracionMin=${duracion}`
+        + `&idReservacion=${reserva.idReservacion}`;
+
+        fetch(url)
+        .then(r => r.json())
+        .then(lista => _renderDropdownEmpleados(lista, reserva))
+        .catch(() => {
+        const cont = document.getElementById('asignacionContenido');
+        if (cont) cont.innerHTML = `<span style="color:#842029;font-size:.78rem;">${t.errorLoadingEmployees || 'Error al cargar empleados.'}</span>`;
+        document.getElementById('formAsignacionInline').style.display = 'none';
+        });
+        }
+
+        function _renderDropdownEmpleados(lista, reserva) {
+        const cont = document.getElementById('asignacionContenido');
+        const form = document.getElementById('formAsignacionInline');
+        const select = document.getElementById('empleadoInline');
+
+        if (!lista || !lista.length) {
+        cont.innerHTML = `<span style="font-size:.78rem;color:var(--cal-text-muted);">${t.noActiveEmployees || 'No hay empleados activos.'}</span>`;
+        form.style.display = 'none';
+        return;
+        }
+
+        cont.innerHTML = '';
+        select.innerHTML = `<option value="">— ${t.unassigned || 'Sin asignar'} —</option>`;
+        const idActual = reserva.idEmpleado ? parseInt(reserva.idEmpleado.split(',')[0]) : null;
+        lista.forEach(e => {
+        const ocupado = !!e.ocupado;
+        const option = document.createElement('option');
+        option.value = e.idEmpleado;
+        option.text = e.nombreCompleto + (ocupado ? ' — OCUPADO' : '');
+        option.disabled = ocupado;
+        if (e.idEmpleado === idActual) option.selected = true;
+        select.appendChild(option);
+        });
+
+        document.getElementById('horaInicioInline').value = reserva.hora ? reserva.hora.substring(0, 5) : '08:00';
+        document.getElementById('duracionInline').value = reserva.duracionEstimadaMin || 60;
+        document.getElementById('estadoInline').value = 'pendiente';
+        document.getElementById('observacionesInline').value = '';
+
+        form.style.display = 'block';
+
+        const btn = document.getElementById('btnGuardarAsignacion');
+        btn.onclick = function() {
+        _guardarAsignacion(reserva);
+        };
+        }
+
+        async function _guardarAsignacion(reserva) {
+        const idReservacion = reserva.idReservacion;
+        const select = document.getElementById('empleadoInline');
+        const idEmpleado = parseInt(select.value);
+        if (!idEmpleado) {
+        alert(t.selectEmployee || 'Por favor selecciona un empleado.');
+        return;
+        }
+
+        const horaInicio = document.getElementById('horaInicioInline').value;
+        const duracionMin = parseInt(document.getElementById('duracionInline').value);
+        const estado = document.getElementById('estadoInline').value;
+        const observaciones = document.getElementById('observacionesInline').value;
+
+        const btn = document.getElementById('btnGuardarAsignacion');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> ' + (t.saving || 'Guardando…');
+
+        try {
+        const resp = await fetch('/Crm/AsignarEmpleado', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        idReservacion,
+        idEmpleado,
+        horaInicio,
+        duracionMin,
+        estadoAsignacion: estado,
+        observaciones
+        })
+        });
+        const data = await resp.json();
+
+        if (data.exito) {
+        alert((t.saveSuccess || '✅ {0}').replace('{0}', data.mensaje));
+        window.location.reload();
+        } else {
+        alert((t.saveError || '❌ Error: {0}').replace('{0}', data.mensaje));
+        }
+        } catch (error) {
+        alert((t.networkError || '❌ Error de red: {0}').replace('{0}', error.message));
+        } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-save mr-1"></i> ' + (t.saveAssignment || 'Guardar asignación');
+        }
+        }
+    </script>
+
+    <!-- Calendario.js modificado (abajo) -->
+    <script src="~/js/Calendario.js" asp-append-version="true"></script>
+</body>
+</html>

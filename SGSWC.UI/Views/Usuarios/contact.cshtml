@@ -1,0 +1,66 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutLanding";
+    ViewData["Title"] = "Web Clean | " + Localizer["ContactTitle"];
+}
+
+<div class="container-fluid pb-5 bg-primary hero-header">
+    <div class="container py-5">
+        <div class="row g-3 align-items-center">
+            <div class="col-lg-6 text-center text-lg-start">
+                <h1 class="display-1 mb-0 animated slideInLeft">@Localizer["ContactHeroTitle"]</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="text-center wow fadeIn" data-wow-delay="0.1s">
+            <h1 class="mb-5">
+                @Localizer["ContactQueryTitle"] <span class="text-uppercase text-primary bg-light px-2">
+                @Localizer["ContactUsTitle"]
+            </span>
+        </h1>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <p class="text-center mb-4">@Localizer["ContactFormInactive"]</p>
+            <div class="wow fadeIn" data-wow-delay="0.3s">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="name" placeholder="@Localizer["YourName"]">
+                                <label for="name">@Localizer["YourName"]</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" placeholder="@Localizer["YourEmail"]">
+                                <label for="email">@Localizer["YourEmail"]</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="subject" placeholder="@Localizer["Subject"]">
+                                <label for="subject">@Localizer["Subject"]</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="@Localizer["MessagePlaceholder"]" id="message"
+                                          style="height: 150px"></textarea>
+                                <label for="message">@Localizer["Message"]</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary w-100 py-3" type="submit">@Localizer["SendMessage"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

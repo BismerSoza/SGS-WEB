@@ -1,0 +1,181 @@
+﻿@model dynamic
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Detalle del Servicio";
+}
+
+<div class="container-fluid p-4">
+    <!-- Botón de regreso -->
+    <div class="mb-3">
+        <a href="@Url.Action("Index", "Services")" class="btn btn-outline-secondary">
+            <i class="bx bx-arrow-back me-1"></i> Volver a servicios
+        </a>
+    </div>
+
+    <!-- Tarjeta principal con información del servicio -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Detalle del Servicio</h4>
+            <span class="badge bg-label-secondary fs-6">ID: SERV-001</span>
+        </div>
+        <div class="card-body">
+            <!-- Información del cliente y servicio -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="info-group">
+                        <label class="text-muted small text-uppercase">Cliente</label>
+                        <h5 class="mb-0">Juan Pérez García</h5>
+                        <p class="text-muted mb-0">juan.perez@email.com</p>
+                        <p class="text-muted">+52 55 1234 5678</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-group">
+                        <label class="text-muted small text-uppercase">Fecha del servicio</label>
+                        <h5 class="mb-0">15 de Abril, 2026</h5>
+                        <p class="text-muted mb-0">10:00 AM - 12:00 PM</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-group">
+                        <label class="text-muted small text-uppercase">Técnico asignado</label>
+                        <h5 class="mb-0">Carlos Rodríguez</h5>
+                        <p class="text-muted">carlos.rodriguez@empresa.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descripción del servicio -->
+            <div class="mb-4">
+                <label class="text-muted small text-uppercase">Descripción del servicio</label>
+                <p class="mb-0">
+                    Reparación de equipo de cómputo: diagnóstico de falla en placa madre,
+                    limpieza interna, cambio de pasta térmica y reinstalación de sistema operativo.
+                    El cliente reporta que el equipo no enciende correctamente y presenta pantallazos azules.
+                </p>
+            </div>
+
+            <hr />
+
+            <!-- Stepper de estado -->
+            <div class="mb-4">
+                <label class="text-muted small text-uppercase mb-3">Estado del servicio</label>
+                <div class="stepper-wrapper">
+                    <div class="stepper-item completed">
+                        <div class="step-counter">
+                            <i class="bx bx-check"></i>
+                        </div>
+                        <div class="step-name">Pendiente</div>
+                    </div>
+                    <div class="stepper-item active">
+                        <div class="step-counter">2</div>
+                        <div class="step-name">En proceso</div>
+                    </div>
+                    <div class="stepper-item">
+                        <div class="step-counter">3</div>
+                        <div class="step-name">Finalizado</div>
+                    </div>
+                    <div class="stepper-item">
+                        <div class="step-counter">
+                            <i class="bx bx-x"></i>
+                        </div>
+                        <div class="step-name">Cancelado</div>
+                    </div>
+                </div>
+
+                <!-- Selector dropdown para cambiar estado -->
+                <div class="mt-3">
+                    <select class="form-select w-auto" id="estadoSelector">
+                        <option value="pendiente" selected>📋 Pendiente</option>
+                        <option value="proceso">⚙️ En proceso</option>
+                        <option value="finalizado">✅ Finalizado</option>
+                        <option value="cancelado">❌ Cancelado</option>
+                    </select>
+                    <small class="text-muted">Cambia el estado usando el selector</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de pago -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Información de pago</h5>
+            <span class="badge bg-label-warning">Pendiente de pago</span>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="text-muted small">Subtotal</label>
+                            <p class="mb-0 fw-semibold">$1,200.00 MXN</p>
+                        </div>
+                        <div class="col-6">
+                            <label class="text-muted small">IVA (16%)</label>
+                            <p class="mb-0 fw-semibold">$192.00 MXN</p>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label class="text-muted small">Total</label>
+                            <h4 class="mb-0 text-primary">$1,392.00 MXN</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                    <button class="btn btn-success btn-lg" id="btnMarcarPagado">
+                        <i class="bx bx-check-circle me-1"></i> Marcar como pagado
+                    </button>
+                    <p class="text-muted small mt-2 mb-0">* Solo se puede marcar como pagado cuando el servicio está finalizado</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de cambios de estado (Timeline con DataTable) -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Historial de cambios de estado</h5>
+        </div>
+        <div class="card-body">
+            <table id="tablaHistorial" class="table">
+                <thead>
+                    <tr>
+                        <th>Fecha/Hora</th>
+                        <th>Estado anterior</th>
+                        <th>Estado nuevo</th>
+                        <th>Usuario</th>
+                        <th>Comentarios</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Datos de ejemplo -->
+                    <tr>
+                        <td>2026-04-15 09:30:00</td>
+                        <td><span class="badge bg-label-secondary">-</span></td>
+                        <td><span class="badge bg-label-info">Pendiente</span></td>
+                        <td>Sistema</td>
+                        <td>Servicio registrado</td>
+                    </tr>
+                    <tr>
+                        <td>2026-04-15 10:15:00</td>
+                        <td><span class="badge bg-label-info">Pendiente</span></td>
+                        <td><span class="badge bg-label-primary">En proceso</span></td>
+                        <td>Carlos Rodríguez</td>
+                        <td>Técnico asignado, inicio de diagnóstico</td>
+                    </tr>
+                    <tr>
+                        <td>2026-04-15 14:45:00</td>
+                        <td><span class="badge bg-label-primary">En proceso</span></td>
+                        <td><span class="badge bg-label-success">Finalizado</span></td>
+                        <td>Carlos Rodríguez</td>
+                        <td>Servicio completado, equipo funcionando correctamente</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/lib/css/detalleServicio.css" />
+<script src="~/js/DetalleServicio.js" asp-append-version="true"></script>

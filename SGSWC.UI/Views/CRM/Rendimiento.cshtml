@@ -1,0 +1,145 @@
+﻿@model SGSWC.UI.Models.MetricasDesempenoModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["PerformanceMetricsTitle"];
+
+    int anioConsulta = ViewBag.AnioConsulta;
+    int mesConsulta = ViewBag.MesConsulta;
+    var nombresMeses = new[] {
+        "", Localizer["MonthJanuary"].Value, Localizer["MonthFebruary"].Value, Localizer["MonthMarch"].Value,
+        Localizer["MonthApril"].Value, Localizer["MonthMay"].Value, Localizer["MonthJune"].Value,
+        Localizer["MonthJuly"].Value, Localizer["MonthAugust"].Value, Localizer["MonthSeptember"].Value,
+        Localizer["MonthOctober"].Value, Localizer["MonthNovember"].Value, Localizer["MonthDecember"].Value
+    };
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- HU-RE-005: Titulo de pagina -->
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-end flex-wrap gap-2">
+            <div>
+                <h4 class="fw-bold py-1 mb-2">
+                    <i class="bx bx-line-chart me-1"></i> @Localizer["PerformanceMetricsTitle"]
+                </h4>
+                <p class="text-muted mb-0">@Localizer["PerformanceMetricsSubtitle"]</p>
+            </div>
+
+            <form id="formPeriodo" method="get" class="d-flex gap-2">
+                <select name="mes" class="form-select form-select-sm" style="width:auto;">
+                    @for (int m = 1; m <= 12; m++)
+                    {
+                        <option value="@m" selected="@(m == mesConsulta)">@nombresMeses[m]</option>
+                    }
+                </select>
+                <select name="anio" class="form-select form-select-sm" style="width:auto;">
+                    @for (int a = DateTime.Now.Year; a >= DateTime.Now.Year - 4; a--)
+                    {
+                        <option value="@a" selected="@(a == anioConsulta)">@a</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="bx bx-search-alt me-1"></i> @Localizer["Query"]
+                </button>
+            </form>
+        </div>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bx bx-error-circle me-1"></i>
+            @ViewBag.Error
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    else if (!Model.DatosDisponibles)
+    {
+        <!-- Escenario 2: Validar ausencia de datos -->
+        <div class="alert alert-warning mb-0">
+            <i class="bx bx-info-circle me-1"></i> @Localizer["NoPerformanceDataAvailable"]
+        </div>
+    }
+    else
+    {
+        <!-- Escenario 1: Mostrar metricas de productividad -->
+        <div class="row mb-4">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">@Localizer["ServicesPerformed"]</h5>
+                            <small class="text-muted">@nombresMeses[mesConsulta] @anioConsulta</small>
+                        </div>
+                        <div class="avatar flex-shrink-0">
+                            <span class="avatar-initial rounded bg-label-primary p-2">
+                                <i class="bx bx-check-square fs-3"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-baseline mb-1">
+                            <h1 class="display-4 mb-0 me-2">@Model.TotalServiciosRealizados</h1>
+                            <span class="fs-5">@Localizer["Services"]</span>
+                        </div>
+                        <small class="text-muted">@Localizer["ReservationsInPeriod"]</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">@Localizer["AverageServiceTime"]</h5>
+                            <small class="text-muted">@Localizer["BasedOnAssignments"]</small>
+                        </div>
+                        <div class="avatar flex-shrink-0">
+                            <span class="avatar-initial rounded bg-label-info p-2">
+                                <i class="bx bx-timer fs-3"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-baseline mb-1">
+                            <h1 class="display-4 mb-0 me-2">@Model.TiempoPromedioAtencionMin.ToString("N0")</h1>
+                            <span class="fs-5">@Localizer["Minutes"]</span>
+                        </div>
+                        <small class="text-muted">@Localizer["PerServiceOnAverage"]</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">@Localizer["ComplianceLevel"]</h5>
+                            <small class="text-muted">@Localizer["CompletedVsNonCancelled"]</small>
+                        </div>
+                        <div class="avatar flex-shrink-0">
+                            <span class="avatar-initial rounded bg-label-success p-2">
+                                <i class="bx bx-check-shield fs-3"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-baseline mb-3">
+                            <h1 class="display-4 mb-0 me-2">@Model.NivelCumplimiento.ToString("N1")</h1>
+                            <span class="fs-4">%</span>
+                        </div>
+                        @{
+                            var nivelClase = Model.NivelCumplimiento >= 80 ? "bg-success"
+                                : Model.NivelCumplimiento >= 50 ? "bg-warning" : "bg-danger";
+                            var nivelPct = Math.Min(100, Math.Max(0, Model.NivelCumplimiento));
+                        }
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar @nivelClase" style="width: @nivelPct.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)%"
+                                 role="progressbar" aria-valuenow="@nivelPct" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

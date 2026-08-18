@@ -1,0 +1,130 @@
+﻿@model IEnumerable<SGSWC.UI.Models.HorarioSolicitadoUIModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["MostRequestedSchedulesTitle"];
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-1 mb-4">
+        <i class="bx bx-time me-1"></i> @Localizer["MostRequestedSchedulesReport"]
+    </h4>
+
+    <div class="card mb-4">
+        <div class="card-header"><h5 class="mb-0">@Localizer["Filters"]</h5></div>
+        <div class="card-body">
+            <form method="get" asp-action="HorariosSolicitados" asp-controller="CRM">
+                <input type="hidden" name="generado" value="true" />
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">@Localizer["StartDate"]</label>
+                        <input type="date" name="fechaDesde" class="form-control" value="@ViewBag.FechaDesde" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">@Localizer["EndDate"]</label>
+                        <input type="date" name="fechaHasta" class="form-control" value="@ViewBag.FechaHasta" />
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-search me-1"></i> @Localizer["Generate"]
+                        </button>
+                        <a asp-action="HorariosSolicitados" asp-controller="CRM"
+                           class="btn btn-outline-secondary">@Localizer["Clear"]</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            <i class="bx bx-error-circle me-1"></i> @ViewBag.Error
+        </div>
+    }
+    else if (ViewBag.Generado == true)
+    {
+        if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                <i class="bx bx-info-circle me-1"></i> @Localizer["NoDataAvailable"]
+            </div>
+        }
+        else
+        {
+            <div class="card mb-4">
+                <div class="card-body">
+                    <canvas id="graficoHorarios" height="60"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">@Localizer["SchedulesByFrequency"]</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Position"]</th>
+                                <th>@Localizer["Time"]</th>
+                                <th>@Localizer["TotalBookings"]</th>
+                                <th>@Localizer["Percentage"]</th>
+                                <th>@Localizer["RelativeFrequency"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int pos = 1;
+                            }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><strong>#@pos</strong></td>
+                                    <td>@item.Hora_Inicio:00 — @(item.Hora_Inicio + 1):00</td>
+                                    <td><span class="badge bg-label-primary">@item.Total_Reservas</span></td>
+                                    <td>@item.Porcentaje.ToString("N2")%</td>
+                                    <td>
+                                        <div class="progress" style="height:20px;">
+                                            <div class="progress-bar bg-primary" role="progressbar"
+                                                 style="width:@item.Porcentaje%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                pos++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        @if (Model != null && Model.Any())
+        {
+            <text>
+                const bookingsPerHourLabel = '@Localizer["BookingsPerHour"]';
+                new Chart(document.getElementById('graficoHorarios'), {
+                type: 'bar',
+                data: {
+                labels: [@Html.Raw(string.Join(",", Model.Select(h => $"'{h.Hora_Inicio}:00'")))],
+                datasets: [{
+                label: bookingsPerHourLabel,
+                data: [@Html.Raw(string.Join(",", Model.Select(h => h.Total_Reservas)))],
+                backgroundColor: 'rgba(3,169,244,0.8)',
+                borderRadius: 6
+                }]
+                },
+                options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+                });
+            </text>
+        }
+    </script>
+}

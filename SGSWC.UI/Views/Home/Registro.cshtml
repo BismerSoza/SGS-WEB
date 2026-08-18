@@ -1,0 +1,105 @@
+﻿@model SGSWC.UI.Models.UsuarioModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutExterno";
+    ViewData["Title"] = Localizer["RegisterTitle"];
+}
+
+<style>
+    /* Botón personalizado con color exacto #696cff */
+    .btn-custom-primary {
+        background-color: #696cff !important;
+        border-color: #696cff !important;
+        color: #fff !important;
+    }
+
+        .btn-custom-primary:hover {
+            background-color: #5a5cdf !important;
+            border-color: #5a5cdf !important;
+            color: #fff !important;
+            box-shadow: 0 4px 12px rgba(105, 108, 255, 0.35);
+        }
+
+    /* Enlace "Iniciar sesión" más oscuro */
+    .link-custom-dark {
+        color: #4a4bb5 !important;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.15s ease;
+    }
+
+        .link-custom-dark:hover {
+            color: #3a3b95 !important;
+            text-decoration: underline;
+        }
+</style>
+
+<div class="authentication-wrapper authentication-basic container-p-y">
+    <div class="authentication-inner">
+        <div class="card">
+            <div class="card-body">
+                <div class="app-brand justify-content-center">
+                    <a href="index.html" class="app-brand-link gap-2">
+                        <img src="~/lib/img/logo2.png" alt="46" width="30" style="width: 26px; margin-right: 8px;" />
+                        <span class="app-brand-text demo text-body fw-bolder">@Localizer["RegisterTitle"]</span>
+                    </a>
+                </div>
+
+                @if (ViewBag.Mensaje != null)
+                {
+                    <div class="alert @(ViewBag.Mensaje.ToString().Contains("exitosamente") ? "alert-success" : "alert-danger") text-center">
+                        @ViewBag.Mensaje
+                    </div>
+                }
+
+                <form id="FormRegistro" class="mb-3" asp-action="Registro" asp-controller="Home">
+
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["Name"]</label>
+                        <input type="text" class="form-control" asp-for="Nombre" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["Email"]</label>
+                        <input type="email" class="form-control" asp-for="Correo" required />
+                    </div>
+
+                    <div class="mb-3 form-password-toggle">
+                        <label class="form-label">@Localizer["Password"]</label>
+                        <input type="password" class="form-control" asp-for="Contrasena_hash"
+                               id="inputPassword" required minlength="8" />
+                        <small class="text-muted">@Localizer["Minimum8Chars"]</small>
+                    </div>
+
+                    <div id="errorPassword" class="alert alert-danger mt-2" style="display:none;">
+                        @Localizer["PasswordTooShort"]
+                    </div>
+
+                    <button class="btn btn-custom-primary d-grid w-100" type="submit">@Localizer["RegisterButton"]</button>
+                </form>
+
+                <p class="text-center">
+                    <span>@Localizer["AlreadyHaveAccount"]</span>
+                    <a asp-controller="Home" asp-action="Index" class="link-custom-dark">@Localizer["SignIn"]</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const translations = {
+        passwordTooShort: '@Localizer["PasswordTooShort"]'
+    };
+
+    document.getElementById('FormRegistro').addEventListener('submit', function(e) {
+        var pass = document.getElementById('inputPassword').value;
+        if (pass.length < 8) {
+            e.preventDefault();
+            document.getElementById('errorPassword').style.display = 'block';
+            document.getElementById('errorPassword').textContent = translations.passwordTooShort;
+        } else {
+            document.getElementById('errorPassword').style.display = 'none';
+        }
+    });
+</script>

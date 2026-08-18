@@ -1,0 +1,148 @@
+﻿@model List<GestionUsuarioModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["UserManagementTitle"];
+    Layout = "_LayoutInterno";
+    var culture = System.Globalization.CultureInfo.CurrentCulture;
+    var langCode = culture.TwoLetterISOLanguageName;
+    var dataTableLang = langCode == "es" ? "es-ES" : "en-GB";
+}
+
+@* DataTables CSS *@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+<div class="card mb-4 mt-4">
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success text-center fw-bold">@TempData["Mensaje"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger text-center fw-bold">@TempData["Error"]</div>
+    }
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="text-center flex-grow-1 m-0">@Localizer["UserManagementTitle"]</h4>
+    </div>
+
+    <div class="card-body">
+        @if (Model == null || !Model.Any())
+        {
+            <p class="text-center text-muted">@Localizer["NoUsersRegistered"]</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table id="tablaUsuarios" class="table table-hover align-middle w-100">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>@Localizer["Id"]</th>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Email"]</th>
+                            <th>@Localizer["Role"]</th>
+                            <th>@Localizer["RegistrationDate"]</th>
+                            <th class="text-center">@Localizer["Status"]</th>
+                            <th class="text-center">@Localizer["Actions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var usuario in Model)
+                        {
+                            <tr>
+                                <td>@usuario.Id_Usuario</td>
+                                <td>@usuario.Nombre</td>
+                                <td>@usuario.Correo</td>
+                                <td>
+                                    <span class="badge bg-secondary">@usuario.Nombre_Rol</span>
+                                </td>
+                                <td>@usuario.Fecha_Creacion.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">
+                                    <div class="form-check form-switch d-flex justify-content-center">
+                                        <input class="form-check-input toggle-estado fs-5"
+                                               type="checkbox"
+                                               role="switch"
+                                               data-id="@usuario.Id_Usuario"
+                                               data-nombre="@usuario.Nombre"
+                                        @(usuario.Activo ? "checked" : "")
+                                               title="@(usuario.Activo ? Localizer["DeactivateUser"] : Localizer["ActivateUser"])" />
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    @if (usuario.Nombre_Rol == "Usuario Consulta")
+                                    {
+                                        <a asp-action="PerfilCliente" asp-controller="Crm" asp-route-id="@usuario.Id_Usuario"
+                                           class="btn btn-sm btn-icon btn-outline-primary" title="@Localizer["ViewProfile"]">
+                                            <i class="bx bx-user-circle"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@* Modal de confirmación *@
+<div class="modal fade" id="modalConfirmar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitulo">@Localizer["ConfirmAction"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalCuerpo">
+                @Localizer["ConfirmChangeStatusPlaceholder"]
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnCancelar"
+                        data-bs-dismiss="modal">
+                    @Localizer["Cancel"]
+                </button>
+                <button type="button" class="btn btn-primary" id="btnConfirmar">@Localizer["Confirm"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    // Inyectar traducciones y configuración de idioma
+    window.translations = {
+            activateUser: '@Localizer["ActivateUser"]',
+            deactivateUser: '@Localizer["DeactivateUser"]',
+            confirmAction: '@Localizer["ConfirmAction"]',
+            confirmChangeStatus: '@Localizer["ConfirmChangeStatus"]',
+            activate: '@Localizer["Activate"]',
+            deactivate: '@Localizer["Deactivate"]',
+            cancel: '@Localizer["Cancel"]',
+            confirm: '@Localizer["Confirm"]',
+            userActivated: '@Localizer["UserActivated"]',
+            userDeactivated: '@Localizer["UserDeactivated"]',
+            errorChangeStatus: '@Localizer["ErrorChangeStatus"]',
+            connectionError: '@Localizer["ConnectionError"]',
+            activateTooltip: '@Localizer["ActivateTooltip"]',
+            deactivateTooltip: '@Localizer["DeactivateTooltip"]',
+            dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
+        };
+    window.locale = '@langCode';
+
+        $(document).ready(function() {
+            $('#tablaUsuarios').DataTable({
+                language: {
+                    url: window.translations.dataTableLanguageUrl
+                },
+                columnDefs: [
+                    { orderable: false, targets: -1 } // última columna (acciones) no ordenable
+                ],
+                order: [[0, 'asc']], // ordenar por ID ascendente
+                pageLength: 10
+            });
+        });
+
+        // El resto del código (manejo de modal, toggle, etc.) está en GestionUsuarios.js
+</script>

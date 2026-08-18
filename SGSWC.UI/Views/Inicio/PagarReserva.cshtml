@@ -1,0 +1,57 @@
+﻿@model SGSWC.UI.Models.EstadoPagoUIModel
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Pagar Reservación";
+}
+
+<section class="mb-5">
+    <h2 class="text-primary text-center mb-4">Pagar Reservación</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger text-center fw-bold">@TempData["Error"]</div>
+    }
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Reservación #@Model?.Id_Reservacion</h5>
+            <p class="card-text">
+                <strong>Fecha:</strong> @Model?.Fecha<br />
+                <strong>Total a pagar:</strong> $@Model?.Total.ToString("N2") USD<br />
+                <strong>Estado de pago:</strong>
+                <span class="badge @(Model?.Estado_Pago == "pagado" ? "bg-success" : "bg-warning text-dark")">
+                    @(Model?.Estado_Pago == "pagado" ? "Pagado" : "Pendiente")
+                </span>
+            </p>
+        </div>
+    </div>
+
+    @if (Model?.Estado_Pago != "pagado")
+    {
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5 class="mb-3">Selecciona tu método de pago</h5>
+                <p class="text-muted mb-4">Serás redirigido a PayPal para completar el pago de forma segura.</p>
+
+                <form asp-action="IniciarPagoPayPal" asp-controller="Inicio" method="post">
+                    <input type="hidden" name="idReservacion" value="@Model?.Id_Reservacion" />
+                    <input type="hidden" name="monto" value="@Model?.Total" />
+                    <button type="submit" class="btn btn-warning btn-lg px-5">
+                        <i class="bx bxl-paypal me-2"></i> Pagar con PayPal
+                    </button>
+                </form>
+
+                <p class="text-muted mt-3 small">
+                    <i class="bx bx-lock me-1"></i> Pago seguro procesado por PayPal
+                </p>
+            </div>
+        </div>
+    }
+
+    <div class="mt-4 text-center">
+        <a asp-action="DetalleReserva" asp-controller="Inicio"
+           asp-route-id="@Model?.Id_Reservacion" class="btn btn-secondary">
+            Volver al Detalle
+        </a>
+    </div>
+</section>

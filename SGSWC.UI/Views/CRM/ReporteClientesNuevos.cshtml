@@ -1,0 +1,235 @@
+﻿@model ReporteClientesNuevosResponseModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["NewClientsReportTitle"];
+    var kpis = Model.Kpis;
+    var variacionClase = kpis.Variacion >= 0 ? "text-success" : "text-danger";
+    var variacionIcono = kpis.Variacion >= 0 ? "bx-up-arrow-alt" : "bx-down-arrow-alt";
+    var variacionTexto = kpis.Variacion >= 0 ? $"+{kpis.Variacion}%" : $"{kpis.Variacion}%";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Encabezado -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-0">
+                <i class="bx bx-user-plus me-2 text-primary"></i>@Localizer["NewClientsReport"]
+            </h4>
+            <small class="text-muted">
+                @Localizer["PeriodLabel"] @kpis.FechaInicio — @kpis.FechaFin
+            </small>
+        </div>
+    </div>
+
+    <!-- Filtro de fechas -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">@Localizer["DateFrom"]</label>
+                    <input type="date" name="fechaInicio" class="form-control"
+                           value="@ViewBag.FechaInicio" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">@Localizer["DateTo"]</label>
+                    <input type="date" name="fechaFin" class="form-control"
+                           value="@ViewBag.FechaFin" />
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bx bx-search me-1"></i> @Localizer["Filter"]
+                    </button>
+                    <a href="@Url.Action("ReporteClientesNuevos")"
+                       class="btn btn-outline-secondary w-100">
+                        <i class="bx bx-reset me-1"></i> @Localizer["Clear"]
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger text-center mb-4">
+            <i class="bx bx-error-circle me-1"></i> @ViewBag.Error
+        </div>
+    }
+
+    <!-- KPIs -->
+    <div class="row mb-4">
+
+        <!-- Total período -->
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="avatar-initial rounded bg-label-primary p-2 me-2">
+                            <i class="bx bx-user-plus fs-5"></i>
+                        </span>
+                        <span class="text-muted small">@Localizer["NewClients"]</span>
+                    </div>
+                    <h3 class="fw-bold mb-1">@kpis.TotalPeriodo</h3>
+                    <small class="@variacionClase fw-semibold">
+                        <i class="bx @variacionIcono"></i> @variacionTexto
+                    </small>
+                    <small class="text-muted ms-1">@Localizer["VsPreviousPeriod"]</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clientes activos -->
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="avatar-initial rounded bg-label-success p-2 me-2">
+                            <i class="bx bx-check-circle fs-5"></i>
+                        </span>
+                        <span class="text-muted small">@Localizer["ActiveClientsPeriod"]</span>
+                    </div>
+                    <h3 class="fw-bold mb-1">@kpis.Activos</h3>
+                    @if (kpis.TotalPeriodo > 0)
+                    {
+                        var pctActivos = Math.Round((double)kpis.Activos / kpis.TotalPeriodo * 100, 1);
+                        <small class="text-success fw-semibold">@Localizer["PercentageOfTotal", pctActivos]</small>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Inactivos -->
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="avatar-initial rounded bg-label-warning p-2 me-2">
+                            <i class="bx bx-user-x fs-5"></i>
+                        </span>
+                        <span class="text-muted small">@Localizer["InactiveClientsPeriod"]</span>
+                    </div>
+                    <h3 class="fw-bold mb-1">@(kpis.TotalPeriodo - kpis.Activos)</h3>
+                    @if (kpis.TotalPeriodo > 0)
+                    {
+                        var pctInactivos = Math.Round((double)(kpis.TotalPeriodo - kpis.Activos) / kpis.TotalPeriodo * 100, 1);
+                        <small class="text-warning fw-semibold">@Localizer["PercentageOfTotal", pctInactivos]</small>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Período anterior -->
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="avatar-initial rounded bg-label-info p-2 me-2">
+                            <i class="bx bx-calendar fs-5"></i>
+                        </span>
+                        <span class="text-muted small">@Localizer["PreviousPeriod"]</span>
+                    </div>
+                    <h3 class="fw-bold mb-1">@kpis.TotalAnterior</h3>
+                    <small class="text-muted">@Localizer["RegisteredClients"]</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de detalle -->
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">@Localizer["RegisteredClientsDetail"]</h5>
+            <span class="badge bg-label-primary">@Model.Clientes.Count @Localizer["Records"]</span>
+        </div>
+        <div class="card-body">
+
+            @if (!Model.Clientes.Any())
+            {
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bx bx-info-circle me-1"></i>
+                    @Localizer["NoDataAvailable"]
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table id="tablaClientes" class="table table-hover table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>@Localizer["Hash"]</th>
+                                <th>@Localizer["Name"]</th>
+                                <th>@Localizer["Email"]</th>
+                                <th>@Localizer["RegistrationDate"]</th>
+                                <th>@Localizer["Bookings"]</th>
+                                <th>@Localizer["Status"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int i = 1;
+                            }
+                            @foreach (var c in Model.Clientes)
+                            {
+                                <tr>
+                                    <td>@i</td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="avatar-initial rounded-circle bg-label-primary"
+                                                  style="width:32px;height:32px;font-size:13px;
+                                                display:inline-flex;align-items:center;
+                                                justify-content:center;">
+                                                @c.Nombre.Substring(0, 1).ToUpper()
+                                            </span>
+                                            @c.Nombre
+                                        </div>
+                                    </td>
+                                    <td>@c.Correo</td>
+                                    <td>@c.FechaRegistro</td>
+                                    <td>
+                                        @if (c.TotalReservas > 0)
+                                        {
+                                            <span class="badge bg-label-success">@c.TotalReservas</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-label-secondary">0</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (c.Estado == "Activo")
+                                        {
+                                            <span class="badge bg-success">@Localizer["Active"]</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">@Localizer["Inactive"]</span>
+                                        }
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (document.getElementById("tablaClientes")) {
+                new DataTable("#tablaClientes", {
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                    },
+                    pageLength: 10,
+                    order: [[3, "desc"]]
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,136 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="@Localizer["LandingMetaDescription"]" />
+
+    <link href="~/img/favicon.ico" rel="icon" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Space+Grotesk&display=swap" rel="stylesheet" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet" />
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <div id="spinner"
+         class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">@Localizer["Loading"]</span>
+        </div>
+    </div>
+
+    <div class="container-fluid sticky-top">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light border-bottom border-2 border-white">
+                <a asp-controller="Usuarios" asp-action="Index" class="navbar-brand">
+                    <h1>Web Clean</h1>
+                </a>
+                <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto">
+                        <a asp-controller="Usuarios" asp-action="Index" class="nav-item nav-link active">@Localizer["Home"]</a>
+                        <a asp-controller="Usuarios" asp-action="About" class="nav-item nav-link">@Localizer["About"]</a>
+                        <a asp-controller="Usuarios" asp-action="Service" class="nav-item nav-link">@Localizer["Services"]</a>
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                <i class="bx bx-globe bx-sm"></i>
+                                <span class="ms-1">@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper()</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" asp-action="CambiarIdioma" asp-controller="Home"
+                                       asp-route-culture="es"
+                                       asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                                        🇪🇸 Español
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-action="CambiarIdioma" asp-controller="Home"
+                                       asp-route-culture="en"
+                                       asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                                        🇺🇸 English
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <a asp-controller="Home" asp-action="Index" class="nav-item nav-link">@Localizer["Login"]</a>
+                        <a asp-controller="Home" asp-action="Registro" class="nav-item nav-link btn btn-primary text-white px-3 ms-lg-2">@Localizer["Register"]</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <div class="container-fluid bg-dark text-white-50 footer pt-5">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
+                    <a asp-controller="Usuarios" asp-action="Index" class="d-inline-block mb-3">
+                        <h1 class="text-white">Web Clean</h1>
+                    </a>
+                    <p class="mb-0">
+                        @Localizer["FooterDescription"]
+                    </p>
+                </div>
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
+                    <h5 class="text-white mb-4">@Localizer["QuickLinks"]</h5>
+                    <a class="btn btn-link" asp-controller="Usuarios" asp-action="Index">@Localizer["Home"]</a>
+                    <a class="btn btn-link" asp-controller="Usuarios" asp-action="About">@Localizer["About"]</a>
+                    <a class="btn btn-link" asp-controller="Usuarios" asp-action="Service">@Localizer["Services"]</a>
+                </div>
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.7s">
+                    <h5 class="text-white mb-4">@Localizer["Account"]</h5>
+                    <a class="btn btn-link" asp-controller="Home" asp-action="Index">@Localizer["Login"]</a>
+                    <a class="btn btn-link" asp-controller="Home" asp-action="Registro">@Localizer["Register"]</a>
+                </div>
+            </div>
+        </div>
+        <div class="container wow fadeIn" data-wow-delay="0.1s">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        &copy; @DateTime.Now.Year Web Clean. @Localizer["AllRightsReserved"]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#!" class="btn btn-lg btn-primary btn-lg-square back-to-top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/wow/wow.min.js"></script>
+    <script src="~/lib/easing/easing.min.js"></script>
+    <script src="~/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/js/main.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

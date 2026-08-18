@@ -1,0 +1,165 @@
+﻿@model IEnumerable<SGSWC.UI.Models.ServicioPendienteUIModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["PendingServicesTitle"];
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <h4 class="fw-bold py-1 mb-0">
+            <i class="bx bx-time-five me-1"></i> @Localizer["PendingServicesReport"]
+        </h4>
+        @if (Model != null && Model.Any())
+        {
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalExportar">
+                <i class="bx bx-download me-1"></i> @Localizer["GeneratePendingServicesReport"]
+            </button>
+        }
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bx bx-error-circle me-1"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            <i class="bx bx-error-circle me-1"></i> @ViewBag.Error
+        </div>
+    }
+    else if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <i class="bx bx-info-circle me-1"></i> @Localizer["NoDataAvailable"]
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">@Localizer["PendingServicesList"]</h5>
+                <span class="badge bg-label-warning fs-6">@Model.Count() @Localizer["Pending"]</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["ReservationNumber"]</th>
+                                <th>@Localizer["Client"]</th>
+                                <th>@Localizer["Email"]</th>
+                                <th>@Localizer["Phone"]</th>
+                                <th>@Localizer["Date"]</th>
+                                <th>@Localizer["Time"]</th>
+                                <th>@Localizer["ServiceType"]</th>
+                                <th>@Localizer["Address"]</th>
+                                <th>@Localizer["Total"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><strong>#@item.Id_Reservacion</strong></td>
+                                    <td>@item.Nombre_Cliente</td>
+                                    <td>@item.Correo</td>
+                                    <td>@(string.IsNullOrEmpty(item.Telefono) ? "-" : item.Telefono)</td>
+                                    <td>@item.Fecha</td>
+                                    <td>@item.Hora</td>
+                                    <td>@item.Nombre_Servicio</td>
+                                    <td>@item.Direccion_Servicio</td>
+                                    <td>@Localizer["CurrencySymbol"]@item.Total.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@* Modal de exportación *@
+<div class="modal fade" id="modalExportar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bx bx-download me-1"></i> @Localizer["GeneratePendingServicesReport"]
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label class="form-label fw-semibold">
+                    <i class="bx bx-file me-1"></i> @Localizer["ExportFormat"]
+                </label>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card border-2 h-100 formato-card-pendientes" data-formato="excel" style="cursor:pointer; border-color: #e5e7eb;">
+                            <div class="card-body text-center py-4">
+                                <span class="avatar avatar-lg bg-label-success mb-2" style="width:56px; height:56px;">
+                                    <i class="bx bx-spreadsheet fs-2"></i>
+                                </span>
+                                <h6 class="fw-bold mb-0">@Localizer["ExcelFormat"]</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-2 h-100 formato-card-pendientes" data-formato="pdf" style="cursor:pointer; border-color: #e5e7eb;">
+                            <div class="card-body text-center py-4">
+                                <span class="avatar avatar-lg bg-label-danger mb-2" style="width:56px; height:56px;">
+                                    <i class="bx bxs-file-pdf fs-2"></i>
+                                </span>
+                                <h6 class="fw-bold mb-0">@Localizer["PDFFormat"]</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="mensajeFormatoPendientes" class="text-danger small mt-2 d-none">
+                    <i class="bx bx-error-circle me-1"></i> @Localizer["FormatSelectionRequired"]
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                <button type="button" id="btnConfirmarExportar" class="btn btn-primary">
+                    <i class="bx bx-download me-1"></i> @Localizer["ExportReport"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        let formatoSeleccionado = '';
+        const tarjetas = document.querySelectorAll('.formato-card-pendientes');
+        const mensajeFormato = document.getElementById('mensajeFormatoPendientes');
+
+        tarjetas.forEach(tarjeta => {
+            tarjeta.addEventListener('click', () => {
+                tarjetas.forEach(c => {
+                    c.style.borderColor = '#e5e7eb';
+                    c.classList.remove('shadow');
+                });
+                tarjeta.style.borderColor = '#4f46e5';
+                tarjeta.classList.add('shadow');
+                formatoSeleccionado = tarjeta.dataset.formato;
+                mensajeFormato.classList.add('d-none');
+            });
+        });
+
+        document.getElementById('btnConfirmarExportar').addEventListener('click', () => {
+            if (!formatoSeleccionado) {
+                mensajeFormato.classList.remove('d-none');
+                return;
+            }
+            window.location.href = '@Url.Action("ExportarServiciosPendientes", "Crm")?formato=' + formatoSeleccionado;
+        });
+    })();
+</script>

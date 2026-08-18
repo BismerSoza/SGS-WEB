@@ -1,0 +1,50 @@
+﻿@model SGSWC.UI.Models.ServicioModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutLanding";
+    ViewData["Title"] = "Web Clean | " + (Model?.Nombre ?? Localizer["ServiceDetailTitle"]);
+    var reservarUrl = Url.Action("ReservarServicio", "Inicio", new { idServicio = Model?.Id_Servicio });
+}
+
+<div class="container-fluid pb-5 bg-primary hero-header">
+    <div class="container py-5">
+        <div class="row g-3 align-items-center">
+            <div class="col-lg-8 text-center text-lg-start">
+                <h1 class="display-4 mb-0 animated slideInLeft">@Model?.Nombre</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <img src="@(string.IsNullOrEmpty(Model?.Imagen_Ruta) ? Url.Content("~/lib/img/services/default-service.jpg") : Model.Imagen_Ruta)"
+                 class="img-fluid rounded mb-3"
+                 alt="@Model?.Nombre" />
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow border-0">
+                <div class="card-body p-4">
+                    <h2 class="text-primary mb-3">@($"₡{Model?.Precio_Base:N2}")</h2>
+
+                    <h4>@Localizer["Description"]</h4>
+                    <p>@Model?.Descripcion</p>
+
+                    <hr>
+
+                    <p class="text-muted mb-3">
+                        @Localizer["BookingRequiresLogin"]
+                    </p>
+
+                    <a asp-controller="Home" asp-action="Index"
+                       asp-route-returnUrl="@reservarUrl"
+                       class="btn btn-primary w-100 py-3">
+                        @Localizer["BookNow"]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

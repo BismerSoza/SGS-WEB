@@ -1,0 +1,164 @@
+﻿@model IEnumerable<SGSWC.UI.Models.GestionUsuarioModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["UserManagementTitle"];
+    var culture = System.Globalization.CultureInfo.CurrentCulture;
+    var langCode = culture.TwoLetterISOLanguageName;
+    var dataTableLang = langCode == "es" ? "es-ES" : "en-GB";
+}
+
+@* DataTables CSS *@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+<style>
+    /* Botón personalizado con paleta Sneat */
+    .btn-outline-custom {
+        color: #696cff !important;
+        border-color: #696cff !important;
+        background-color: transparent !important;
+    }
+
+        .btn-outline-custom:hover {
+            background-color: #696cff !important;
+            color: #fff !important;
+            border-color: #696cff !important;
+            box-shadow: 0 4px 12px rgba(105, 108, 255, 0.25);
+        }
+</style>
+
+<div class="card mb-4 mt-4">
+    @if (ViewBag.Mensaje != null)
+    {
+        <div class="alert alert-success text-center fw-bold">@ViewBag.Mensaje</div>
+    }
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger text-center fw-bold">@ViewBag.Error</div>
+    }
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="text-center flex-grow-1 m-0">@Localizer["UserManagementTitle"]</h4>
+    </div>
+
+    <div class="card-body">
+        @if (Model == null || !Model.Any())
+        {
+            <p class="text-center text-muted">@Localizer["NoUsersRegistered"]</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table id="tablaUsuarios" class="table table-hover align-middle w-100">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>@Localizer["Id"]</th>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Email"]</th>
+                            <th>@Localizer["Role"]</th>
+                            <th>@Localizer["Status"]</th>
+                            <th class="text-center">@Localizer["Actions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id_Usuario</td>
+                                <td>@item.Nombre</td>
+                                <td>@item.Correo</td>
+                                <td>
+                                    <span class="badge bg-label-primary">@item.Rol</span>
+                                </td>
+                                <td>
+                                    <span class="badge @(item.Activo ? "bg-label-success" : "bg-label-danger")">
+                                        @(item.Activo ? Localizer["Active"] : Localizer["Inactive"])
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-custom"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalAsignarRol"
+                                            data-id="@item.Id_Usuario"
+                                            data-nombre="@item.Nombre"
+                                            data-rol="@item.Id_Rol">
+                                        @Localizer["AssignRole"]
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal Asignar Rol -->
+<div class="modal fade" id="modalAsignarRol" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Localizer["AssignRole"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">
+                    @Localizer["UserLabel"]: <strong id="rolModal-nombre"></strong>
+                </p>
+                <form asp-action="AsignarRol" asp-controller="Users" method="post">
+                    <input type="hidden" id="rolModal-id" name="IdUsuario" />
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["SelectRole"]</label>
+                        <select id="rolModal-select" name="Rol" class="form-select">
+                            <option value="0">@Localizer["SelectRoleDefault"]</option>
+                            <option value="1">@Localizer["RoleAdmin"]</option>
+                            <option value="2">@Localizer["RoleSupervisor"]</option>
+                            <option value="3">@Localizer["RoleOperative"]</option>
+                            <option value="4">@Localizer["RoleClient"]</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer px-0 pb-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                        <button type="submit" class="btn btn-primary">@Localizer["Save"]</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* DataTables JS *@
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    // Inyectar traducciones y configuración de idioma
+    window.translations = {
+        dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
+    };
+    window.locale = '@langCode';
+
+    $(document).ready(function() {
+        $('#tablaUsuarios').DataTable({
+            language: {
+                url: window.translations.dataTableLanguageUrl
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 } // última columna (acciones) no ordenable
+            ],
+            order: [[0, 'asc']], // ordenar por ID ascendente
+            pageLength: 10
+        });
+    });
+
+    // Modal: asignar rol
+    var modalAsignarRol = document.getElementById('modalAsignarRol');
+    modalAsignarRol.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        document.getElementById('rolModal-id').value = button.getAttribute('data-id');
+        document.getElementById('rolModal-nombre').textContent = button.getAttribute('data-nombre');
+        document.getElementById('rolModal-select').value = button.getAttribute('data-rol');
+    });
+</script>

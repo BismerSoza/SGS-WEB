@@ -1,0 +1,294 @@
+﻿@model SGSWC.UI.Models.PerfilClienteViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["ClientProfileTitle"];
+    var culture = System.Globalization.CultureInfo.CurrentCulture;
+    var langCode = culture.TwoLetterISOLanguageName;
+    var dataTableLang = langCode == "es" ? "es-ES" : "en-GB";
+}
+
+@* Estilos personalizados para botones *@
+<style>
+    .btn-outline-custom {
+        color: #696cff !important;
+        border-color: #696cff !important;
+        background-color: transparent !important;
+    }
+
+        .btn-outline-custom:hover {
+            background-color: #696cff !important;
+            color: #fff !important;
+            border-color: #696cff !important;
+            box-shadow: 0 4px 12px rgba(105, 108, 255, 0.25);
+        }
+</style>
+
+@* DataTables CSS *@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+<div class="container-fluid p-4">
+    <div class="mb-3">
+        <a asp-action="GestionUsuarios" asp-controller="Crm" class="btn btn-outline-custom">
+            <i class="bx bx-arrow-back me-1"></i> @Localizer["BackToUsers"]
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar avatar-xl">
+                    <div class="avatar-initial bg-label-primary rounded-circle" style="font-size: 2rem;">
+                        <i class="bx bx-user-circle"></i>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="mb-0">@Model.Cliente.Nombre</h3>
+                    <p class="text-muted mb-0">
+                        @Localizer["ClientSince"] @Model.Cliente.Fecha_Creacion.ToString("MMMM yyyy")
+                    </p>
+                </div>
+            </div>
+            <div class="mt-2 mt-md-0 d-flex gap-2">
+                @if (Model.EstadoFrecuente != null && Model.EstadoFrecuente.Es_Cliente_Frecuente)
+                {
+                    <span class="badge bg-label-success d-inline-flex align-items-center gap-1 fs-6 p-2"
+                          title="@string.Format(Localizer["ServicesInLast30Days"], Model.EstadoFrecuente.Total_Servicios_30_Dias)">
+                        <i class="bx bxs-star"></i>
+                        @Localizer["FrequentCustomerBadge"]
+                    </span>
+                }
+                <span class="badge bg-label-secondary fs-6 p-2">
+                    <i class="bx bx-calendar me-1"></i> @Model.Historial.Count @Localizer["ServicesRequested"]
+                </span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-3 mb-lg-0">
+                    <div class="info-group">
+                        <label class="text-muted small text-uppercase">@Localizer["Email"]</label>
+                        <p class="mb-0 fw-semibold"><i class="bx bx-envelope me-1"></i> @Model.Cliente.Correo</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-3 mb-lg-0">
+                    <div class="info-group">
+                        <label class="text-muted small text-uppercase">@Localizer["Phone"]</label>
+                        <p class="mb-0 fw-semibold"><i class="bx bx-phone me-1"></i> @(Model.Cliente.Telefono ?? "-")</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="info-group">
+                        <label class="text-muted small text-uppercase">@Localizer["Address"]</label>
+                        <p class="mb-0 fw-semibold"><i class="bx bx-map me-1"></i> @(Model.Cliente.Direccion_Principal ?? "-")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HU-GC-005: Analizar historial de contratación del cliente -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0">@Localizer["AnalyzeHistoryTitle"]</h5>
+            <button type="button" id="btnAnalizarHistorial" class="btn btn-primary btn-sm"
+                    data-id-usuario="@Model.Cliente.Id_Usuario">
+                <i class="bx bx-analyse me-1"></i> @Localizer["AnalyzeHistoryButton"]
+            </button>
+        </div>
+        <div class="card-body">
+            <div id="analisisHistorialCargando" class="text-center py-3 d-none">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="text-muted mt-2 mb-0">@Localizer["AnalyzingHistory"]</p>
+            </div>
+
+            <div id="analisisHistorialSinDatos" class="alert alert-warning mb-0 d-none">
+                <i class="bx bx-error-circle me-1"></i>
+                <span id="analisisHistorialMensaje">@Localizer["NotEnoughDataForAnalysis"]</span>
+            </div>
+
+            <div id="analisisHistorialResultado" class="d-none">
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="border rounded p-3 h-100">
+                            <small class="text-muted d-block text-uppercase">@Localizer["TotalServicesContracted"]</small>
+                            <h4 class="mb-0 mt-1" id="valTotalServicios">-</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="border rounded p-3 h-100">
+                            <small class="text-muted d-block text-uppercase">@Localizer["TotalAmountGenerated"]</small>
+                            <h4 class="mb-0 mt-1" id="valMontoTotal">-</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="border rounded p-3 h-100">
+                            <small class="text-muted d-block text-uppercase">@Localizer["ContractingFrequency"]</small>
+                            <h4 class="mb-0 mt-1" id="valFrecuencia">-</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="border rounded p-3 h-100">
+                            <small class="text-muted d-block text-uppercase">@Localizer["MostRequestedService"]</small>
+                            <h6 class="mb-0 mt-1" id="valServicioTop">-</h6>
+                            <small class="text-muted" id="valPeriodicidad"></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">@Localizer["ServiceHistory"]</h5>
+        </div>
+        <div class="card-body">
+            @if (!Model.Historial.Any())
+            {
+                <div class="alert alert-info mb-0">
+                    <i class="bx bx-info-circle me-1"></i> @Localizer["NoDataAvailable"]
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table id="tablaHistorialServicios" class="table table-hover align-middle w-100">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>@Localizer["ReservationNumber"]</th>
+                                <th>@Localizer["Service"]</th>
+                                <th>@Localizer["ServiceType"]</th>
+                                <th>@Localizer["Date"]</th>
+                                <th>@Localizer["Time"]</th>
+                                <th>@Localizer["Address"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["Total"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Historial)
+                            {
+                                <tr>
+                                    <td><strong>#@item.Id_Reservacion</strong></td>
+                                    <td>@item.Nombre_Servicio</td>
+                                    <td>@item.Tipo_Servicio</td>
+                                    <td>@item.Fecha</td>
+                                    <td>@item.Hora</td>
+                                    <td>@item.Direccion_Servicio</td>
+                                    <td>
+                                        @{
+                                            var estadoClass = item.Estado switch
+                                            {
+                                                "Aceptada" => "bg-success",
+                                                "Pendiente" => "bg-warning text-dark",
+                                                "Confirmada" => "bg-primary",
+                                                "Completada" => "bg-success",
+                                                "Cancelada" => "bg-danger",
+                                                _ => "bg-secondary"
+                                            };
+                                            var estadoTraducido = item.Estado switch
+                                            {
+                                                "Aceptada" => Localizer["Accepted"],
+                                                "Pendiente" => Localizer["Pending"],
+                                                "Confirmada" => Localizer["Confirmed"],
+                                                "Completada" => Localizer["Completed"],
+                                                "Cancelada" => Localizer["Cancelled"],
+                                                _ => item.Estado
+                                            };
+                                        }
+                                        <span class="badge @estadoClass">@estadoTraducido</span>
+                                    </td>
+                                    <td>@Localizer["CurrencySymbol"]@item.Total.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@* DataTables JS *@
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    // Inyectar traducciones y configuración de idioma
+    window.translations = {
+        dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
+    };
+    window.locale = '@langCode';
+
+    $(document).ready(function() {
+        @if (Model.Historial.Any())
+            {
+                <text>
+                        $('#tablaHistorialServicios').DataTable({
+                            language: {
+                            url: window.translations.dataTableLanguageUrl
+                                    },
+                        order: [[3, 'desc']], // Ordenar por fecha (columna índice 3) descendente
+                        pageLength: 10,
+                        columnDefs: [
+                        {orderable: false, targets: [0] } // No ordenar columna de # reserva
+                        ]
+                                });
+                </text>
+        }
+            });
+
+    // Lógica de análisis de historial (sin cambios)
+    const textos = {
+        notEnoughData: '@Localizer["NotEnoughDataForAnalysis"]',
+        genericError: '@Localizer["AnalysisError"]',
+        na: '@Localizer["NotAvailable"]'
+    };
+
+    document.getElementById('btnAnalizarHistorial').addEventListener('click', function() {
+        const boton = this;
+        const idUsuario = boton.dataset.idUsuario;
+
+        const cargando = document.getElementById('analisisHistorialCargando');
+        const sinDatos = document.getElementById('analisisHistorialSinDatos');
+        const mensajeSinDatos = document.getElementById('analisisHistorialMensaje');
+        const resultado = document.getElementById('analisisHistorialResultado');
+
+        boton.disabled = true;
+        cargando.classList.remove('d-none');
+        sinDatos.classList.add('d-none');
+        resultado.classList.add('d-none');
+
+        fetch(`/Crm/AnalizarHistorialCliente?idUsuario=${idUsuario}`)
+            .then(resp => resp.json())
+            .then(data => {
+                cargando.classList.add('d-none');
+                boton.disabled = false;
+
+                if (!data.datosSuficientes) {
+                    mensajeSinDatos.textContent = data.mensaje || textos.notEnoughData;
+                    sinDatos.classList.remove('d-none');
+                    return;
+                }
+
+                document.getElementById('valTotalServicios').textContent = data.totalServiciosContratados;
+                document.getElementById('valMontoTotal').textContent =
+                    '₡' + Number(data.montoTotalGenerado).toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('valFrecuencia').textContent =
+                    Number(data.frecuenciaContratacionDias).toFixed(1) + ' @Localizer["Days"]';
+                document.getElementById('valServicioTop').textContent = data.servicioMasSolicitado || textos.na;
+                document.getElementById('valPeriodicidad').textContent = data.periodicidadContratacion
+                    ? '@Localizer["Periodicity"]: ' + data.periodicidadContratacion
+                    : '';
+
+                resultado.classList.remove('d-none');
+            })
+            .catch(() => {
+                cargando.classList.add('d-none');
+                boton.disabled = false;
+                mensajeSinDatos.textContent = textos.genericError;
+                sinDatos.classList.remove('d-none');
+            });
+    });
+</script>

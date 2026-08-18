@@ -1,0 +1,128 @@
+﻿@model SGSWC.UI.Models.ReservaModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["BookingDetailTitle"];
+    Layout = "_LayoutInterno";
+}
+
+<section class="mb-5">
+    <h2 class="text-primary text-center mb-4">@Localizer["BookingDetailTitle"]</h2>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success text-center fw-bold">@TempData["Mensaje"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger text-center fw-bold">@TempData["Error"]</div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h5 class="card-title">@string.Format(Localizer["BookingNumber"], Model.Id_Reservacion)</h5>
+            <p class="card-text">
+                <strong>@Localizer["Date"]:</strong> @Model.Fecha<br />
+                <strong>@Localizer["Time"]:</strong> @Model.Hora<br />
+                <strong>@Localizer["Address"]:</strong> @Model.Direccion_Servicio<br />
+                <strong>@Localizer["Total"]:</strong> ₡@Model.Total.ToString("N2")<br />
+                <strong>@Localizer["Status"]:</strong>
+                <span class="badge @(Model.Estado == "Pendiente" ? "bg-warning text-dark" :
+                                                                                                       Model.Estado == "Completada" ? "bg-success" :
+                                                                                                       Model.Estado == "Confirmada" ? "bg-info" : "bg-danger")">
+                    @(Model.Estado == "Pendiente" ? Localizer["Pending"] :
+                      Model.Estado == "Completada" ? Localizer["Completed"] :
+                      Model.Estado == "Confirmada" ? Localizer["Confirmed"] :
+                      Model.Estado == "Cancelada" ? Localizer["Cancelled"] :
+                      Model.Estado)
+                </span>
+            </p>
+
+            @if (Model.Estado == "Pendiente")
+            {
+                <hr />
+                <h6 class="text-secondary">@Localizer["CancelBooking"]</h6>
+                <form asp-action="CancelarReserva" asp-controller="Inicio" method="post" class="mb-4">
+                    <input type="hidden" name="id" value="@Model.Id_Reservacion" />
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["CancellationReason"] <span class="text-danger">*</span></label>
+                        <select name="Motivo" id="selectMotivoCancelar" class="form-select" required>
+                            <option value="">@Localizer["SelectReason"]</option>
+                            <option value="Cambio de planes">@Localizer["ReasonChangePlans"]</option>
+                            <option value="Error en la reserva">@Localizer["ReasonBookingError"]</option>
+                            <option value="Encontré otro proveedor">@Localizer["ReasonFoundOtherProvider"]</option>
+                            <option value="Emergencia personal">@Localizer["ReasonPersonalEmergency"]</option>
+                            <option value="Otro">@Localizer["Other"]</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="detalleCancelar" style="display:none;">
+                        <label class="form-label">@Localizer["DescribeReason"] <span class="text-danger">*</span></label>
+                        <textarea name="Detalle" class="form-control" rows="3"
+                                  placeholder="@Localizer["DescribeReasonPlaceholder"]"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger">@Localizer["CancelBookingButton"]</button>
+                </form>
+
+                <hr />
+                <h6 class="text-secondary">@Localizer["RescheduleBooking"]</h6>
+                <form asp-action="ReprogramarReserva" asp-controller="Inicio" method="post">
+                    <input type="hidden" name="id" value="@Model.Id_Reservacion" />
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer["NewDate"] <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="nuevaFecha"
+                                   required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer["NewTime"] <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control" name="nuevaHora" required />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["ChangeReason"] <span class="text-danger">*</span></label>
+                        <select name="Motivo" class="form-select" required>
+                            <option value="">@Localizer["SelectReason"]</option>
+                            <option value="Cambio de agenda personal">@Localizer["ReasonPersonalScheduleChange"]</option>
+                            <option value="Conflicto de horario">@Localizer["ReasonScheduleConflict"]</option>
+                            <option value="Solicitud del proveedor">@Localizer["ReasonProviderRequest"]</option>
+                            <option value="Emergencia">@Localizer["ReasonEmergency"]</option>
+                            <option value="Otro">@Localizer["Other"]</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning">@Localizer["SaveChanges"]</button>
+                </form>
+            }
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        @if (Model.Estado != "Cancelada")
+        {
+            <a asp-action="PagarReserva" asp-controller="Inicio"
+               asp-route-id="@Model.Id_Reservacion"
+               class="btn btn-success me-2">
+                <i class="bx bxl-paypal me-1"></i> @Localizer["PayBooking"]
+            </a>
+        }
+        <a asp-action="MisReservas" asp-controller="Inicio" class="btn btn-secondary">
+            @Localizer["BackToMyBookings"]
+        </a>
+        <a asp-action="Index" asp-controller="Inicio" class="btn btn-outline-secondary ms-2">
+            @Localizer["BackToHome"]
+        </a>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.getElementById('selectMotivoCancelar').addEventListener('change', function () {
+            var detalle = document.getElementById('detalleCancelar');
+            if (this.value === 'Otro' || this.value === 'Other') {
+                detalle.style.display = 'block';
+                detalle.querySelector('textarea').required = true;
+            } else {
+                detalle.style.display = 'none';
+                detalle.querySelector('textarea').required = false;
+            }
+        });
+    </script>
+}

@@ -1,0 +1,316 @@
+﻿@model List<SGSWC.UI.Models.PagoUIModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["PaymentManagementTitle"];
+    Layout = "_LayoutInterno";
+    var culture = System.Globalization.CultureInfo.CurrentCulture;
+    var langCode = culture.TwoLetterISOLanguageName;
+    var dataTableLang = langCode == "es" ? "es-ES" : "en-GB";
+}
+
+@* DataTables CSS *@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+<div class="card mb-4 mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="text-center flex-grow-1 m-0">
+            @Localizer["PaymentManagementTitle"]
+        </h4>
+        @* Este contenedor se moverá al slot central del DataTable *@
+        <div id="dtExportSlot" class="d-none">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalExportar">
+                <i class="bx bx-download me-1"></i> @Localizer["GeneratePaymentReport"]
+            </button>
+        </div>
+    </div>
+
+    <div class="card-body">
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bx bx-error-circle me-1"></i>
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                <i class="bx bx-info-circle me-1"></i> @Localizer["NoPaymentData"]
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table id="tablaPagos" class="table table-hover align-middle w-100">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>@Localizer["ReservationId"]</th>
+                            <th>@Localizer["Client"]</th>
+                            <th>@Localizer["Email"]</th>
+                            <th>@Localizer["Service"]</th>
+                            <th>@Localizer["Date"]</th>
+                            <th>@Localizer["Time"]</th>
+                            <th>@Localizer["Total"]</th>
+                            <th>@Localizer["PaymentStatus"]</th>
+                            <th>@Localizer["ReservationStatus"]</th>
+                            <th class="text-center">@Localizer["Actions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pago in Model)
+                        {
+                            <tr>
+                                <td>#@pago.Id_Reservacion</td>
+                                <td>@pago.Nombre_Cliente</td>
+                                <td>@pago.Correo</td>
+                                <td>@pago.Nombre_Servicio</td>
+                                <td>@pago.Fecha</td>
+                                <td>@pago.Hora</td>
+                                <td>₡@pago.Total.ToString("N2")</td>
+                                <td>
+                                    <span class="badge @(pago.Estado_Pago == "pagado" ? "bg-success" : "bg-warning")">
+                                        @Localizer[pago.Estado_Pago]
+                                    </span>
+                                </td>
+                                <td>@pago.Estado_Reservacion</td>
+                                <td class="text-center">
+                                    @if (pago.Estado_Pago == "pendiente")
+                                    {
+                                        <button class="btn btn-sm btn-success btn-pagar"
+                                                data-id="@pago.Id_Reservacion"
+                                                data-cliente="@pago.Nombre_Cliente"
+                                                title="@Localizer["MarkAsPaid"]">
+                                            <i class="bx bx-check-circle"></i> @Localizer["Pay"]
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">@Localizer["Paid"]</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@* Modal de confirmación para cambio de estado *@
+<div class="modal fade" id="modalConfirmarPago" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Localizer["ConfirmPayment"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalCuerpoPago">
+                @Localizer["ConfirmPaymentMessage"]
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    @Localizer["Cancel"]
+                </button>
+                <button type="button" class="btn btn-success" id="btnConfirmarPago">
+                    <i class="bx bx-check-circle me-1"></i> @Localizer["ConfirmPayment"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal de exportación *@
+<div class="modal fade" id="modalExportar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bx bx-download me-1"></i> @Localizer["GeneratePaymentReport"]
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">@Localizer["DateFrom"]</label>
+                        <input type="date" class="form-control" id="fechaDesde" value="@DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">@Localizer["DateTo"]</label>
+                        <input type="date" class="form-control" id="fechaHasta" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <label class="form-label fw-semibold">
+                    <i class="bx bx-file me-1"></i> @Localizer["ExportFormat"]
+                </label>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card border-2 h-100 formato-card-pagos" data-formato="excel" style="cursor:pointer; border-color: #e5e7eb;">
+                            <div class="card-body text-center py-4">
+                                <span class="avatar avatar-lg bg-label-success mb-2" style="width:56px; height:56px;">
+                                    <i class="bx bx-spreadsheet fs-2"></i>
+                                </span>
+                                <h6 class="fw-bold mb-0">@Localizer["ExcelFormat"]</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-2 h-100 formato-card-pagos" data-formato="pdf" style="cursor:pointer; border-color: #e5e7eb;">
+                            <div class="card-body text-center py-4">
+                                <span class="avatar avatar-lg bg-label-danger mb-2" style="width:56px; height:56px;">
+                                    <i class="bx bxs-file-pdf fs-2"></i>
+                                </span>
+                                <h6 class="fw-bold mb-0">@Localizer["PDFFormat"]</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="mensajeFormatoPagos" class="text-danger small mt-2 d-none">
+                    <i class="bx bx-error-circle me-1"></i> @Localizer["FormatSelectionRequired"]
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                <button type="button" id="btnConfirmarExportar" class="btn btn-primary">
+                    <i class="bx bx-download me-1"></i> @Localizer["ExportReport"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        // Inyectar traducciones y configuraciones
+        window.translations = {
+            confirmPayment: '@Localizer["ConfirmPayment"]',
+            confirmPaymentMessage: '@Localizer["ConfirmPaymentMessage"]',
+            cancel: '@Localizer["Cancel"]',
+            confirm: '@Localizer["Confirm"]',
+            paymentSuccess: '@Localizer["PaymentSuccess"]',
+            paymentBlocked: '@Localizer["PaymentBlocked"]',
+            paymentError: '@Localizer["PaymentError"]',
+            connectionError: '@Localizer["ConnectionError"]',
+            markAsPaid: '@Localizer["MarkAsPaid"]',
+            paid: '@Localizer["Paid"]',
+            dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
+        };
+        window.locale = '@langCode';
+
+        $(document).ready(function() {
+            // ---------- DataTable con DOM personalizado ----------
+            $('#tablaPagos').DataTable({
+                language: {
+                    url: window.translations.dataTableLanguageUrl
+                },
+                columnDefs: [
+                    { orderable: false, targets: -1 } // última columna (acciones) no ordenable
+                ],
+                order: [[0, 'desc']], // ordenar por # reserva descendente
+                pageLength: 10,
+                dom: '<"row mb-2 align-items-center"' +
+                    '<"col-sm-3"l>' +
+                    '<"#dtExportSlot.col-sm-6 text-center">' +
+                    '<"col-sm-3"f>' +
+                    '>rtip',
+                initComplete: function() {
+                    // Mover el contenido del slot oculto al contenedor central de DataTable
+                    var exportHtml = $('#dtExportSlot').html();
+                    $('div#dtExportSlot').html(exportHtml);
+                    // El contenedor original ya no se necesita
+                }
+            });
+
+            // ---------- Cambio de estado (botón Pagar) ----------
+            let idReservacionActual = 0;
+
+            $('#tablaPagos').on('click', '.btn-pagar', function() {
+                idReservacionActual = $(this).data('id');
+                var cliente = $(this).data('cliente');
+                $('#modalCuerpoPago').text(
+                    window.translations.confirmPaymentMessage.replace('{0}', cliente)
+                );
+                $('#modalConfirmarPago').modal('show');
+            });
+
+            $('#btnConfirmarPago').click(function() {
+                if (idReservacionActual === 0) return;
+
+                var request = {
+                    Id_Reservacion: idReservacionActual,
+                    Estado_Pago_Nuevo: 'pagado',
+                    Id_Metodo: null,
+                    Referencia_Externa: null
+                };
+
+                $.ajax({
+                    url: '@Url.Action("CambiarEstadoPago", "Crm")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(request),
+                    success: function(response) {
+                        if (response.exito) {
+                            showToast('success', window.translations.paymentSuccess);
+                            location.reload();
+                        } else if (response.bloqueado) {
+                            showToast('warning', window.translations.paymentBlocked);
+                        } else {
+                            showToast('danger', response.mensaje || window.translations.paymentError);
+                        }
+                        $('#modalConfirmarPago').modal('hide');
+                    },
+                    error: function() {
+                        showToast('danger', window.translations.connectionError);
+                        $('#modalConfirmarPago').modal('hide');
+                    }
+                });
+            });
+
+            // ---------- Modal de exportación ----------
+            let formatoSeleccionado = '';
+            const tarjetas = document.querySelectorAll('.formato-card-pagos');
+            const mensajeFormato = document.getElementById('mensajeFormatoPagos');
+
+            tarjetas.forEach(tarjeta => {
+                tarjeta.addEventListener('click', function() {
+                    tarjetas.forEach(c => {
+                        c.style.borderColor = '#e5e7eb';
+                        c.classList.remove('shadow');
+                    });
+                    this.style.borderColor = '#4f46e5';
+                    this.classList.add('shadow');
+                    formatoSeleccionado = this.dataset.formato;
+                    mensajeFormato.classList.add('d-none');
+                });
+            });
+
+            document.getElementById('btnConfirmarExportar').addEventListener('click', function() {
+                if (!formatoSeleccionado) {
+                    mensajeFormato.classList.remove('d-none');
+                    return;
+                }
+                var url = '@Url.Action("ExportarEstadoPagos", "Crm")?formato=' + formatoSeleccionado;
+                window.location.href = url;
+            });
+
+            // ---------- Helper para toast ----------
+            function showToast(type, message) {
+                var alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                    message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>';
+                var container = document.querySelector('.card-body');
+                if (container) {
+                    container.insertAdjacentHTML('afterbegin', alertHtml);
+                } else {
+                    alert(message);
+                }
+            }
+        });
+    </script>
+}

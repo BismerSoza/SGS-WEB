@@ -1,0 +1,98 @@
+﻿@{
+    Layout = "_LayoutLanding";
+    ViewData["Title"] = "Web Clean | " + Localizer["AboutTitle"];
+}
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+
+<div class="container-fluid pb-5 bg-primary hero-header">
+    <div class="container py-5">
+        <div class="row g-3 align-items-center">
+            <div class="col-lg-6 text-center text-lg-start">
+                <h1 class="display-1 mb-0 animated slideInLeft">@Localizer["AboutHeroTitle"]</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
+                        <img class="img-fluid" src="~/img/about-1.jpg" alt="@Localizer["CleaningTeamAlt"]">
+                    </div>
+                    <div class="col-6 wow fadeIn" data-wow-delay="0.3s">
+                        <img class="img-fluid h-100" src="~/img/about-2.jpg" alt="@Localizer["CleanSpaceAlt"]">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                <h1 class="mb-5">
+                    <span class="text-uppercase text-primary bg-light px-2">@Localizer["Our"]</span> @Localizer["StoryTitle"]
+                </h1>
+                <p class="mb-4">
+                    @Localizer["StoryDesc1"]
+                </p>
+                <p class="mb-4">
+                    @Localizer["StoryDesc2"]
+                </p>
+                <p class="mb-4">
+                    @Localizer["StoryDesc3"]
+                </p>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <h6 class="mb-3"><i class="fa fa-check text-primary me-2"></i>@Localizer["TrainedStaff"]</h6>
+                        <h6 class="mb-0"><i class="fa fa-check text-primary me-2"></i>@Localizer["ServiceSupport"]</h6>
+                    </div>
+                    <div class="col-sm-6">
+                        <h6 class="mb-3"><i class="fa fa-check text-primary me-2"></i>@Localizer["OnlineTracking"]</h6>
+                        <h6 class="mb-0"><i class="fa fa-check text-primary me-2"></i>@Localizer["ClearPrices"]</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="text-center wow fadeIn" data-wow-delay="0.1s">
+            <h1 class="mb-5">
+                @Localizer["WhyChooseTitle"] <span class="text-uppercase text-primary bg-light px-2">@Localizer["WhyChooseHighlight"]</span>
+            </h1>
+        </div>
+        <div class="row g-5 align-items-center text-center">
+            <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
+                <i class="fa fa-calendar-alt fa-5x text-primary mb-4"></i>
+                <h4>@Localizer["FlexibleSchedule"]</h4>
+                <p class="mb-0">@Localizer["FlexibleScheduleDesc"]</p>
+            </div>
+            <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
+                <i class="fa fa-tasks fa-5x text-primary mb-4"></i>
+                <h4>@Localizer["AttentionToDetail"]</h4>
+                <p class="mb-0">@Localizer["AttentionToDetailDesc"]</p>
+            </div>
+            <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
+                <i class="fa fa-pencil-ruler fa-5x text-primary mb-4"></i>
+                <h4>@Localizer["TrainedTeam"]</h4>
+                <p class="mb-0">@Localizer["TrainedTeamDesc"]</p>
+            </div>
+            <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
+                <i class="fa fa-user fa-5x text-primary mb-4"></i>
+                <h4>@Localizer["CustomerFocus"]</h4>
+                <p class="mb-0">@Localizer["CustomerFocusDesc"]</p>
+            </div>
+            <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
+                <i class="fa fa-hand-holding-usd fa-5x text-primary mb-4"></i>
+                <h4>@Localizer["ClearPricing"]</h4>
+                <p class="mb-0">@Localizer["ClearPricingDesc"]</p>
+            </div>
+            <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
+                <i class="fa fa-check fa-5x text-primary mb-4"></i>
+                <h4>@Localizer["SafeProducts"]</h4>
+                <p class="mb-0">@Localizer["SafeProductsDesc"]</p>
+            </div>
+        </div>
+    </div>
+</div>

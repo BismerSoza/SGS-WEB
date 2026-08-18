@@ -1,0 +1,261 @@
+﻿@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["ExportReportsTitle"];
+}
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="fw-bold py-1 mb-2">
+                <i class="bx bx-file-export me-1"></i> @Localizer["ExportReportsTitle"]
+            </h4>
+            <p class="text-muted">@Localizer["ExportReportsSubtitle"]</p>
+        </div>
+    </div>
+
+    @if (TempData["ErrorReporte"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bx bx-error-circle me-1"></i>
+            @TempData["ErrorReporte"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bx bx-filter-alt me-1"></i> @Localizer["ConfigureReport"]
+                    </h5>
+                </div>
+                <div class="card-body">
+
+                    <form id="formReporte" method="get">
+
+                        <!-- Rango de fechas -->
+                        <!-- HU-RE-001: Selector de tipo de período -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bx bx-calendar-event me-1"></i> @Localizer["PeriodType"]
+                            </label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="tipoPeriodo" id="tipoRango" value="rango" checked>
+                                <label class="btn btn-outline-primary" for="tipoRango">@Localizer["CustomDateRange"]</label>
+
+                                <input type="radio" class="btn-check" name="tipoPeriodo" id="tipoMensual" value="mensual">
+                                <label class="btn btn-outline-primary" for="tipoMensual">@Localizer["SpecificMonth"]</label>
+                            </div>
+                        </div>
+
+                        <!-- Rango de fechas (HU-RE-004) -->
+                        <div class="row mb-4" id="bloqueRango">
+                            <div class="col-md-6 mb-3">
+                                <label for="fechaDesde" class="form-label fw-semibold">
+                                    <i class="bx bx-calendar me-1"></i> @Localizer["StartDate"]
+                                </label>
+                                <input type="date" id="fechaDesde" name="fechaDesde" class="form-control"
+                                       value="@DateTime.Now.ToString("yyyy-MM-01")" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="fechaHasta" class="form-label fw-semibold">
+                                    <i class="bx bx-calendar-check me-1"></i> @Localizer["EndDate"]
+                                </label>
+                                <input type="date" id="fechaHasta" name="fechaHasta" class="form-control"
+                                       value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                            </div>
+                        </div>
+
+                        <!-- Mes específico (HU-RE-001) -->
+                        <div class="row mb-4 d-none" id="bloqueMensual">
+                            <div class="col-md-6 mb-3">
+                                <label for="mesReporte" class="form-label fw-semibold">
+                                    <i class="bx bx-calendar me-1"></i> @Localizer["Month"]
+                                </label>
+                                <select id="mesReporte" name="mesReporte" class="form-select">
+                                    @for (int m = 1; m <= 12; m++)
+                                    {
+                                        <option value="@m" selected="@(m == DateTime.Now.Month)">
+                                            @System.Globalization.CultureInfo.GetCultureInfo("es-CR").DateTimeFormat.GetMonthName(m)
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="anioReporte" class="form-label fw-semibold">
+                                    <i class="bx bx-calendar-check me-1"></i> @Localizer["Year"]
+                                </label>
+                                <select id="anioReporte" name="anioReporte" class="form-select">
+                                    @for (int a = DateTime.Now.Year; a >= DateTime.Now.Year - 4; a--)
+                                    {
+                                        <option value="@a" selected="@(a == DateTime.Now.Year)">@a</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Formato -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bx bx-file me-1"></i> @Localizer["ExportFormat"]
+                            </label>
+                            <div class="row g-3">
+                                <!-- Opción Excel -->
+                                <div class="col-md-6">
+                                    <div class="card border-2 h-100 formato-card" data-formato="excel" style="cursor:pointer; border-color: #e5e7eb;">
+                                        <div class="card-body text-center py-4">
+                                            <div class="mb-3">
+                                                <span class="avatar avatar-lg bg-label-success" style="width:56px; height:56px;">
+                                                    <i class="bx bx-spreadsheet fs-2"></i>
+                                                </span>
+                                            </div>
+                                            <h6 class="fw-bold mb-1">@Localizer["ExcelFormat"]</h6>
+                                            <small class="text-muted">
+                                                @Localizer["ExcelDescription"]
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Opción PDF -->
+                                <div class="col-md-6">
+                                    <div class="card border-2 h-100 formato-card" data-formato="pdf" style="cursor:pointer; border-color: #e5e7eb;">
+                                        <div class="card-body text-center py-4">
+                                            <div class="mb-3">
+                                                <span class="avatar avatar-lg bg-label-danger" style="width:56px; height:56px;">
+                                                    <i class="bx bxs-file-pdf fs-2"></i>
+                                                </span>
+                                            </div>
+                                            <h6 class="fw-bold mb-1">@Localizer["PDFFormat"]</h6>
+                                            <small class="text-muted">
+                                                @Localizer["PDFDescription"]
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="formato" name="formato" value="" />
+                            <div id="mensajeFormato" class="text-danger small mt-2 d-none">
+                                <i class="bx bx-error-circle me-1"></i> @Localizer["FormatSelectionRequired"]
+                            </div>
+                        </div>
+
+                        <!-- Botón exportar -->
+                        <div class="d-grid">
+                            <button type="submit" id="btnExportar" class="btn btn-primary btn-lg">
+                                <i class="bx bx-download me-1"></i> @Localizer["ExportReport"]
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const t = {
+        fromDateGreaterThanToDate: '@Localizer["FromDateGreaterThanToDate"]',
+        formatSelectionRequired: '@Localizer["FormatSelectionRequired"]'
+    };
+
+    const tarjetas = document.querySelectorAll('.formato-card');
+    const inputFormato = document.getElementById('formato');
+    const mensajeFormato = document.getElementById('mensajeFormato');
+    const bloqueRango = document.getElementById('bloqueRango');
+    const bloqueMensual = document.getElementById('bloqueMensual');
+    const radiosPeriodo = document.querySelectorAll('input[name="tipoPeriodo"]');
+
+    // HU-RE-001: Alternar entre rango de fechas y mes específico
+    radiosPeriodo.forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (radio.value === 'mensual' && radio.checked) {
+                bloqueRango.classList.add('d-none');
+                bloqueMensual.classList.remove('d-none');
+            }
+            else if (radio.value === 'rango' && radio.checked) {
+                bloqueMensual.classList.add('d-none');
+                bloqueRango.classList.remove('d-none');
+            }
+        });
+    });
+
+    // Selección del formato
+    tarjetas.forEach(tarjeta => {
+        tarjeta.addEventListener('click', () => {
+
+            tarjetas.forEach(c => {
+                c.style.borderColor = '#e5e7eb';
+                c.classList.remove('shadow');
+            });
+
+            tarjeta.style.borderColor = '#4f46e5';
+            tarjeta.classList.add('shadow');
+
+            inputFormato.value = tarjeta.dataset.formato;
+            mensajeFormato.classList.add('d-none');
+        });
+    });
+
+    document.getElementById('formReporte').addEventListener('submit', function (e) {
+
+        e.preventDefault();
+
+        const formato = inputFormato.value;
+        const esMensual = document.getElementById('tipoMensual').checked;
+
+        let valido = true;
+
+        // Validar formato
+        if (!formato) {
+            mensajeFormato.classList.remove('d-none');
+            valido = false;
+        }
+
+        if (!valido)
+            return;
+
+        if (esMensual) {
+
+            // HU-RE-001: Reporte mensual
+            const mes = document.getElementById('mesReporte').value;
+            const anio = document.getElementById('anioReporte').value;
+
+            const params = new URLSearchParams({
+                formato: formato,
+                mes: mes,
+                anio: anio
+            });
+
+            window.location.href =
+                '@Url.Action("ExportarReporteMensual", "Crm")?' +
+                params.toString();
+
+            return;
+        }
+
+        // HU-RE-004: Reporte por rango
+        const fechaDesde = document.getElementById('fechaDesde').value;
+        const fechaHasta = document.getElementById('fechaHasta').value;
+
+        if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
+            alert(t.fromDateGreaterThanToDate);
+            return;
+        }
+
+        const params = new URLSearchParams({
+            formato: formato,
+            fechaDesde: fechaDesde,
+            fechaHasta: fechaHasta
+        });
+
+        window.location.href =
+            '@Url.Action("ExportarReporte", "Crm")?' +
+            params.toString();
+    });
+</script>

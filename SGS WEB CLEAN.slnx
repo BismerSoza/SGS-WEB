@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SGSWC.API/SGSWC.API.csproj" Id="244aada0-ebd4-4040-abf6-a3fcf60abc2e" />
+  <Project Path="SGSWC.UI/SGSWC.UI.csproj" />
+  <Project Path="Utiles/Utiles.csproj" Id="ffde1b1f-0cdf-4c84-8070-b1515f505aaa" />
+</Solution>

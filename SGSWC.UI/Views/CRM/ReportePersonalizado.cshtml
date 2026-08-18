@@ -1,0 +1,142 @@
+﻿@model IEnumerable<SGSWC.UI.Models.ReporteServiciosModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["CustomReportTitle"];
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-1 mb-4">
+        <i class="bx bx-filter-alt me-1"></i> @Localizer["CustomReportTitle"]
+    </h4>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            <i class="bx bx-error-circle me-1"></i> @ViewBag.Error
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">@Localizer["Filters"]</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-action="ReportePersonalizado" asp-controller="CRM">
+                <input type="hidden" name="generado" value="true" />
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">@Localizer["StartDate"]</label>
+                        <input type="date" name="fechaDesde" class="form-control"
+                               value="@ViewBag.FechaDesde" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">@Localizer["EndDate"]</label>
+                        <input type="date" name="fechaHasta" class="form-control"
+                               value="@ViewBag.FechaHasta" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">@Localizer["PaymentStatus"]</label>
+                        <select name="estadoPago" class="form-select">
+                            <option value="">@Localizer["All"]</option>
+                            <option value="pendiente" selected="@(ViewBag.EstadoPago == "pendiente")">@Localizer["Pending"]</option>
+                            <option value="pagado" selected="@(ViewBag.EstadoPago == "pagado")">@Localizer["Paid"]</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">@Localizer["BookingStatus"]</label>
+                        <select name="idEstado" class="form-select">
+                            <option value="">@Localizer["All"]</option>
+                            <option value="1" selected="@(ViewBag.IdEstado?.ToString() == "1")">@Localizer["Pending"]</option>
+                            <option value="2" selected="@(ViewBag.IdEstado?.ToString() == "2")">@Localizer["Confirmed"]</option>
+                            <option value="3" selected="@(ViewBag.IdEstado?.ToString() == "3")">@Localizer["Cancelled"]</option>
+                            <option value="4" selected="@(ViewBag.IdEstado?.ToString() == "4")">@Localizer["Completed"]</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bx bx-search me-1"></i> @Localizer["Generate"]
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (ViewBag.Generado == true)
+    {
+        if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                <i class="bx bx-info-circle me-1"></i> @Localizer["NoDataForFilters"]
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">@string.Format(Localizer["ResultsWithCount"], Model.Count())</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Id"]</th>
+                                <th>@Localizer["Date"]</th>
+                                <th>@Localizer["Time"]</th>
+                                <th>@Localizer["Client"]</th>
+                                <th>@Localizer["Service"]</th>
+                                <th>@Localizer["Total"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["PaymentStatus"]</th>
+                                <th>@Localizer["Employee"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.IdReservacion</td>
+                                    <td>@item.FechaReserva</td>
+                                    <td>@item.HoraReserva</td>
+                                    <td>@item.NombreCliente</td>
+                                    <td>@item.NombreServicio</td>
+                                    <td>₡@item.TotalReservacion.ToString("N2")</td>
+                                    <td>
+                                        @{
+                                            var estadoClase = item.EstadoReservacion switch
+                                            {
+                                                "Pendiente" => "bg-warning text-dark",
+                                                "Cancelada" => "bg-danger",
+                                                "Confirmada" => "bg-info",
+                                                _ => "bg-success"
+                                            };
+                                            var estadoTraducido = item.EstadoReservacion switch
+                                            {
+                                                "Pendiente" => Localizer["Pending"].Value,
+                                                "Cancelada" => Localizer["Cancelled"].Value,
+                                                "Confirmada" => Localizer["Confirmed"].Value,
+                                                "Completada" => Localizer["Completed"].Value,
+                                                _ => item.EstadoReservacion
+                                            };
+                                        }
+                                        <span class="badge @estadoClase">@estadoTraducido</span>
+                                    </td>
+                                    <td>@item.EstadoPago</td>
+                                    <td>@item.NombreEmpleado</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="fw-bold">
+                                <td colspan="5" class="text-end">@Localizer["TotalLabel"]:</td>
+                                <td>₡@Model.Sum(m => m.TotalReservacion).ToString("N2")</td>
+                                <td colspan="3"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</div>

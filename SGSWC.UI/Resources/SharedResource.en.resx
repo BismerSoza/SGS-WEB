@@ -1,0 +1,2269 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+	
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+
+
+	<data name="Mantenimientos" xml:space="preserve">
+    <value>Maintenance</value>
+  </data>
+	<data name="Empresa" xml:space="preserve">
+    <value>Company</value>
+  </data>
+	<data name="Productos" xml:space="preserve">
+    <value>Products</value>
+  </data>
+	<data name="MisReservas" xml:space="preserve">
+    <value>My Bookings</value>
+  </data>
+	<data name="Resenas" xml:space="preserve">
+    <value>Reviews</value>
+  </data>
+	<data name="Usuarios" xml:space="preserve">
+    <value>Users</value>
+  </data>
+	<data name="Roles" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+	<data name="HistorialAccesos" xml:space="preserve">
+    <value>Access History</value>
+  </data>
+	<data name="CompararServicios" xml:space="preserve">
+    <value>Compare Services</value>
+  </data>
+	<data name="GestionServicios" xml:space="preserve">
+    <value>Service Management</value>
+  </data>
+	<data name="Calendario" xml:space="preserve">
+    <value>Calendar</value>
+  </data>
+	<data name="Reportes" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+	<data name="ReporteClientesFrecuentes" xml:space="preserve">
+    <value>Frequent Customers Report</value>
+  </data>
+	<data name="HorariosSolicitados" xml:space="preserve">
+    <value>Requested Schedules Report</value>
+  </data>
+	<data name="ReportePersonalizado" xml:space="preserve">
+    <value>Custom Report</value>
+  </data>
+	<data name="Perfil" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+	<data name="PerfilDe" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+	<data name="Seguridad" xml:space="preserve">
+    <value>Security</value>
+  </data>
+	<data name="CambiarCorreo" xml:space="preserve">
+    <value>Change Email</value>
+  </data>
+	<data name="CambiarContrasena" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+	<data name="CerrarSesion" xml:space="preserve">
+    <value>Log Out</value>
+  </data>
+	<data name="NuevoCorreo" xml:space="preserve">
+    <value>New Email</value>
+  </data>
+	<data name="Cancelar" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+	<data name="Guardar" xml:space="preserve">
+    <value>Save</value>
+  </data>
+	<data name="ContrasenaActual" xml:space="preserve">
+    <value>Current Password</value>
+  </data>
+	<data name="NuevaContrasena" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+	<data name="ConfirmarNuevaContrasena" xml:space="preserve">
+    <value>Confirm New Password</value>
+  </data>
+	<data name="ReqLongitud" xml:space="preserve">
+    <value>Minimum 8 characters, maximum 12</value>
+  </data>
+	<data name="ReqMayus" xml:space="preserve">
+    <value>At least 1 uppercase letter</value>
+  </data>
+	<data name="ReqMinus" xml:space="preserve">
+    <value>At least 1 lowercase letter</value>
+  </data>
+	<data name="ReqEspecial" xml:space="preserve">
+    <value>At least one special character (!@#$%...)</value>
+  </data>
+	<data name="CambioContrasenaRequerido" xml:space="preserve">
+    <value>Password Change Required</value>
+  </data>
+	<data name="CambioContrasenaMensaje" xml:space="preserve">
+    <value>For security reasons, you must set a new password before continuing.</value>
+  </data>
+	<data name="GuardarYContinuar" xml:space="preserve">
+    <value>Save and continue</value>
+  </data>
+	<data name="DashboardTitle" xml:space="preserve">
+    <value>Dashboard</value>
+</data>
+	<data name="NoRecordsForPeriod" xml:space="preserve">
+    <value>No records for the current period ({0}). Indicators will update automatically as new services are registered.</value>
+</data>
+	<data name="ServicesThisMonth" xml:space="preserve">
+    <value>Services this month</value>
+</data>
+	<data name="IncomeThisMonth" xml:space="preserve">
+    <value>Income this month</value>
+</data>
+	<data name="PendingServices" xml:space="preserve">
+    <value>Pending Services Report</value>
+</data>
+	<data name="PendingServicesSubtext" xml:space="preserve">
+    <value>To be confirmed or executed</value>
+</data>
+	<data name="FrequentCustomers" xml:space="preserve">
+    <value>Frequent customers</value>
+</data>
+	<data name="FrequentCustomersSubtext" xml:space="preserve">
+    <value>3+ services in 30 days</value>
+</data>
+	<data name="VsPreviousMonth" xml:space="preserve">
+    <value>vs previous month</value>
+</data>
+	<data name="ServicesByMonth" xml:space="preserve">
+    <value>Services by month</value>
+</data>
+	<data name="AllMonths" xml:space="preserve">
+    <value>All months</value>
+</data>
+	<data name="Trend" xml:space="preserve">
+    <value>Trend</value>
+</data>
+	<data name="Last6Months" xml:space="preserve">
+    <value>Last 6</value>
+</data>
+	<data name="CancellationRateText" xml:space="preserve">
+    <value>{0}% cancellation rate</value>
+</data>
+	<data name="NoCancellationsThisMonth" xml:space="preserve">
+    <value>No cancellations this month</value>
+</data>
+	<data name="TopService" xml:space="preserve">
+    <value>Top service</value>
+</data>
+	<data name="Average" xml:space="preserve">
+    <value>Average</value>
+</data>
+	<data name="ServiceDistribution" xml:space="preserve">
+    <value>Service distribution</value>
+</data>
+	<data name="ServiceDistributionSubtext" xml:space="preserve">
+    <value>Current status — all records</value>
+</data>
+	<data name="ThisMonth" xml:space="preserve">
+    <value>This month</value>
+</data>
+	<data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+</data>
+	<data name="CompletedSubtext" xml:space="preserve">
+    <value>Finished services</value>
+</data>
+	<data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+</data>
+	<data name="PendingSubtext" xml:space="preserve">
+    <value>Awaiting start</value>
+</data>
+	<data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+</data>
+	<data name="CancelledSubtext" xml:space="preserve">
+    <value>Not performed</value>
+</data>
+	<data name="Total" xml:space="preserve">
+    <value>Total</value>
+</data>
+	<data name="CancellationRate" xml:space="preserve">
+    <value>Cancellation rate</value>
+</data>
+	<data name="CancelledThisMonth" xml:space="preserve">
+    <value>{0} service(s) cancelled this month</value>
+</data>
+	<data name="MostRequestedService" xml:space="preserve">
+    <value>Most requested service</value>
+</data>
+	<data name="MostRequestedSubtext" xml:space="preserve">
+    <value>During the current month</value>
+</data>
+	<data name="AveragePerService" xml:space="preserve">
+    <value>Average per service</value>
+</data>
+	<data name="AveragePerServiceSubtext" xml:space="preserve">
+    <value>Average income this month</value>
+</data>
+	<data name="Services" xml:space="preserve">
+    <value>Services</value>
+</data>
+	<data name="ServicesTooltip" xml:space="preserve">
+    <value>services</value>
+</data>
+	<data name="Growth" xml:space="preserve">
+    <value>Growth</value>
+</data>
+	<data name="CalendarTitle" xml:space="preserve">
+    <value>Service Calendar</value>
+</data>
+	<data name="NoServicesThisMonth" xml:space="preserve">
+    <value>No services scheduled for this month.</value>
+</data>
+	<data name="Today" xml:space="preserve">
+    <value>Today</value>
+</data>
+	<data name="ServicesOfTheDay" xml:space="preserve">
+    <value>Today's Services</value>
+</data>
+	<data name="BookingDetail" xml:space="preserve">
+    <value>Booking Detail</value>
+</data>
+	<data name="Hide" xml:space="preserve">
+    <value>hide</value>
+</data>
+	<data name="Close" xml:space="preserve">
+    <value>Close</value>
+</data>
+	<data name="SearchPlaceholder" xml:space="preserve">
+    <value>Search by client or service…</value>
+</data>
+	<data name="NoServicesForDay" xml:space="preserve">
+    <value>No services scheduled for this day.</value>
+</data>
+	<data name="ScheduleConflict" xml:space="preserve">
+    <value>Schedule conflict:</value>
+</data>
+	<data name="ConflictMessage" xml:space="preserve">
+    <value>a service is already scheduled at that exact date and time for this employee. Please choose another time.</value>
+</data>
+	<data name="Hour" xml:space="preserve">
+    <value>Hour</value>
+</data>
+	<data name="Status" xml:space="preserve">
+    <value>Status</value>
+</data>
+	<data name="EstimatedDuration" xml:space="preserve">
+    <value>Est. duration</value>
+</data>
+	<data name="Service" xml:space="preserve">
+    <value>Service</value>
+</data>
+	<data name="Client" xml:space="preserve">
+    <value>Client</value>
+</data>
+	<data name="Employees" xml:space="preserve">
+    <value>Employee(s)</value>
+</data>
+	<data name="Address" xml:space="preserve">
+    <value>Address</value>
+</data>
+	<data name="Observations" xml:space="preserve">
+    <value>Observations</value>
+</data>
+	<data name="AssignEmployee" xml:space="preserve">
+    <value>Assign employee</value>
+</data>
+	<data name="LoadingAvailability" xml:space="preserve">
+    <value>Loading availability…</value>
+</data>
+	<data name="ErrorLoadingEmployees" xml:space="preserve">
+    <value>Error loading employees.</value>
+</data>
+	<data name="NoActiveEmployees" xml:space="preserve">
+    <value>No active employees.</value>
+</data>
+	<data name="SaveAssignment" xml:space="preserve">
+    <value>Save assignment</value>
+</data>
+	<data name="StartTime" xml:space="preserve">
+    <value>Start time</value>
+</data>
+	<data name="DurationMinutes" xml:space="preserve">
+    <value>Duration (min)</value>
+</data>
+	<data name="AssignmentStatus" xml:space="preserve">
+    <value>Assignment status</value>
+</data>
+	<data name="Employee" xml:space="preserve">
+    <value>Employee</value>
+</data>
+	<data name="Unassigned" xml:space="preserve">
+    <value>Unassigned</value>
+</data>
+	<data name="OneBooking" xml:space="preserve">
+    <value>1 booking</value>
+</data>
+	<data name="MultipleBookings" xml:space="preserve">
+    <value>{0} bookings</value>
+</data>
+	<data name="SaveSuccess" xml:space="preserve">
+    <value>✅ {0}</value>
+</data>
+	<data name="SaveError" xml:space="preserve">
+    <value>❌ Error: {0}</value>
+</data>
+	<data name="NetworkError" xml:space="preserve">
+    <value>❌ Network error: {0}</value>
+</data>
+	<data name="SelectEmployee" xml:space="preserve">
+    <value>Please select an employee.</value>
+</data>
+	<data name="Saving" xml:space="preserve">
+    <value>Saving…</value>
+</data>
+	<data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+</data>
+	<data name="Confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+</data>
+	<data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+</data>
+	<data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+</data>
+	<data name="UserManagementTitle" xml:space="preserve">
+    <value>User Management</value>
+</data>
+	<data name="UserManagementSubtitle" xml:space="preserve">
+    <value>Manage the access status of system users.</value>
+</data>
+	<data name="Id" xml:space="preserve">
+    <value>#</value>
+</data>
+	<data name="Name" xml:space="preserve">
+    <value>Name</value>
+</data>
+	<data name="Email" xml:space="preserve">
+    <value>Email</value>
+</data>
+	<data name="Role" xml:space="preserve">
+    <value>Role</value>
+</data>
+	<data name="RegistrationDate" xml:space="preserve">
+    <value>Registration Date</value>
+</data>
+	<data name="Status" xml:space="preserve">
+    <value>Status</value>
+</data>
+	<data name="ActivateUser" xml:space="preserve">
+    <value>Activate user</value>
+</data>
+	<data name="DeactivateUser" xml:space="preserve">
+    <value>Deactivate user</value>
+</data>
+	<data name="ConfirmAction" xml:space="preserve">
+    <value>Confirm action</value>
+</data>
+	<data name="ConfirmChangeStatus" xml:space="preserve">
+    <value>Are you sure you want to {0} user "{1}"?</value>
+</data>
+	<data name="ConfirmChangeStatusPlaceholder" xml:space="preserve">
+    <value>Are you sure you want to change the status of this user?</value>
+</data>
+	<data name="Activate" xml:space="preserve">
+    <value>Activate</value>
+</data>
+	<data name="Deactivate" xml:space="preserve">
+    <value>Deactivate</value>
+</data>
+	<data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+</data>
+	<data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+</data>
+	<data name="UserActivated" xml:space="preserve">
+    <value>User "{0}" activated successfully.</value>
+</data>
+	<data name="UserDeactivated" xml:space="preserve">
+    <value>User "{0}" deactivated successfully.</value>
+</data>
+	<data name="ErrorChangeStatus" xml:space="preserve">
+    <value>Could not change status. Please try again.</value>
+</data>
+	<data name="ConnectionError" xml:space="preserve">
+    <value>Server connection error.</value>
+</data>
+	<data name="ActivateTooltip" xml:space="preserve">
+    <value>Activate user</value>
+</data>
+	<data name="DeactivateTooltip" xml:space="preserve">
+    <value>Deactivate user</value>
+</data>
+	<data name="UserManagementTitle" xml:space="preserve">
+    <value>User Management</value>
+</data>
+	<data name="NoUsersRegistered" xml:space="preserve">
+    <value>No users registered.</value>
+</data>
+	<data name="Id" xml:space="preserve">
+    <value>#</value>
+</data>
+	<data name="Name" xml:space="preserve">
+    <value>Name</value>
+</data>
+	<data name="Email" xml:space="preserve">
+    <value>Email</value>
+</data>
+	<data name="Role" xml:space="preserve">
+    <value>Role</value>
+</data>
+	<data name="Status" xml:space="preserve">
+    <value>Status</value>
+</data>
+	<data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+</data>
+	<data name="Active" xml:space="preserve">
+    <value>Active</value>
+</data>
+	<data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+</data>
+	<data name="AssignRole" xml:space="preserve">
+    <value>Assign Role</value>
+</data>
+	<data name="UserLabel" xml:space="preserve">
+    <value>User</value>
+</data>
+	<data name="SelectRole" xml:space="preserve">
+    <value>Select Role</value>
+</data>
+	<data name="SelectRoleDefault" xml:space="preserve">
+    <value>-- Select a role --</value>
+</data>
+	<data name="RoleAdmin" xml:space="preserve">
+    <value>Administrator</value>
+</data>
+	<data name="RoleSupervisor" xml:space="preserve">
+    <value>Supervisor</value>
+</data>
+	<data name="RoleOperative" xml:space="preserve">
+    <value>Operative User</value>
+</data>
+	<data name="RoleClient" xml:space="preserve">
+    <value>Client</value>
+</data>
+	<data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+</data>
+	<data name="Save" xml:space="preserve">
+    <value>Save</value>
+</data>
+	<data name="AccessLogTitle" xml:space="preserve">
+    <value>Access Log</value>
+</data>
+	<data name="StartDate" xml:space="preserve">
+    <value>Start date</value>
+</data>
+	<data name="EndDate" xml:space="preserve">
+    <value>End date</value>
+</data>
+	<data name="Filter" xml:space="preserve">
+    <value>Filter</value>
+</data>
+	<data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+</data>
+	<data name="NoAccessRecords" xml:space="preserve">
+    <value>No access records.</value>
+</data>
+	<data name="Id" xml:space="preserve">
+    <value>#</value>
+</data>
+	<data name="User" xml:space="preserve">
+    <value>User</value>
+</data>
+	<data name="Email" xml:space="preserve">
+    <value>Email</value>
+</data>
+	<data name="Event" xml:space="preserve">
+    <value>Event</value>
+</data>
+	<data name="Status" xml:space="preserve">
+    <value>Status</value>
+</data>
+	<data name="DateTime" xml:space="preserve">
+    <value>Date/Time</value>
+</data>
+	<data name="IP" xml:space="preserve">
+    <value>IP</value>
+</data>
+	<data name="Login" xml:space="preserve">
+    <value>Login</value>
+</data>
+	<data name="LoginFailed" xml:space="preserve">
+    <value>Login failed</value>
+</data>
+	<data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+</data>
+	<data name="Successful" xml:space="preserve">
+    <value>Successful</value>
+</data>
+	<data name="Failed" xml:space="preserve">
+    <value>Failed</value>
+</data>
+	<data name="NotAvailable" xml:space="preserve">
+    <value>N/A</value>
+</data>
+	<data name="CompareServicesTitle" xml:space="preserve">
+    <value>Compare Services</value>
+</data>
+	<data name="MostRequestedServices" xml:space="preserve">
+    <value>Most Requested Services</value>
+</data>
+	<data name="NoDataAvailable" xml:space="preserve">
+    <value>No data available.</value>
+</data>
+	<data name="Position" xml:space="preserve">
+    <value>Position</value>
+</data>
+	<data name="Service" xml:space="preserve">
+    <value>Service</value>
+</data>
+	<data name="TotalRequested" xml:space="preserve">
+    <value>Total Requested</value>
+</data>
+	<data name="Percentage" xml:space="preserve">
+    <value>Percentage</value>
+</data>
+	<data name="RelativeFrequency" xml:space="preserve">
+    <value>Relative Frequency</value>
+</data>
+	<data name="TimesRequested" xml:space="preserve">
+    <value>Times requested</value>
+</data>
+	<data name="ServiceManagementTitle" xml:space="preserve">
+    <value>Service Management</value>
+</data>
+	<data name="Client" xml:space="preserve">
+    <value>Client</value>
+</data>
+	<data name="Service" xml:space="preserve">
+    <value>Service</value>
+</data>
+	<data name="Date" xml:space="preserve">
+    <value>Date</value>
+</data>
+	<data name="Status" xml:space="preserve">
+    <value>Status</value>
+</data>
+	<data name="ChangeStatus" xml:space="preserve">
+    <value>Change status</value>
+</data>
+	<data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+</data>
+	<data name="Accepted" xml:space="preserve">
+    <value>Accepted</value>
+</data>
+	<data name="Confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+</data>
+	<data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+</data>
+	<data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+</data>
+	<data name="Update" xml:space="preserve">
+    <value>Update</value>
+</data>
+	<data name="FinalStatus" xml:space="preserve">
+    <value>Final status</value>
+</data>
+	<data name="ViewHistory" xml:space="preserve">
+    <value>View history</value>
+</data>
+	<data name="ExportReportsTitle" xml:space="preserve">
+    <value>Export Reports</value>
+</data>
+	<data name="ExportReportsSubtitle" xml:space="preserve">
+    <value>Generate reports of bookings and services in PDF or Excel format.</value>
+</data>
+	<data name="ConfigureReport" xml:space="preserve">
+    <value>Configure Report</value>
+</data>
+	<data name="StartDate" xml:space="preserve">
+    <value>Start Date</value>
+</data>
+	<data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+</data>
+	<data name="ExportFormat" xml:space="preserve">
+    <value>Export Format</value>
+</data>
+	<data name="ExcelFormat" xml:space="preserve">
+    <value>Excel (.xlsx)</value>
+</data>
+	<data name="ExcelDescription" xml:space="preserve">
+    <value>Editable table with totals, colors and professional formatting. Ideal for analysis and filters.</value>
+</data>
+	<data name="PDFFormat" xml:space="preserve">
+    <value>PDF (.pdf)</value>
+</data>
+	<data name="PDFDescription" xml:space="preserve">
+    <value>Document ready to print or share with management. Includes summary and detail per booking.</value>
+</data>
+	<data name="ExportReport" xml:space="preserve">
+    <value>Export Report</value>
+</data>
+	<data name="FormatSelectionRequired" xml:space="preserve">
+    <value>You must select a format.</value>
+</data>
+	<data name="FromDateGreaterThanToDate" xml:space="preserve">
+    <value>The "Start Date" cannot be later than the "End Date".</value>
+</data>
+	<data name="ProjectTitle" xml:space="preserve">
+    <value>Web Clean Project</value>
+</data>
+	<data name="NewEmail" xml:space="preserve">
+    <value>New Email</value>
+</data>
+	<data name="CurrentPassword" xml:space="preserve">
+    <value>Current Password</value>
+</data>
+	<data name="NewPassword" xml:space="preserve">
+    <value>New Password</value>
+</data>
+	<data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Confirm New Password</value>
+</data>
+	<data name="ReqLongitud" xml:space="preserve">
+    <value>Minimum 8 characters, maximum 12</value>
+</data>
+	<data name="ReqMayus" xml:space="preserve">
+    <value>At least 1 uppercase letter</value>
+</data>
+	<data name="ReqMinus" xml:space="preserve">
+    <value>At least 1 lowercase letter</value>
+</data>
+	<data name="ReqEspecial" xml:space="preserve">
+    <value>At least one special character (!@#$%...)</value>
+</data>
+	<data name="CambioContrasenaRequerido" xml:space="preserve">
+    <value>Password Change Required</value>
+</data>
+	<data name="CambioContrasenaMensaje" xml:space="preserve">
+    <value>For security reasons, you must set a new password before continuing.</value>
+</data>
+	<data name="GuardarYContinuar" xml:space="preserve">
+    <value>Save and continue</value>
+</data>
+	<!-- Las siguientes claves ya deberían existir en inglés, pero se incluyen por consistencia -->
+	<data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+</data>
+	<data name="Save" xml:space="preserve">
+    <value>Save</value>
+</data>
+	<data name="CambiarCorreo" xml:space="preserve">
+    <value>Change Email</value>
+</data>
+	<data name="CambiarContrasena" xml:space="preserve">
+    <value>Change Password</value>
+</data>
+	<data name="CerrarSesion" xml:space="preserve">
+    <value>Log Out</value>
+</data>
+	<data name="PerfilDe" xml:space="preserve">
+    <value>Profile</value>
+</data>
+	<data name="Perfil" xml:space="preserve">
+    <value>Profile</value>
+</data>
+	<data name="Seguridad" xml:space="preserve">
+    <value>Security</value>
+</data>
+	<data name="CustomReportTitle" xml:space="preserve">
+    <value>Custom Report</value>
+</data>
+	<data name="Filters" xml:space="preserve">
+    <value>Filters</value>
+</data>
+	<data name="PaymentStatus" xml:space="preserve">
+    <value>Payment Status</value>
+</data>
+	<data name="BookingStatus" xml:space="preserve">
+    <value>Booking Status</value>
+</data>
+	<data name="All" xml:space="preserve">
+    <value>All</value>
+</data>
+	<data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+</data>
+	<data name="Paid" xml:space="preserve">
+    <value>Paid</value>
+</data>
+	<data name="Confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+</data>
+	<data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+</data>
+	<data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+</data>
+	<data name="Generate" xml:space="preserve">
+    <value>Generate</value>
+</data>
+	<data name="NoDataForFilters" xml:space="preserve">
+    <value>No data for the selected filters.</value>
+</data>
+	<data name="ResultsWithCount" xml:space="preserve">
+    <value>Results — {0} records</value>
+</data>
+	<data name="Id" xml:space="preserve">
+    <value>#</value>
+</data>
+	<data name="Date" xml:space="preserve">
+    <value>Date</value>
+</data>
+	<data name="Time" xml:space="preserve">
+    <value>Time</value>
+</data>
+	<data name="Client" xml:space="preserve">
+    <value>Client</value>
+</data>
+	<data name="Service" xml:space="preserve">
+    <value>Service</value>
+</data>
+	<data name="Total" xml:space="preserve">
+    <value>Total</value>
+</data>
+	<data name="Status" xml:space="preserve">
+    <value>Status</value>
+</data>
+	<data name="Employee" xml:space="preserve">
+    <value>Employee</value>
+</data>
+	<data name="TotalLabel" xml:space="preserve">
+    <value>Total</value>
+</data>
+	<data name="StartDate" xml:space="preserve">
+    <value>Start Date</value>
+</data>
+	<data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+</data>
+	<data name="RegisterTitle" xml:space="preserve">
+    <value>Create Account</value>
+</data>
+	<data name="Name" xml:space="preserve">
+    <value>Name</value>
+</data>
+	<data name="Email" xml:space="preserve">
+    <value>Email</value>
+</data>
+	<data name="Password" xml:space="preserve">
+    <value>Password</value>
+</data>
+	<data name="Minimum8Chars" xml:space="preserve">
+    <value>Minimum 8 characters.</value>
+</data>
+	<data name="PasswordTooShort" xml:space="preserve">
+    <value>Password must be at least 8 characters long.</value>
+</data>
+	<data name="RegisterButton" xml:space="preserve">
+    <value>Register</value>
+</data>
+	<data name="AlreadyHaveAccount" xml:space="preserve">
+    <value>Already have an account?</value>
+</data>
+	<data name="SignIn" xml:space="preserve">
+    <value>Sign In</value>
+</data>
+	<data name="ExternalLayoutTitle" xml:space="preserve">
+    <value>SGS Web Clean</value>
+</data>
+	<data name="LoginTitle" xml:space="preserve">
+    <value>Sign In</value>
+</data>
+	<data name="Email" xml:space="preserve">
+    <value>Email</value>
+</data>
+	<data name="Password" xml:space="preserve">
+    <value>Password</value>
+</data>
+	<data name="LoginButton" xml:space="preserve">
+    <value>Sign In</value>
+</data>
+	<data name="ForgotPassword" xml:space="preserve">
+    <value>Forgot your password?</value>
+</data>
+	<data name="Recover" xml:space="preserve">
+    <value>Recover</value>
+</data>
+	<data name="NewToSystem" xml:space="preserve">
+    <value>New to the system?</value>
+</data>
+	<data name="CreateAccount" xml:space="preserve">
+    <value>Create Account</value>
+</data>
+	<data name="RecoverAccessTitle" xml:space="preserve">
+    <value>Recover Access</value>
+</data>
+	<data name="Email" xml:space="preserve">
+    <value>Email</value>
+</data>
+	<data name="Process" xml:space="preserve">
+    <value>Process</value>
+</data>
+	<data name="Back" xml:space="preserve">
+    <value>Back</value>
+</data>
+	<data name="SuccessTitle" xml:space="preserve">
+    <value>Success</value>
+</data>
+	<data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+</data>
+	<data name="HomeClientTitle" xml:space="preserve">
+    <value>Client Home</value>
+</data>
+	<data name="WelcomeTitle" xml:space="preserve">
+    <value>Welcome to Web Clean</value>
+</data>
+	<data name="WelcomeSubtitle" xml:space="preserve">
+    <value>Professional cleaning services for homes and businesses.</value>
+</data>
+	<data name="BookServiceButton" xml:space="preserve">
+    <value>Book Service</value>
+</data>
+	<data name="OurServices" xml:space="preserve">
+    <value>Our Services</value>
+</data>
+	<data name="ResidentialCleaningAlt" xml:space="preserve">
+    <value>Residential Cleaning</value>
+</data>
+	<data name="ResidentialCleaningTitle" xml:space="preserve">
+    <value>Residential Cleaning</value>
+</data>
+	<data name="ResidentialCleaningDesc" xml:space="preserve">
+    <value>Complete service for homes, with trained staff.</value>
+</data>
+	<data name="CommercialCleaningAlt" xml:space="preserve">
+    <value>Commercial Cleaning</value>
+</data>
+	<data name="CommercialCleaningTitle" xml:space="preserve">
+    <value>Commercial Cleaning</value>
+</data>
+	<data name="CommercialCleaningDesc" xml:space="preserve">
+    <value>Cleaning solutions for offices and premises.</value>
+</data>
+	<data name="SpecialServicesAlt" xml:space="preserve">
+    <value>Special Services</value>
+</data>
+	<data name="SpecialServicesTitle" xml:space="preserve">
+    <value>Special Services</value>
+</data>
+	<data name="SpecialServicesDesc" xml:space="preserve">
+    <value>Deep cleaning, carpets, windows and more.</value>
+</data>
+	<data name="OfficeCleaningAlt" xml:space="preserve">
+    <value>Office Cleaning</value>
+</data>
+	<data name="OfficeCleaningTitle" xml:space="preserve">
+    <value>Office Cleaning</value>
+</data>
+	<data name="OfficeCleaningDesc" xml:space="preserve">
+    <value>Daily and deep maintenance for workspaces.</value>
+</data>
+	<data name="GlassCleaningAlt" xml:space="preserve">
+    <value>Glass Cleaning</value>
+</data>
+	<data name="GlassCleaningTitle" xml:space="preserve">
+    <value>Glass Cleaning</value>
+</data>
+	<data name="GlassCleaningDesc" xml:space="preserve">
+    <value>Immaculate windows in homes and businesses.</value>
+</data>
+	<data name="CarpetCleaningAlt" xml:space="preserve">
+    <value>Carpet Cleaning</value>
+</data>
+	<data name="CarpetCleaningTitle" xml:space="preserve">
+    <value>Carpet Cleaning</value>
+</data>
+	<data name="CarpetCleaningDesc" xml:space="preserve">
+    <value>Stain removal and professional maintenance.</value>
+</data>
+	<data name="IndustrialCleaningAlt" xml:space="preserve">
+    <value>Industrial Cleaning</value>
+</data>
+	<data name="IndustrialCleaningTitle" xml:space="preserve">
+    <value>Industrial Cleaning</value>
+</data>
+	<data name="IndustrialCleaningDesc" xml:space="preserve">
+    <value>Solutions for factories and production plants.</value>
+</data>
+	<data name="EventCleaningAlt" xml:space="preserve">
+    <value>Event Cleaning</value>
+</data>
+	<data name="EventCleaningTitle" xml:space="preserve">
+    <value>Event Cleaning</value>
+</data>
+	<data name="EventCleaningDesc" xml:space="preserve">
+    <value>Preparation and post-event cleaning.</value>
+</data>
+	<data name="DeepCleaningAlt" xml:space="preserve">
+    <value>Deep Cleaning</value>
+</data>
+	<data name="DeepCleaningTitle" xml:space="preserve">
+    <value>Deep Cleaning</value>
+</data>
+	<data name="DeepCleaningDesc" xml:space="preserve">
+    <value>Complete disinfection and sanitization of spaces.</value>
+</data>
+	<data name="MyBookingsTitle" xml:space="preserve">
+    <value>My Bookings</value>
+</data>
+	<data name="BackToHome" xml:space="preserve">
+    <value>Back to Home</value>
+</data>
+	<data name="NoBookings" xml:space="preserve">
+    <value>You have no registered bookings.</value>
+</data>
+	<data name="BookingNumber" xml:space="preserve">
+    <value>Booking #{0}</value>
+</data>
+	<data name="Date" xml:space="preserve">
+    <value>Date</value>
+</data>
+	<data name="Time" xml:space="preserve">
+    <value>Time</value>
+</data>
+	<data name="Address" xml:space="preserve">
+    <value>Address</value>
+</data>
+	<data name="Total" xml:space="preserve">
+    <value>Total</value>
+</data>
+	<data name="Status" xml:space="preserve">
+    <value>Status</value>
+</data>
+	<data name="ViewDetail" xml:space="preserve">
+    <value>View Detail</value>
+</data>
+	<data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+</data>
+	<data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+</data>
+	<data name="Confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+</data>
+	<data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+</data>
+	<data name="BookingDetailTitle" xml:space="preserve">
+    <value>Booking Detail</value>
+</data>
+	<data name="BookingNumber" xml:space="preserve">
+    <value>Booking #{0}</value>
+</data>
+	<data name="Date" xml:space="preserve">
+    <value>Date</value>
+</data>
+	<data name="Time" xml:space="preserve">
+    <value>Time</value>
+</data>
+	<data name="Address" xml:space="preserve">
+    <value>Address</value>
+</data>
+	<data name="Total" xml:space="preserve">
+    <value>Total</value>
+</data>
+	<data name="Status" xml:space="preserve">
+    <value>Status</value>
+</data>
+	<data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+</data>
+	<data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+</data>
+	<data name="Confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+</data>
+	<data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+</data>
+	<data name="CancelBooking" xml:space="preserve">
+    <value>Cancel booking</value>
+</data>
+	<data name="CancellationReason" xml:space="preserve">
+    <value>Cancellation reason</value>
+</data>
+	<data name="SelectReason" xml:space="preserve">
+    <value>-- Select a reason --</value>
+</data>
+	<data name="ReasonChangePlans" xml:space="preserve">
+    <value>Change of plans</value>
+</data>
+	<data name="ReasonBookingError" xml:space="preserve">
+    <value>Booking error</value>
+</data>
+	<data name="ReasonFoundOtherProvider" xml:space="preserve">
+    <value>Found another provider</value>
+</data>
+	<data name="ReasonPersonalEmergency" xml:space="preserve">
+    <value>Personal emergency</value>
+</data>
+	<data name="Other" xml:space="preserve">
+    <value>Other</value>
+</data>
+	<data name="DescribeReason" xml:space="preserve">
+    <value>Describe the reason</value>
+</data>
+	<data name="DescribeReasonPlaceholder" xml:space="preserve">
+    <value>Briefly explain the reason...</value>
+</data>
+	<data name="CancelBookingButton" xml:space="preserve">
+    <value>Cancel Booking</value>
+</data>
+	<data name="RescheduleBooking" xml:space="preserve">
+    <value>Reschedule booking</value>
+</data>
+	<data name="NewDate" xml:space="preserve">
+    <value>New Date</value>
+</data>
+	<data name="NewTime" xml:space="preserve">
+    <value>New Time</value>
+</data>
+	<data name="ChangeReason" xml:space="preserve">
+    <value>Reason for change</value>
+</data>
+	<data name="ReasonPersonalScheduleChange" xml:space="preserve">
+    <value>Personal schedule change</value>
+</data>
+	<data name="ReasonScheduleConflict" xml:space="preserve">
+    <value>Schedule conflict</value>
+</data>
+	<data name="ReasonProviderRequest" xml:space="preserve">
+    <value>Provider request</value>
+</data>
+	<data name="ReasonEmergency" xml:space="preserve">
+    <value>Emergency</value>
+</data>
+	<data name="SaveChanges" xml:space="preserve">
+    <value>Save Changes</value>
+</data>
+	<data name="BackToMyBookings" xml:space="preserve">
+    <value>Back to My Bookings</value>
+</data>
+	<data name="BackToHome" xml:space="preserve">
+    <value>Back to Home</value>
+</data>
+	<data name="ReviewsTitle" xml:space="preserve">
+    <value>Reviews</value>
+</data>
+	<data name="MyReviews" xml:space="preserve">
+    <value>My Reviews</value>
+</data>
+	<data name="ReviewIntro" xml:space="preserve">
+    <value>Here you can rate the services that have already been completed.</value>
+</data>
+	<data name="NoCompletedServices" xml:space="preserve">
+    <value>You don't have any completed services to review yet.</value>
+</data>
+	<data name="BookingNumber" xml:space="preserve">
+    <value>Booking #{0}</value>
+</data>
+	<data name="TeamResponse" xml:space="preserve">
+    <value>Team response:</value>
+</data>
+	<data name="Rating" xml:space="preserve">
+    <value>Rating</value>
+</data>
+	<data name="Excellent" xml:space="preserve">
+    <value>Excellent</value>
+</data>
+	<data name="VeryGood" xml:space="preserve">
+    <value>Very good</value>
+</data>
+	<data name="Good" xml:space="preserve">
+    <value>Good</value>
+</data>
+	<data name="Average" xml:space="preserve">
+    <value>Average</value>
+</data>
+	<data name="Poor" xml:space="preserve">
+    <value>Poor</value>
+</data>
+	<data name="Comment" xml:space="preserve">
+    <value>Comment</value>
+</data>
+	<data name="SubmitReview" xml:space="preserve">
+    <value>Submit review</value>
+</data>
+	<data name="BookServiceTitle" xml:space="preserve">
+    <value>Book a Service</value>
+</data>
+	<data name="BookServiceSubtitle" xml:space="preserve">
+    <value>Complete the form to schedule your cleaning with SGSWC.</value>
+</data>
+	<data name="Service" xml:space="preserve">
+    <value>Service</value>
+</data>
+	<data name="SelectService" xml:space="preserve">
+    <value>Select a service...</value>
+</data>
+	<data name="Date" xml:space="preserve">
+    <value>Date</value>
+</data>
+	<data name="Time" xml:space="preserve">
+    <value>Time</value>
+</data>
+	<data name="Address" xml:space="preserve">
+    <value>Address</value>
+</data>
+	<data name="Observations" xml:space="preserve">
+    <value>Observations</value>
+</data>
+	<data name="BookButton" xml:space="preserve">
+    <value>Book</value>
+</data>
+	<data name="CurrencySymbol" xml:space="preserve">
+    <value>₡</value>
+</data>
+	<data name="HistoryTitle" xml:space="preserve">
+    <value>History</value>
+</data>
+	<data name="PreviousStatus" xml:space="preserve">
+    <value>Previous Status</value>
+</data>
+	<data name="NewStatus" xml:space="preserve">
+    <value>New Status</value>
+</data>
+	<data name="User" xml:space="preserve">
+    <value>User</value>
+</data>
+	<data name="Date" xml:space="preserve">
+    <value>Date</value>
+</data>
+	<data name="NoHistoryRecords" xml:space="preserve">
+    <value>No history records.</value>
+</data>
+	<data name="MostRequestedSchedulesTitle" xml:space="preserve">
+    <value>Most Requested Schedules</value>
+</data>
+	<data name="MostRequestedSchedulesReport" xml:space="preserve">
+    <value>Most Requested Schedules Report</value>
+</data>
+	<data name="NoDataAvailable" xml:space="preserve">
+    <value>No data available.</value>
+</data>
+	<data name="SchedulesByFrequency" xml:space="preserve">
+    <value>Schedules ordered by frequency</value>
+</data>
+	<data name="Position" xml:space="preserve">
+    <value>Position</value>
+</data>
+	<data name="Time" xml:space="preserve">
+    <value>Time</value>
+</data>
+	<data name="TotalBookings" xml:space="preserve">
+    <value>Total Bookings</value>
+</data>
+	<data name="Percentage" xml:space="preserve">
+    <value>Percentage</value>
+</data>
+	<data name="RelativeFrequency" xml:space="preserve">
+    <value>Relative Frequency</value>
+</data>
+	<data name="BookingsPerHour" xml:space="preserve">
+    <value>Bookings per hour</value>
+</data>
+	<data name="FrequentCustomersTitle" xml:space="preserve">
+    <value>Frequent Customers</value>
+</data>
+	<data name="FrequentCustomersReport" xml:space="preserve">
+    <value>Frequent Customers Report</value>
+</data>
+	<data name="NoDataAvailable" xml:space="preserve">
+    <value>No data available.</value>
+</data>
+	<data name="SortedByServices" xml:space="preserve">
+    <value>List sorted by hired services</value>
+</data>
+	<data name="Position" xml:space="preserve">
+    <value>#</value>
+</data>
+	<data name="Client" xml:space="preserve">
+    <value>Client</value>
+</data>
+	<data name="Email" xml:space="preserve">
+    <value>Email</value>
+</data>
+	<data name="TotalServices" xml:space="preserve">
+    <value>Total Services</value>
+</data>
+	<data name="LastBooking" xml:space="preserve">
+    <value>Last Booking</value>
+</data>
+	<data name="TotalSpent" xml:space="preserve">
+    <value>Total Spent</value>
+</data>
+	<data name="ServicesHired" xml:space="preserve">
+    <value>Services hired</value>
+</data>
+	<data name="CurrencySymbol" xml:space="preserve">
+    <value>₡</value>
+</data>
+	<data name="ClientProfileTitle" xml:space="preserve">
+    <value>Client Profile</value>
+</data>
+	<data name="BackToUsers" xml:space="preserve">
+    <value>Back to User Management</value>
+</data>
+	<data name="ClientSince" xml:space="preserve">
+    <value>Client since</value>
+</data>
+	<data name="FrequentCustomerBadge" xml:space="preserve">
+    <value>Frequent Client</value>
+</data>
+	<data name="ServicesInLast30Days" xml:space="preserve">
+    <value>{0} services in the last 30 days</value>
+</data>
+	<data name="ServicesRequested" xml:space="preserve">
+    <value>services requested</value>
+</data>
+	<data name="Email" xml:space="preserve">
+    <value>Email</value>
+</data>
+	<data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+</data>
+	<data name="Address" xml:space="preserve">
+    <value>Address</value>
+</data>
+	<data name="ServiceHistory" xml:space="preserve">
+    <value>Service History</value>
+</data>
+	<data name="NoDataAvailable" xml:space="preserve">
+    <value>No data available.</value>
+</data>
+	<data name="ReservationNumber" xml:space="preserve">
+    <value>Booking #</value>
+</data>
+	<data name="Date" xml:space="preserve">
+    <value>Date</value>
+</data>
+	<data name="Time" xml:space="preserve">
+    <value>Time</value>
+</data>
+	<data name="Status" xml:space="preserve">
+    <value>Status</value>
+</data>
+	<data name="Total" xml:space="preserve">
+    <value>Total</value>
+</data>
+	<data name="CurrencySymbol" xml:space="preserve">
+    <value>₡</value>
+</data>
+	<data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+</data>
+	<data name="Confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+</data>
+	<data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+</data>
+	<data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+</data>
+	<data name="PendingServices" xml:space="preserve">
+    <value>Pending Services</value>
+</data>
+	<data name="PendingServicesTitle" xml:space="preserve">
+    <value>Pending Services</value>
+</data>
+	<data name="PendingServicesReport" xml:space="preserve">
+    <value>Pending Services Report</value>
+</data>
+	<data name="PendingServicesList" xml:space="preserve">
+    <value>Pending Services List</value>
+</data>
+	<data name="ServiceType" xml:space="preserve">
+    <value>Service Type</value>
+</data>
+	<data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+</data>
+	<data name="Client" xml:space="preserve">
+    <value>Client</value>
+</data>
+	<data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+</data>
+	<data name="GeneratePendingServicesReport" xml:space="preserve">
+    <value>Generate Pending Services Report</value>
+</data>
+	<data name="ExcelFormat" xml:space="preserve">
+    <value>Excel (.xlsx)</value>
+</data>
+	<data name="PDFFormat" xml:space="preserve">
+    <value>PDF (.pdf)</value>
+</data>
+	<data name="ExportReport" xml:space="preserve">
+    <value>Export Report</value>
+</data>
+	<data name="FormatSelectionRequired" xml:space="preserve">
+    <value>You must select a format.</value>
+</data>
+	<data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+</data>
+	<data name="ExportFormat" xml:space="preserve">
+    <value>Export Format</value>
+</data>
+<data name="NewClientsReport" xml:space="preserve">
+  <value>New Clients Report</value>
+</data>
+	<data name="FinancialReport" xml:space="preserve">
+  <value>Financial Report</value>
+</data>
+	<data name="Performance" xml:space="preserve">
+  <value>Performance</value>
+</data>
+	<data name="Monitoring" xml:space="preserve">
+  <value>Monitoring</value>
+</data>
+	<data name="LowRatingsReport" xml:space="preserve">
+  <value>Low Ratings Report</value>
+</data>
+	<data name="SatisfactionStatsReport" xml:space="preserve">
+  <value>Satisfaction Statistics Report</value>
+</data>
+	<data name="PaymentManagement" xml:space="preserve">
+  <value>Payment Management</value>
+</data>
+	<data name="NewClientsReportTitle" xml:space="preserve">
+  <value>New Clients Report</value>
+</data>
+	<data name="NewClientsReport" xml:space="preserve">
+  <value>New Clients Report</value>
+</data>
+	<data name="PeriodLabel" xml:space="preserve">
+  <value>Period:</value>
+</data>
+	<data name="DateFrom" xml:space="preserve">
+  <value>Date from</value>
+</data>
+	<data name="DateTo" xml:space="preserve">
+  <value>Date to</value>
+</data>
+	<data name="Filter" xml:space="preserve">
+  <value>Filter</value>
+</data>
+	<data name="Clear" xml:space="preserve">
+  <value>Clear</value>
+</data>
+	<data name="NoDataAvailable" xml:space="preserve">
+  <value>No data available.</value>
+</data>
+	<data name="NewClients" xml:space="preserve">
+  <value>New clients</value>
+</data>
+	<data name="ActiveClientsPeriod" xml:space="preserve">
+  <value>Active of the period</value>
+</data>
+	<data name="InactiveClientsPeriod" xml:space="preserve">
+  <value>Inactive of the period</value>
+</data>
+	<data name="PreviousPeriod" xml:space="preserve">
+  <value>Previous period</value>
+</data>
+	<data name="VsPreviousPeriod" xml:space="preserve">
+  <value>vs previous period</value>
+</data>
+	<data name="PercentageOfTotal" xml:space="preserve">
+  <value>{0}% of total</value>
+</data>
+	<data name="RegisteredClients" xml:space="preserve">
+  <value>registered clients</value>
+</data>
+	<data name="RegisteredClientsDetail" xml:space="preserve">
+  <value>Registered clients detail</value>
+</data>
+	<data name="Records" xml:space="preserve">
+  <value>records</value>
+</data>
+	<data name="Hash" xml:space="preserve">
+  <value>#</value>
+</data>
+	<data name="Name" xml:space="preserve">
+  <value>Name</value>
+</data>
+	<data name="Email" xml:space="preserve">
+  <value>Email</value>
+</data>
+	<data name="RegistrationDate" xml:space="preserve">
+  <value>Registration date</value>
+</data>
+	<data name="Bookings" xml:space="preserve">
+  <value>Bookings</value>
+</data>
+	<data name="Status" xml:space="preserve">
+  <value>Status</value>
+</data>
+	<data name="Active" xml:space="preserve">
+  <value>Active</value>
+</data>
+	<data name="Inactive" xml:space="preserve">
+  <value>Inactive</value>
+</data>
+	<data name="FinancialReportTitle" xml:space="preserve">
+  <value>Financial Report</value>
+</data>
+	<data name="FinancialReport" xml:space="preserve">
+  <value>Financial Report</value>
+</data>
+	<data name="FinancialReportDescription" xml:space="preserve">
+  <value>Generate an income and expense report to evaluate company profitability.</value>
+</data>
+	<data name="ConfigureReport" xml:space="preserve">
+  <value>Configure Report</value>
+</data>
+	<data name="DateFrom" xml:space="preserve">
+  <value>Date From</value>
+</data>
+	<data name="DateTo" xml:space="preserve">
+  <value>Date To</value>
+</data>
+	<data name="ExportFormat" xml:space="preserve">
+  <value>Export Format</value>
+</data>
+	<data name="ExcelOption" xml:space="preserve">
+  <value>Excel (.xlsx)</value>
+</data>
+	<data name="ExcelDetail" xml:space="preserve">
+  <value>Full detail with totals and net profit</value>
+</data>
+	<data name="PdfOption" xml:space="preserve">
+  <value>PDF</value>
+</data>
+	<data name="PdfDetail" xml:space="preserve">
+  <value>Ready‑to‑print or share report</value>
+</data>
+	<data name="ReportSummary" xml:space="preserve">
+  <value>The report includes all confirmed payments (income) and recorded expenses (outgoings) within the selected date range, along with the calculation of the net profit for the period.</value>
+</data>
+	<data name="GenerateFinancialReport" xml:space="preserve">
+  <value>Generate Financial Report</value>
+</data>
+	<data name="SelectExportFormat" xml:space="preserve">
+  <value>You must select an export format.</value>
+</data>
+	<data name="DateFromCannotBeGreater" xml:space="preserve">
+  <value>The 'From' date cannot be later than the 'To' date.</value>
+</data>
+	<data name="PerformanceMetricsTitle" xml:space="preserve">
+  <value>Performance Metrics</value>
+</data>
+	<data name="PerformanceMetricsSubtitle" xml:space="preserve">
+  <value>Productivity indicators for the selected period</value>
+</data>
+	<data name="Query" xml:space="preserve">
+  <value>Query</value>
+</data>
+	<data name="NoPerformanceDataAvailable" xml:space="preserve">
+  <value>No performance data available for the selected period.</value>
+</data>
+	<data name="ServicesPerformed" xml:space="preserve">
+  <value>Services Performed</value>
+</data>
+	<data name="AverageServiceTime" xml:space="preserve">
+  <value>Average Service Time</value>
+</data>
+	<data name="ComplianceLevel" xml:space="preserve">
+  <value>Compliance Level</value>
+</data>
+	<data name="Services" xml:space="preserve">
+  <value>Services</value>
+</data>
+	<data name="ReservationsInPeriod" xml:space="preserve">
+  <value>Reservations in the period</value>
+</data>
+	<data name="BasedOnAssignments" xml:space="preserve">
+  <value>Based on assignments</value>
+</data>
+	<data name="Minutes" xml:space="preserve">
+  <value>Minutes</value>
+</data>
+	<data name="PerServiceOnAverage" xml:space="preserve">
+  <value>per service on average</value>
+</data>
+	<data name="CompletedVsNonCancelled" xml:space="preserve">
+  <value>Completed vs. non‑cancelled</value>
+</data>
+
+	<!-- Nombres de los meses (12) -->
+	<data name="MonthJanuary" xml:space="preserve">
+  <value>January</value>
+</data>
+	<data name="MonthFebruary" xml:space="preserve">
+  <value>February</value>
+</data>
+	<data name="MonthMarch" xml:space="preserve">
+  <value>March</value>
+</data>
+	<data name="MonthApril" xml:space="preserve">
+  <value>April</value>
+</data>
+	<data name="MonthMay" xml:space="preserve">
+  <value>May</value>
+</data>
+	<data name="MonthJune" xml:space="preserve">
+  <value>June</value>
+</data>
+	<data name="MonthJuly" xml:space="preserve">
+  <value>July</value>
+</data>
+	<data name="MonthAugust" xml:space="preserve">
+  <value>August</value>
+</data>
+	<data name="MonthSeptember" xml:space="preserve">
+  <value>September</value>
+</data>
+	<data name="MonthOctober" xml:space="preserve">
+  <value>October</value>
+</data>
+	<data name="MonthNovember" xml:space="preserve">
+  <value>November</value>
+</data>
+	<data name="MonthDecember" xml:space="preserve">
+  <value>December</value>
+</data>
+<data name="MonitoringSystemPerformanceTitle" xml:space="preserve">
+  <value>System Performance Monitoring</value>
+</data>
+	<data name="MonitoringSystemPerformanceSubtitle" xml:space="preserve">
+  <value>Real‑time technical status indicators</value>
+</data>
+	<data name="SystemSlowAlert" xml:space="preserve">
+  <value>The system is experiencing slowness. Response time above the configured threshold.</value>
+</data>
+	<data name="AverageResponseTime" xml:space="preserve">
+  <value>Average Response Time</value>
+</data>
+	<data name="Milliseconds" xml:space="preserve">
+  <value>milliseconds</value>
+</data>
+	<data name="ActiveRequests" xml:space="preserve">
+  <value>Active Requests</value>
+</data>
+	<data name="GeneralStatus" xml:space="preserve">
+  <value>General Status</value>
+</data>
+	<data name="Loading" xml:space="preserve">
+  <value>Loading...</value>
+</data>
+	<data name="Degraded" xml:space="preserve">
+  <value>Degraded</value>
+</data>
+	<data name="Normal" xml:space="preserve">
+  <value>Normal</value>
+</data>
+	<data name="LowRatingsReportTitle" xml:space="preserve">
+  <value>Low Ratings Report</value>
+</data>
+	<data name="LowRatingsReport" xml:space="preserve">
+  <value>Low Ratings Report</value>
+</data>
+	<data name="PeriodLabel" xml:space="preserve">
+  <value>Period:</value>
+</data>
+	<data name="ThresholdLabel" xml:space="preserve">
+  <value>Threshold:</value>
+</data>
+	<data name="DateFrom" xml:space="preserve">
+  <value>Date from</value>
+</data>
+	<data name="DateTo" xml:space="preserve">
+  <value>Date to</value>
+</data>
+	<data name="RatingThreshold" xml:space="preserve">
+  <value>Rating threshold</value>
+</data>
+	<data name="Filter" xml:space="preserve">
+  <value>Filter</value>
+</data>
+	<data name="Clear" xml:space="preserve">
+  <value>Clear</value>
+</data>
+	<data name="NoDataAvailable" xml:space="preserve">
+  <value>No data available</value>
+</data>
+	<data name="TotalLowRatings" xml:space="preserve">
+  <value>Total low ratings</value>
+</data>
+	<data name="WithThreshold" xml:space="preserve">
+  <value>with ≤ {0} ★</value>
+</data>
+	<data name="AverageRating" xml:space="preserve">
+  <value>Average rating</value>
+</data>
+	<data name="InPeriod" xml:space="preserve">
+  <value>in the period</value>
+</data>
+	<data name="AffectedServices" xml:space="preserve">
+  <value>Affected services</value>
+</data>
+	<data name="WithRegisteredComplaints" xml:space="preserve">
+  <value>with registered complaints</value>
+</data>
+	<data name="DissatisfiedClients" xml:space="preserve">
+  <value>Dissatisfied clients</value>
+</data>
+	<data name="Unique" xml:space="preserve">
+  <value>unique</value>
+</data>
+	<data name="ComplaintsByService" xml:space="preserve">
+  <value>Complaints by service</value>
+</data>
+	<data name="ProblematicServicesRanking" xml:space="preserve">
+  <value>Problematic services ranking</value>
+</data>
+	<data name="ComplaintPlural" xml:space="preserve">
+  <value>complaint(s)</value>
+</data>
+	<data name="LowRatingsDetail" xml:space="preserve">
+  <value>Low ratings detail</value>
+</data>
+	<data name="Records" xml:space="preserve">
+  <value>records</value>
+</data>
+	<data name="Client" xml:space="preserve">
+  <value>Client</value>
+</data>
+	<data name="Email" xml:space="preserve">
+  <value>Email</value>
+</data>
+	<data name="Service" xml:space="preserve">
+  <value>Service</value>
+</data>
+	<data name="Rating" xml:space="preserve">
+  <value>Rating</value>
+</data>
+	<data name="Comment" xml:space="preserve">
+  <value>Comment</value>
+</data>
+	<data name="Date" xml:space="preserve">
+  <value>Date</value>
+</data>
+	<data name="Status" xml:space="preserve">
+  <value>Status</value>
+</data>
+	<data name="Attended" xml:space="preserve">
+  <value>Attended</value>
+</data>
+	<data name="Unattended" xml:space="preserve">
+  <value>Unattended</value>
+</data>
+	<data name="ChartTotalComplaints" xml:space="preserve">
+  <value>Total complaints</value>
+</data>
+	<data name="ChartAverageRating" xml:space="preserve">
+  <value>Average rating</value>
+</data>
+	<data name="SatisfactionStatisticsTitle" xml:space="preserve">
+  <value>Satisfaction Statistics</value>
+</data>
+	<data name="SatisfactionStatistics" xml:space="preserve">
+  <value>Satisfaction Statistics</value>
+</data>
+	<data name="AverageRating" xml:space="preserve">
+  <value>Average Rating</value>
+</data>
+	<data name="TotalReviews" xml:space="preserve">
+  <value>Total Reviews</value>
+</data>
+	<data name="SatisfactionRate" xml:space="preserve">
+  <value>Satisfaction Rate</value>
+</data>
+	<data name="NegativeReviews" xml:space="preserve">
+  <value>Negative Reviews</value>
+</data>
+	<data name="PositiveReviewsWith4to5Stars" xml:space="preserve">
+  <value>{0} reviews with 4-5 ★</value>
+</data>
+	<data name="With1to2Stars" xml:space="preserve">
+  <value>with 1-2 ★</value>
+</data>
+	<data name="RatingDistribution" xml:space="preserve">
+  <value>Rating Distribution</value>
+</data>
+	<data name="DetailsByStar" xml:space="preserve">
+  <value>Details by Star</value>
+</data>
+	<data name="TopServicesTitle" xml:space="preserve">
+  <value>Top 3 Most Requested Services</value>
+</data>
+	<data name="SelectedPeriod" xml:space="preserve">
+  <value>Selected period</value>
+</data>
+	<data name="ContractsCount" xml:space="preserve">
+  <value>{0} contract(s)</value>
+</data>
+	<data name="ReviewsDetail" xml:space="preserve">
+  <value>Reviews Detail</value>
+</data>
+	<data name="Responded" xml:space="preserve">
+  <value>Responded</value>
+</data>
+	<data name="NoReply" xml:space="preserve">
+  <value>No reply</value>
+</data>
+	<data name="ChartDistributionLabel" xml:space="preserve">
+  <value>Reviews</value>
+</data>
+	<data name="PaymentManagementTitle" xml:space="preserve">
+  <value>Payment Management</value>
+</data>
+	<data name="GeneratePaymentReport" xml:space="preserve">
+  <value>Generate Payment Report</value>
+</data>
+	<data name="NoPaymentData" xml:space="preserve">
+  <value>No payment records available.</value>
+</data>
+	<data name="ReservationId" xml:space="preserve">
+  <value>Reservation ID</value>
+</data>
+	<data name="Time" xml:space="preserve">
+  <value>Time</value>
+</data>
+	<data name="Total" xml:space="preserve">
+  <value>Total</value>
+</data>
+	<data name="PaymentStatus" xml:space="preserve">
+  <value>Payment Status</value>
+</data>
+	<data name="ReservationStatus" xml:space="preserve">
+  <value>Reservation Status</value>
+</data>
+	<data name="Actions" xml:space="preserve">
+  <value>Actions</value>
+</data>
+	<data name="MarkAsPaid" xml:space="preserve">
+  <value>Mark as paid</value>
+</data>
+	<data name="Pay" xml:space="preserve">
+  <value>Pay</value>
+</data>
+	<data name="ConfirmPayment" xml:space="preserve">
+  <value>Confirm Payment</value>
+</data>
+	<data name="ConfirmPaymentMessage" xml:space="preserve">
+  <value>Are you sure you want to mark the payment for client "{0}" as paid?</value>
+</data>
+	<data name="Confirm" xml:space="preserve">
+  <value>Confirm</value>
+</data>
+	<data name="PaymentSuccess" xml:space="preserve">
+  <value>Payment status updated successfully.</value>
+</data>
+	<data name="PaymentBlocked" xml:space="preserve">
+  <value>This payment cannot be modified (it may already be processed or blocked).</value>
+</data>
+	<data name="PaymentError" xml:space="preserve">
+  <value>An error occurred while updating the payment status.</value>
+</data>
+	<data name="ConnectionError" xml:space="preserve">
+  <value>Connection error. Please check your network and try again.</value>
+</data>
+	<data name="ExcelFormat" xml:space="preserve">
+  <value>Excel (.xlsx)</value>
+</data>
+	<data name="PDFFormat" xml:space="preserve">
+  <value>PDF</value>
+</data>
+	<data name="FormatSelectionRequired" xml:space="preserve">
+  <value>Please select an export format.</value>
+</data>
+	<data name="ExportReport" xml:space="preserve">
+  <value>Export Report</value>
+</data>
+	<data name="pagado" xml:space="preserve">
+  <value>Paid</value>
+</data>
+	<data name="pendiente" xml:space="preserve">
+  <value>Pending</value>
+</data>
+	<data name="Dashboard" xml:space="preserve">
+  <value>Dashboard</value>
+</data>
+	<data name="MasterData" xml:space="preserve">
+  <value>Master Data</value>
+</data>
+	<data name="MyAccount" xml:space="preserve">
+  <value>My Account</value>
+</data>
+	<data name="UserManagement" xml:space="preserve">
+  <value>User Management</value>
+</data>
+	<data name="UsersAndRoles" xml:space="preserve">
+  <value>Users &amp; Roles</value>
+</data>
+	<data name="ServiceManagement" xml:space="preserve">
+  <value>Service Management</value>
+</data>
+	<data name="ServicesAndCalendar" xml:space="preserve">
+  <value>Services &amp; Calendar</value>
+</data>
+	<data name="ReportsAndAnalytics" xml:space="preserve">
+  <value>Reports &amp; Analytics</value>
+</data>
+	<data name="Reports" xml:space="preserve">
+  <value>Reports</value>
+</data>
+<data name="ExportReportsTitle" xml:space="preserve">
+  <value>Export Reports</value>
+</data>
+	<data name="ExportReportsSubtitle" xml:space="preserve">
+  <value>Generate and export reports in Excel or PDF format</value>
+</data>
+	<data name="PeriodType" xml:space="preserve">
+  <value>Period type</value>
+</data>
+	<data name="CustomDateRange" xml:space="preserve">
+  <value>Custom date range</value>
+</data>
+	<data name="SpecificMonth" xml:space="preserve">
+  <value>Specific month</value>
+</data>
+	<data name="StartDate" xml:space="preserve">
+  <value>Start date</value>
+</data>
+	<data name="EndDate" xml:space="preserve">
+  <value>End date</value>
+</data>
+	<data name="Month" xml:space="preserve">
+  <value>Month</value>
+</data>
+	<data name="Year" xml:space="preserve">
+  <value>Year</value>
+</data>
+	<data name="ExcelDescription" xml:space="preserve">
+  <value>Full detail with totals and net profit</value>
+</data>
+	<data name="PDFDescription" xml:space="preserve">
+  <value>Ready‑to‑print or share report</value>
+</data>
+	<data name="FromDateGreaterThanToDate" xml:space="preserve">
+  <value>The 'Start date' cannot be later than the 'End date'.</value>
+</data>
+	<data name="Service" xml:space="preserve">
+  <value>Service</value>
+</data>
+	<data name="ServiceType" xml:space="preserve">
+  <value>Service Type</value>
+</data>
+	<data name="AnalyzeHistoryTitle" xml:space="preserve">
+  <value>Analyze History</value>
+</data>
+	<data name="AnalyzeHistoryButton" xml:space="preserve">
+  <value>Analyze</value>
+</data>
+	<data name="AnalyzingHistory" xml:space="preserve">
+  <value>Analyzing history...</value>
+</data>
+	<data name="NotEnoughDataForAnalysis" xml:space="preserve">
+  <value>Not enough data for analysis.</value>
+</data>
+	<data name="TotalServicesContracted" xml:space="preserve">
+  <value>Total Services Contracted</value>
+</data>
+	<data name="TotalAmountGenerated" xml:space="preserve">
+  <value>Total Amount Generated</value>
+</data>
+	<data name="ContractingFrequency" xml:space="preserve">
+  <value>Contracting Frequency</value>
+</data>
+	<data name="MostRequestedService" xml:space="preserve">
+  <value>Most Requested Service</value>
+</data>
+	<data name="Home" xml:space="preserve">
+  <value>Home</value>
+</data>
+	<data name="About" xml:space="preserve">
+  <value>About</value>
+</data>
+	<data name="Services" xml:space="preserve">
+  <value>Services</value>
+</data>
+	<data name="Contact" xml:space="preserve">
+  <value>Contact</value>
+</data>
+	<data name="Login" xml:space="preserve">
+  <value>Login</value>
+</data>
+	<data name="Register" xml:space="preserve">
+  <value>Register</value>
+</data>
+	<data name="QuickLinks" xml:space="preserve">
+  <value>Quick Links</value>
+</data>
+	<data name="Account" xml:space="preserve">
+  <value>Account</value>
+</data>
+	<data name="FooterDescription" xml:space="preserve">
+  <value>Online platform for quoting, booking and tracking cleaning services for residential, office and commercial.</value>
+</data>
+	<data name="AllRightsReserved" xml:space="preserve">
+  <value>All rights reserved.</value>
+</data>
+	<data name="LandingMetaDescription" xml:space="preserve">
+  <value>Book residential, office and commercial cleaning services. Quote and schedule online with Web Clean.</value>
+</data>
+	<data name="Loading" xml:space="preserve">
+  <value>Loading...</value>
+</data>
+	<data name="ProfessionalCleaningServices" xml:space="preserve">
+  <value>Professional Cleaning Services</value>
+</data>
+	<data name="HeroTitle" xml:space="preserve">
+  <value>Professional cleaning for your</value>
+</data>
+	<data name="HeroTitleHighlight" xml:space="preserve">
+  <value>home and business</value>
+</data>
+	<data name="HeroSubtitle" xml:space="preserve">
+  <value>Book the service you need online and keep track of your appointments from one place.</value>
+</data>
+	<data name="ViewServices" xml:space="preserve">
+  <value>View services</value>
+</data>
+	<data name="ResidentialCleaningAlt" xml:space="preserve">
+  <value>Residential cleaning</value>
+</data>
+	<data name="OfficeCleaningAlt" xml:space="preserve">
+  <value>Office cleaning</value>
+</data>
+	<data name="CommercialCleaningAlt" xml:space="preserve">
+  <value>Commercial cleaning</value>
+</data>
+	<data name="ResidentialCleaningTitle" xml:space="preserve">
+  <value>Residential cleaning</value>
+</data>
+	<data name="OfficeCleaningTitle" xml:space="preserve">
+  <value>Office cleaning</value>
+</data>
+	<data name="CommercialCleaningTitle" xml:space="preserve">
+  <value>Commercial cleaning</value>
+</data>
+	<data name="EducationalCleaningTitle" xml:space="preserve">
+  <value>Educational center cleaning</value>
+</data>
+	<data name="WhoWeAre" xml:space="preserve">
+  <value>Who we</value>
+</data>
+	<data name="WhoWeAreTitle" xml:space="preserve">
+  <value>are</value>
+</data>
+	<data name="WhoWeAreDesc1" xml:space="preserve">
+  <value>Web Clean was born to facilitate the hiring of reliable cleaning services, quoted and booked online, without calls or complicated procedures.</value>
+</data>
+	<data name="WhoWeAreDesc2" xml:space="preserve">
+  <value>Each booked service is recorded in your account, with history, real-time status and payment confirmation, so you know exactly what to expect.</value>
+</data>
+	<data name="OnlineBooking" xml:space="preserve">
+  <value>Online booking</value>
+</data>
+	<data name="TrainedStaff" xml:space="preserve">
+  <value>Trained staff</value>
+</data>
+	<data name="ServiceTracking" xml:space="preserve">
+  <value>Service tracking</value>
+</data>
+	<data name="ClearPrices" xml:space="preserve">
+  <value>Clear prices</value>
+</data>
+	<data name="CleaningTeamAlt" xml:space="preserve">
+  <value>Cleaning team</value>
+</data>
+	<data name="CleanSpaceAlt" xml:space="preserve">
+  <value>Clean space</value>
+</data>
+	<data name="WhyChooseTitle" xml:space="preserve">
+  <value>Why choose</value>
+</data>
+	<data name="WhyChooseHighlight" xml:space="preserve">
+  <value>Web Clean</value>
+</data>
+	<data name="FlexibleSchedule" xml:space="preserve">
+  <value>Flexible schedules</value>
+</data>
+	<data name="FlexibleScheduleDesc" xml:space="preserve">
+  <value>Choose the date and time that best fits your schedule.</value>
+</data>
+	<data name="AttentionToDetail" xml:space="preserve">
+  <value>Attention to detail</value>
+</data>
+	<data name="AttentionToDetailDesc" xml:space="preserve">
+  <value>We take care of every corner for an impeccable space.</value>
+</data>
+	<data name="TrainedTeam" xml:space="preserve">
+  <value>Trained team</value>
+</data>
+	<data name="TrainedTeamDesc" xml:space="preserve">
+  <value>Staff with proven experience in professional cleaning.</value>
+</data>
+	<data name="CustomerFocus" xml:space="preserve">
+  <value>Customer focus</value>
+</data>
+	<data name="CustomerFocusDesc" xml:space="preserve">
+  <value>Service tracking and support throughout the process.</value>
+</data>
+	<data name="ClearPricing" xml:space="preserve">
+  <value>Clear pricing</value>
+</data>
+	<data name="ClearPricingDesc" xml:space="preserve">
+  <value>Know the cost before confirming your booking, no surprises.</value>
+</data>
+	<data name="SafeProducts" xml:space="preserve">
+  <value>Safe products</value>
+</data>
+	<data name="SafeProductsDesc" xml:space="preserve">
+  <value>We use products that are safe for people and the environment.</value>
+</data>
+	<data name="OurServicesTitle" xml:space="preserve">
+  <value>Our</value>
+</data>
+	<data name="OurServicesHighlight" xml:space="preserve">
+  <value>services</value>
+</data>
+	<data name="OurServicesDesc" xml:space="preserve">
+  <value>This is the real catalog available for booking. To schedule any of these services you need to log in; if you don't have an account, we'll take you to create one in a moment.</value>
+</data>
+	<data name="NoServicesAvailable" xml:space="preserve">
+  <value>No services available at the moment. Please try again later.</value>
+</data>
+	<data name="BookButton" xml:space="preserve">
+  <value>Book</value>
+</data>
+	<data name="SatisfiedClientAlt" xml:space="preserve">
+  <value>Satisfied client</value>
+</data>
+	<data name="Testimonial1" xml:space="preserve">
+  <value>My home has never looked this good. The team was punctual, professional and very detail-oriented.</value>
+</data>
+	<data name="Testimonial1Author" xml:space="preserve">
+  <value>Marcela R.</value>
+</data>
+	<data name="Testimonial2" xml:space="preserve">
+  <value>Excellent service. Our office is always spotless, creating a better atmosphere for the team and clients.</value>
+</data>
+	<data name="Testimonial2Author" xml:space="preserve">
+  <value>Andrés V.</value>
+</data>
+	<data name="Testimonial3" xml:space="preserve">
+  <value>Reliable and efficient service. They keep our premises impeccable and well-presented every day.</value>
+</data>
+	<data name="Testimonial3Author" xml:space="preserve">
+  <value>Karla S.</value>
+</data>
+	<data name="AboutTitle" xml:space="preserve">
+  <value>About Us</value>
+</data>
+	<data name="AboutHeroTitle" xml:space="preserve">
+  <value>About Us</value>
+</data>
+	<data name="Our" xml:space="preserve">
+  <value>Our</value>
+</data>
+	<data name="StoryTitle" xml:space="preserve">
+  <value>story</value>
+</data>
+	<data name="StoryDesc1" xml:space="preserve">
+  <value>Web Clean was born to simplify the contracting of cleaning services: quote, book and track, all from a single online platform.</value>
+</data>
+	<data name="StoryDesc2" xml:space="preserve">
+  <value>Over time we expanded the service catalog and improved the booking process, always focusing on trust and service quality.</value>
+</data>
+	<data name="StoryDesc3" xml:space="preserve">
+  <value>Today we continue working to improve the experience, from booking to payment and post-service follow-up.</value>
+</data>
+	<data name="ServiceSupport" xml:space="preserve">
+  <value>Service support</value>
+</data>
+	<data name="OnlineTracking" xml:space="preserve">
+  <value>Online tracking</value>
+</data>
+	<data name="ServicesTitle" xml:space="preserve">
+  <value>Our Services</value>
+</data>
+	<data name="ServicesHeroTitle" xml:space="preserve">
+  <value>Services</value>
+</data>
+	<data name="ServicesDesc1" xml:space="preserve">
+  <value>We offer professional cleaning solutions for homes, offices and commercial spaces, with clear pricing and 100% online booking.</value>
+</data>
+	<data name="ServicesDesc2" xml:space="preserve">
+  <value>Choose the service you need. To book it you will need to log in; if you don't have an account yet, we will guide you to create one.</value>
+</data>
+	<data name="ViewDetail" xml:space="preserve">
+  <value>View detail</value>
+</data>
+	<data name="ContactTitle" xml:space="preserve">
+  <value>Contact Us</value>
+</data>
+	<data name="ContactHeroTitle" xml:space="preserve">
+  <value>Contact</value>
+</data>
+	<data name="ContactQueryTitle" xml:space="preserve">
+  <value>Have Any Query?</value>
+</data>
+	<data name="ContactUsTitle" xml:space="preserve">
+  <value>Contact Us</value>
+</data>
+	<data name="ContactFormInactive" xml:space="preserve">
+  <value>The contact form is currently inactive.</value>
+</data>
+	<data name="YourName" xml:space="preserve">
+  <value>Your Name</value>
+</data>
+	<data name="YourEmail" xml:space="preserve">
+  <value>Your Email</value>
+</data>
+	<data name="Subject" xml:space="preserve">
+  <value>Subject</value>
+</data>
+	<data name="Message" xml:space="preserve">
+  <value>Message</value>
+</data>
+	<data name="MessagePlaceholder" xml:space="preserve">
+  <value>Leave a message here</value>
+</data>
+	<data name="SendMessage" xml:space="preserve">
+  <value>Send Message</value>
+</data>
+	<data name="ServiceDetailTitle" xml:space="preserve">
+  <value>Service Detail</value>
+</data>
+	<data name="Description" xml:space="preserve">
+  <value>Description</value>
+</data>
+	<data name="BookingRequiresLogin" xml:space="preserve">
+  <value>You need to log in to choose date, time and confirm your booking. If you don't have an account yet, we'll take you to create one.</value>
+</data>
+	<data name="BookNow" xml:space="preserve">
+  <value>Book now</value>
+</data>
+</root>
+
+
+

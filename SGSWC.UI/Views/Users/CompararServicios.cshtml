@@ -1,0 +1,88 @@
+﻿@model IEnumerable<SGSWC.UI.Models.ServicioComparadoUIModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["CompareServicesTitle"];
+    Layout = "_LayoutInterno";
+}
+
+<div class="card mb-4 mt-4">
+    <div class="card-header">
+        <h4 class="text-center m-0">@Localizer["MostRequestedServices"]</h4>
+    </div>
+    <div class="card-body">
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger text-center fw-bold">@ViewBag.Error</div>
+        }
+        else if (Model == null || !Model.Any() || !Model.Any(s => s.Total_Solicitado > 0))
+        {
+            <div class="alert alert-info text-center">@Localizer["NoDataAvailable"]</div>
+        }
+        else
+        {
+            <div class="mb-4">
+                <canvas id="graficoServicios" height="80"></canvas>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>@Localizer["Position"]</th>
+                        <th>@Localizer["Service"]</th>
+                        <th>@Localizer["TotalRequested"]</th>
+                        <th>@Localizer["Percentage"]</th>
+                        <th>@Localizer["RelativeFrequency"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int pos = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><strong>#@pos</strong></td>
+                            <td>@item.Nombre_Servicio</td>
+                            <td>@item.Total_Solicitado</td>
+                            <td>@item.Porcentaje.ToString("N2")%</td>
+                            <td>
+                                <div class="progress" style="height:20px;">
+                                    <div class="progress-bar bg-primary" role="progressbar"
+                                         style="width:@item.Porcentaje%">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        pos++;
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const timesRequestedLabel = '@Localizer["TimesRequested"]';
+        var labels = [@Html.Raw(string.Join(",", Model?.Select(s => $"'{s.Nombre_Servicio}'")))];
+        var datos = [@Html.Raw(string.Join(",", Model?.Select(s => s.Total_Solicitado)))];
+        new Chart(document.getElementById('graficoServicios'), {
+        type: 'bar',
+        data: {
+        labels: labels,
+        datasets: [{
+        label: timesRequestedLabel,
+        data: datos,
+        backgroundColor: 'rgba(105,108,255,0.8)',
+        borderRadius: 6
+        }]
+        },
+        options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+        });
+    </script>
+}

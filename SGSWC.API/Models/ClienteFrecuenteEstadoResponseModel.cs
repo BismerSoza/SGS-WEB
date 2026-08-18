@@ -1,0 +1,9 @@
+﻿namespace SGSWC.API.Models
+{
+    public class ClienteFrecuenteEstadoResponseModel
+    {
+        public int Id_Usuario { get; set; }
+        public int Total_Servicios_30_Dias { get; set; }
+        public bool Es_Cliente_Frecuente { get; set; }
+    }
+}

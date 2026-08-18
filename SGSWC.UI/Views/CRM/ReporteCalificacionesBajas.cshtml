@@ -1,0 +1,317 @@
+﻿@model ReporteCalificacionesBajasResponseModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["LowRatingsReportTitle"];
+    var kpis = Model.Kpis;
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Encabezado -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-0">
+                <i class="bx bx-sad me-2 text-danger"></i>@Localizer["LowRatingsReport"]
+            </h4>
+            <small class="text-muted">
+                @Localizer["PeriodLabel"] @kpis.FechaInicio — @kpis.FechaFin
+                | @Localizer["ThresholdLabel"] ≤ @kpis.Umbral ★
+            </small>
+        </div>
+    </div>
+
+    <!-- Escenario 3: error -->
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger mb-4">
+            <i class="bx bx-error-circle me-1"></i> @ViewBag.Error
+        </div>
+    }
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">@Localizer["DateFrom"]</label>
+                    <input type="date" name="fechaInicio" class="form-control"
+                           value="@ViewBag.FechaInicio" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">@Localizer["DateTo"]</label>
+                    <input type="date" name="fechaFin" class="form-control"
+                           value="@ViewBag.FechaFin" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">@Localizer["RatingThreshold"]</label>
+                    <select name="umbral" class="form-select">
+                        @for (int i = 1; i <= 4; i++)
+                        {
+                            <option value="@i" selected="@(ViewBag.Umbral == i)">
+                                ≤ @i ★
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bx bx-search me-1"></i> @Localizer["Filter"]
+                    </button>
+                    <a href="@Url.Action("ReporteCalificacionesBajas")"
+                       class="btn btn-outline-secondary w-100">
+                        <i class="bx bx-reset me-1"></i> @Localizer["Clear"]
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Escenario 2: sin datos -->
+    @if (kpis.TotalCalificacionesBajas == 0 && ViewBag.Error == null)
+    {
+        <div class="alert alert-info text-center">
+            <i class="bx bx-info-circle me-1"></i> @Localizer["NoDataAvailable"]
+        </div>
+    }
+    else if (kpis.TotalCalificacionesBajas > 0)
+    {
+        <!-- Escenario 1: KPIs -->
+        <div class="row mb-4">
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="avatar-initial rounded bg-label-danger p-2 me-2">
+                                <i class="bx bx-star fs-5"></i>
+                            </span>
+                            <span class="text-muted small">@Localizer["TotalLowRatings"]</span>
+                        </div>
+                        <h3 class="fw-bold mb-1">@kpis.TotalCalificacionesBajas</h3>
+                        <small class="text-muted">@Localizer["WithThreshold", kpis.Umbral]</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="avatar-initial rounded bg-label-warning p-2 me-2">
+                                <i class="bx bx-bar-chart fs-5"></i>
+                            </span>
+                            <span class="text-muted small">@Localizer["AverageRating"]</span>
+                        </div>
+                        <h3 class="fw-bold mb-1">@kpis.PromedioCalificacion.ToString("F1") / 5</h3>
+                        <small class="text-warning">@Localizer["InPeriod"]</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="avatar-initial rounded bg-label-info p-2 me-2">
+                                <i class="bx bx-list-ul fs-5"></i>
+                            </span>
+                            <span class="text-muted small">@Localizer["AffectedServices"]</span>
+                        </div>
+                        <h3 class="fw-bold mb-1">@kpis.TotalServiciosAfectados</h3>
+                        <small class="text-muted">@Localizer["WithRegisteredComplaints"]</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="avatar-initial rounded bg-label-secondary p-2 me-2">
+                                <i class="bx bx-user fs-5"></i>
+                            </span>
+                            <span class="text-muted small">@Localizer["DissatisfiedClients"]</span>
+                        </div>
+                        <h3 class="fw-bold mb-1">@kpis.TotalClientesInsatisfechos</h3>
+                        <small class="text-muted">@Localizer["Unique"]</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Servicios agrupados + gráfico -->
+        <div class="row mb-4">
+
+            <!-- Gráfico de barras por servicio -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">@Localizer["ComplaintsByService"]</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="graficoServicios" height="220"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ranking de servicios con más quejas -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">@Localizer["ProblematicServicesRanking"]</h5>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            var maxQuejas = Model.Servicios.Any() ? Model.Servicios.Max(x => x.TotalQuejas) : 1;
+                        }
+                        @foreach (var s in Model.Servicios)
+                        {
+                            var colorBarra = s.PromedioCalificacion <= 1 ? "bg-danger"
+                                           : s.PromedioCalificacion <= 2 ? "bg-warning"
+                                           : "bg-info";
+
+                            var pct = maxQuejas > 0
+                                ? ((double)s.TotalQuejas / (double)maxQuejas * 100.0).ToString("F1", System.Globalization.CultureInfo.InvariantCulture)
+                                : "0.0";
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="fw-semibold small">@s.NombreServicio</span>
+                                    <span class="text-muted small">
+                                        @s.TotalQuejas @Localizer["ComplaintPlural"] | ★ @s.PromedioCalificacion.ToString("F1")
+                                    </span>
+                                </div>
+                                <div class="progress" style="height:14px">
+                                    <div class="progress-bar @colorBarra"
+                                         style="width:@(pct)%"
+                                         role="progressbar">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de detalle -->
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="mb-0">@Localizer["LowRatingsDetail"]</h5>
+                <span class="badge bg-label-danger">@Model.Detalle.Count @Localizer["Records"]</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tablaDetalle" class="table table-hover table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>@Localizer["Client"]</th>
+                                <th>@Localizer["Email"]</th>
+                                <th>@Localizer["Service"]</th>
+                                <th>@Localizer["Rating"]</th>
+                                <th>@Localizer["Comment"]</th>
+                                <th>@Localizer["Date"]</th>
+                                <th>@Localizer["Status"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var d in Model.Detalle)
+                            {
+                                <tr>
+                                    <td>@d.NombreCliente</td>
+                                    <td>@d.CorreoCliente</td>
+                                    <td>@d.NombreServicio</td>
+                                    <td>
+                                        @for (int s = 1; s <= 5; s++)
+                                        {
+                                            <i class="bx @(s <= d.Calificacion ? "bxs-star text-warning" : "bx-star text-muted")"></i>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span title="@d.Comentario">
+                                            @(d.Comentario?.Length > 60
+                                                ? d.Comentario.Substring(0, 60) + "..."
+                                                : d.Comentario)
+                                        </span>
+                                    </td>
+                                    <td>@d.Fecha</td>
+                                    <td>
+                                        @if (d.Estado == "Atendida")
+                                        {
+                                            <span class="badge bg-success">@Localizer["Attended"]</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">@Localizer["Unattended"]</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Traducciones para Chart.js inyectadas desde el servidor
+        const chartLabelComplaints = '@Localizer["ChartTotalComplaints"]';
+        const chartLabelAverageRating = '@Localizer["ChartAverageRating"]';
+
+        @if (Model.Kpis.TotalCalificacionesBajas > 0)
+            {
+                <text>
+                        document.addEventListener("DOMContentLoaded", function () {
+
+                                if (document.getElementById("tablaDetalle")) {
+                            new DataTable("#tablaDetalle", {
+                                language: {
+                                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                                },
+                                pageLength: 10,
+                                order: [[3, "asc"]]
+                            });
+                                }
+
+                        const servicios = @Html.Raw(
+                                    System.Text.Json.JsonSerializer.Serialize(Model.Servicios)
+                                    );
+
+                        new Chart(document.getElementById('graficoServicios'), {
+                            type: 'bar',
+                        data: {
+                            labels: servicios.map(s => s.NombreServicio),
+                        datasets: [{
+                            label: chartLabelComplaints,
+                                            data: servicios.map(s => s.TotalQuejas),
+                        backgroundColor: '#dc3545',
+                        borderRadius: 6
+                                        }, {
+                            label: chartLabelAverageRating,
+                                            data: servicios.map(s => s.PromedioCalificacion),
+                        backgroundColor: '#ffc107',
+                        borderRadius: 6
+                                        }]
+                                    },
+                        options: {
+                            responsive: true,
+                        plugins: {
+                            legend: {position: 'bottom' }
+                                        },
+                        scales: {
+                            y: {beginAtZero: true, max: 5 }
+                                        }
+                                    }
+                                });
+                            });
+                </text>
+        }
+    </script>
+}

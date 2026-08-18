@@ -1,0 +1,87 @@
+﻿@model IEnumerable<SGSWC.UI.Models.ServicioModel>
+@{
+    ViewData["Title"] = Localizer["HomeClientTitle"];
+    Layout = "_LayoutInterno";
+}
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+
+<style>
+    .hero-webclean {
+        position: relative;
+        border-radius: .5rem;
+        overflow: hidden;
+        padding: 4.5rem 2rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        background-image: linear-gradient(135deg, rgba(105, 108, 255, .92), rgba(35, 37, 110, .88)), url('/lib/img/services/ResidentialCleaning.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+
+        .hero-webclean h1,
+        .hero-webclean p {
+            color: #fff !important;
+        }
+
+        .hero-webclean .btn-hero {
+            background-color: #fff;
+            color: #696cff;
+            font-weight: 700;
+            border: none;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+            .hero-webclean .btn-hero:hover {
+                background-color: #f1f1ff;
+                color: #5f61e6;
+                transform: translateY(-2px);
+                box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+            }
+
+    .service-card img {
+        height: 220px;
+        object-fit: cover;
+    }
+</style>
+
+<section id="inicio" class="hero-webclean shadow-sm">
+    <h1 class="fw-bold">@Localizer["WelcomeTitle"]</h1>
+    <p class="lead mb-4">@Localizer["WelcomeSubtitle"]</p>
+    <a asp-controller="Inicio" asp-action="ReservarServicio" class="btn btn-hero btn-lg">
+        @Localizer["BookServiceButton"]
+    </a>
+</section>
+
+<section id="servicios" class="mb-5">
+    <h2 class="text-primary text-center mb-4">@Localizer["OurServices"]</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center">@Localizer["NoServicesAvailable"]</div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            @foreach (var servicio in Model)
+            {
+                <div class="col">
+                    <div class="card service-card h-100 shadow-sm">
+                        <img src="@(string.IsNullOrEmpty(servicio.Imagen_Ruta) ? Url.Content("/lib/img/services/default-service.jpg") : servicio.Imagen_Ruta)"
+                             class="card-img-top"
+                             loading="lazy"
+                             alt="@servicio.Nombre" />
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@servicio.Nombre</h5>
+                            <p class="card-text">@servicio.Descripcion</p>
+                            <p class="fw-bold text-primary mb-0">@($"₡{servicio.Precio_Base:N2}")</p>
+                            <a asp-action="ReservarServicio"
+                               asp-controller="Inicio"
+                               asp-route-idServicio="@servicio.Id_Servicio"
+                               class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

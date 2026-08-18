@@ -1,0 +1,127 @@
+﻿@model IEnumerable<SGSWC.UI.Models.ClienteFrecuenteUIModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["FrequentCustomersTitle"];
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-1 mb-4">
+        <i class="bx bx-user-check me-1"></i> @Localizer["FrequentCustomersReport"]
+    </h4>
+
+    <div class="card mb-4">
+        <div class="card-header"><h5 class="mb-0">@Localizer["Filters"]</h5></div>
+        <div class="card-body">
+            <form method="get" asp-action="ClientesFrecuentes" asp-controller="CRM">
+                <input type="hidden" name="generado" value="true" />
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">@Localizer["StartDate"]</label>
+                        <input type="date" name="fechaDesde" class="form-control" value="@ViewBag.FechaDesde" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">@Localizer["EndDate"]</label>
+                        <input type="date" name="fechaHasta" class="form-control" value="@ViewBag.FechaHasta" />
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-search me-1"></i> @Localizer["Generate"]
+                        </button>
+                        <a asp-action="ClientesFrecuentes" asp-controller="CRM"
+                           class="btn btn-outline-secondary">@Localizer["Clear"]</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            <i class="bx bx-error-circle me-1"></i> @ViewBag.Error
+        </div>
+    }
+    else if (ViewBag.Generado == true)
+    {
+        if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                <i class="bx bx-info-circle me-1"></i> @Localizer["NoDataAvailable"]
+            </div>
+        }
+        else
+        {
+            <div class="card mb-4">
+                <div class="card-body">
+                    <canvas id="graficoClientes" height="60"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">@Localizer["SortedByServices"]</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Position"]</th>
+                                <th>@Localizer["Client"]</th>
+                                <th>@Localizer["Email"]</th>
+                                <th>@Localizer["TotalServices"]</th>
+                                <th>@Localizer["LastBooking"]</th>
+                                <th>@Localizer["TotalSpent"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int pos = 1;
+                            }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><strong>#@pos</strong></td>
+                                    <td>@item.Nombre_Cliente</td>
+                                    <td>@item.Correo</td>
+                                    <td><span class="badge bg-label-primary">@item.Total_Servicios</span></td>
+                                    <td>@item.Ultima_Reserva</td>
+                                    <td>@Localizer["CurrencySymbol"]@item.Total_Gastado.ToString("N2")</td>
+                                </tr>
+                                pos++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        @if (Model != null && Model.Any())
+        {
+            <text>
+                const servicesHiredLabel = '@Localizer["ServicesHired"]';
+                new Chart(document.getElementById('graficoClientes'), {
+                type: 'bar',
+                data: {
+                labels: [@Html.Raw(string.Join(",", Model.Select(c => $"'{c.Nombre_Cliente}'")))],
+                datasets: [{
+                label: servicesHiredLabel,
+                data: [@Html.Raw(string.Join(",", Model.Select(c => c.Total_Servicios)))],
+                backgroundColor: 'rgba(105,108,255,0.8)',
+                borderRadius: 6
+                }]
+                },
+                options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+                });
+            </text>
+        }
+    </script>
+}

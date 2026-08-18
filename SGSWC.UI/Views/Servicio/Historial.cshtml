@@ -1,0 +1,84 @@
+﻿@model List<HistorialEstadoServicioModel>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = Localizer["HistoryTitle"];
+    var culture = System.Globalization.CultureInfo.CurrentCulture;
+    var langCode = culture.TwoLetterISOLanguageName;
+    var dataTableLang = langCode == "es" ? "es-ES" : "en-GB";
+}
+
+@* DataTables CSS *@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+<div class="card mb-4 mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="text-center flex-grow-1 m-0">@Localizer["HistoryTitle"]</h4>
+    </div>
+    <div class="card-body">
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                <i class="bx bx-info-circle me-1"></i> @Localizer["NoHistoryRecords"]
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table id="tablaHistorial" class="table table-hover table-bordered align-middle w-100">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>@Localizer["PreviousStatus"]</th>
+                            <th>@Localizer["NewStatus"]</th>
+                            <th>@Localizer["User"]</th>
+                            <th>@Localizer["Date"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.EstadoAnterior</td>
+                                <td>@item.EstadoNuevo</td>
+                                <td>@item.Usuario</td>
+                                <td>@item.FechaCambio</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@* DataTables JS *@
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    // Inyectar traducciones y configuración de idioma
+    window.translations = {
+        dataTableLanguageUrl: '//cdn.datatables.net/plug-ins/1.13.6/i18n/@(dataTableLang).json'
+    };
+    window.locale = '@langCode';
+
+    $(document).ready(function() {
+        @if (Model != null && Model.Any())
+            {
+                <text>
+                        $('#tablaHistorial').DataTable({
+                            language: {
+                            url: window.translations.dataTableLanguageUrl
+                            },
+                        order: [[3, 'desc']], // Ordenar por fecha (columna índice 3) descendente
+                        pageLength: 10,
+                        columnDefs: [
+                                // Opcional: deshabilitar ordenamiento en columnas específicas
+                                // {orderable: false, targets: [0, 1] }
+                        ]
+                        });
+                </text>
+        }
+        });
+</script>

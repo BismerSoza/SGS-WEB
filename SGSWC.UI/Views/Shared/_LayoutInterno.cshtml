@@ -1,0 +1,621 @@
+﻿@inject IConfiguration Configuration
+@{
+
+    var nombreUsuario = (Context.Session.GetString("NombreUsuario") != null ? Context.Session.GetString("NombreUsuario") : "");
+    var nombreRol = (Context.Session.GetString("NombreRol") != null ? Context.Session.GetString("NombreRol") : "");
+    var id_Rol = (Context.Session.GetInt32("Id_Rol") != null ? Context.Session.GetInt32("Id_Rol") : 0);
+    var id_Usuario = (Context.Session.GetInt32("Id_Usuario") != null ? Context.Session.GetInt32("Id_Usuario") : 0);
+    var correoUsuario = (Context.Session.GetString("CorreoUsuario") != null ? Context.Session.GetString("CorreoUsuario") : "");
+    var debeCambiarContrasena = Context.Session.GetInt32("DebeCambiarContrasena") ?? 0;
+    //Configuracion de sesion
+    var urlRenovar = Url.Action("RenovarSesion", "Home");
+    var urlCerrar = Url.Action("CerrarSesion", "Home");
+}
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SGSWC.UI.SharedResource> Localizer
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>@Localizer["ProjectTitle"]</title>
+    <meta name="description" content="" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/lib/css/boxicons.css" />
+    <link rel="stylesheet" href="~/lib/css/core.css" />
+    <link rel="stylesheet" href="~/lib/css/theme-default.css" />
+    <link rel="stylesheet" href="~/lib/css/demo.css" />
+    <link rel="stylesheet" href="~/lib/css/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="~/lib/css/apex-charts.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.bootstrap5.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="~/lib/js/helpers.js"></script>
+    <script src="~/lib/js/config.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+</head>
+
+<body>
+
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+                <div class="app-brand demo">
+                    @if (id_Rol == 1 || id_Rol == 2)
+                    {
+                        <a asp-action="Index" asp-controller="CRM" class="app-brand-link">
+                            <img src="~/lib/img/logo2.png"
+                                 alt="Jireh Cleaning"
+                                 width="26"
+                                 height="26" />
+                            <span class="app-brand-text demo menu-text fw-bolder ms-1">
+                                Jireh Cleaning
+                            </span>
+                        </a>
+                    }
+                    else if (id_Rol == 3 || id_Rol == 4)
+                    {
+                        <a asp-action="Index" asp-controller="Inicio" class="app-brand-link">
+                            <img src="~/lib/img/logo2.png"
+                                 alt="Jireh Cleaning"
+                                 width="26"
+                                 height="26" />
+                            <span class="app-brand-text demo menu-text fw-bolder ms-1">
+                                Jireh Cleaning
+                            </span>
+                        </a>
+                    }
+
+                    <a href="javascript:void(0);"
+                       class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+                        <i class="bx bx-chevron-left bx-sm align-middle"></i>
+                    </a>
+                </div>
+
+                <div class="menu-inner-shadow"></div>
+
+
+                <ul class="menu-inner py-1">
+                     @if (id_Rol == 3 || id_Rol == 4)
+                        {
+                            @* ===================== GENERAL (todos los roles) ===================== *@
+                            <li class="menu-header small text-uppercase">
+                                <span class="menu-header-text">General</span>
+                            </li>
+
+                            <li class="menu-item">
+                                <a asp-action="MisReservas" asp-controller="Inicio" class="menu-link">
+                                    <i class="bx bx-calendar-check me-2"></i>
+                                    <div>@Localizer["MisReservas"]</div>
+                                </a>
+                            </li>
+
+                            <li class="menu-item">
+                                <a asp-action="Resenas" asp-controller="Inicio" class="menu-link">
+                                    <i class="bx bx-star me-2"></i>
+                                    <div>@Localizer["Resenas"]</div>
+                                </a>
+                            </li>
+                        }
+                        @if (id_Rol == 1 || id_Rol == 2)
+                    {
+                        @* ===================== GESTIÓN (solo admin) ===================== *@
+                        <li class="menu-header small text-uppercase">
+                            <span class="menu-header-text">Gestión</span>
+                        </li>
+
+                        <li class="menu-item">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="bx bx-user me-2"></i>
+                                <div>@Localizer["Usuarios"]</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a asp-action="GestionUsuarios" asp-controller="CRM" class="menu-link">
+                                        <div>@Localizer["Usuarios"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="Index" asp-controller="Users" class="menu-link">
+                                        <div>@Localizer["Roles"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="AccessLog" asp-controller="Users" class="menu-link">
+                                        <div>@Localizer["HistorialAccesos"]</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="menu-item">
+                            <a asp-action="Index" asp-controller="Servicio" class="menu-link">
+                                <i class="bx bx-list-check me-2"></i>
+                                <div>@Localizer["GestionServicios"]</div>
+                            </a>
+                        </li>
+
+                        <li class="menu-item">
+                            <a asp-action="Calendario" asp-controller="CRM" class="menu-link">
+                                <i class="bx bx-calendar-alt me-2"></i>
+                                <div>@Localizer["Calendario"]</div>
+                            </a>
+                        </li>
+
+                        <li class="menu-item">
+                            <a asp-action="GestionPagos" asp-controller="CRM" class="menu-link">
+                                <i class="bx bx-wallet me-2"></i>
+                                <div>@Localizer["PaymentManagement"]</div>
+                            </a>
+                        </li>
+
+                        @* ===================== REPORTES (colapsable, solo admin) ===================== *@
+                        <li class="menu-header small text-uppercase">
+                            <span class="menu-header-text">@Localizer["Reportes"]</span>
+                        </li>
+
+                        <li class="menu-item">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="bx bxs-report me-2"></i>
+                                <div>@Localizer["Reportes"]</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a asp-action="Reportes" asp-controller="CRM" class="menu-link">
+                                        <i class="bx bx-file-blank me-2"></i>
+                                        <div>@Localizer["Reportes"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="ReportePersonalizado" asp-controller="CRM" class="menu-link">
+                                        <i class="bx bx-filter-alt me-2"></i>
+                                        <div>@Localizer["ReportePersonalizado"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="ReporteFinanciero" asp-controller="CRM" class="menu-link">
+                                        <i class="bx bx-line-chart me-2"></i>
+                                        <div>@Localizer["FinancialReport"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="ReporteClientesNuevos" asp-controller="CRM" class="menu-link">
+                                        <i class="bx bx-user-plus me-2"></i>
+                                        <div>@Localizer["NewClientsReport"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="ClientesFrecuentes" asp-controller="CRM" class="menu-link">
+                                        <i class="bx bx-user-check me-2"></i>
+                                        <div>@Localizer["ReporteClientesFrecuentes"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="ServiciosPendientes" asp-controller="Crm" class="menu-link">
+                                        <i class="bx bx-time-five me-2"></i>
+                                        <div>@Localizer["PendingServices"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="HorariosSolicitados" asp-controller="CRM" class="menu-link">
+                                        <i class="bx bx-calendar-event me-2"></i>
+                                        <div>@Localizer["HorariosSolicitados"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="CompararServicios" asp-controller="Users" class="menu-link">
+                                        <i class="bx bx-bar-chart-alt-2 me-2"></i>
+                                        <div>@Localizer["CompararServicios"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="ReporteCalificacionesBajas" asp-controller="CRM" class="menu-link">
+                                        <i class="bx bx-dislike me-2"></i>
+                                        <div>@Localizer["LowRatingsReport"]</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a asp-action="ReporteEstadisticasSatisfaccion" asp-controller="CRM" class="menu-link">
+                                        <i class="bx bx-smile me-2"></i>
+                                        <div>@Localizer["SatisfactionStatsReport"]</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                        @* ===================== MONITOREO (solo admin) ===================== *@
+                        <li class="menu-header small text-uppercase">
+                            <span class="menu-header-text">Monitoreo</span>
+                        </li>
+
+                        <li class="menu-item">
+                            <a asp-action="Rendimiento" asp-controller="CRM" class="menu-link">
+                                <i class="bx bx-bar-chart me-2"></i>
+                                <div>@Localizer["Performance"]</div>
+                            </a>
+                        </li>
+
+                        <li class="menu-item">
+                            <a asp-action="Monitoreo" asp-controller="CRM" class="menu-link">
+                                <i class="bx bx-tachometer me-2"></i>
+                                <div>@Localizer["Monitoring"]</div>
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+
+            </aside>
+
+
+            <div class="layout-page">
+
+                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+                     id="layout-navbar">
+                    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                            <i class="bx bx-menu bx-sm"></i>
+                        </a>
+                    </div>
+
+                    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                        <ul class="navbar-nav flex-row align-items-center ms-auto">
+
+                            <li class="nav-item dropdown me-3">
+                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                    <i class="bx bx-globe bx-sm"></i>
+                                    <span class="ms-1">@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper()</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" asp-action="CambiarIdioma" asp-controller="Home"
+                                           asp-route-culture="es"
+                                           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                                            🇪🇸 Español
+                                        </a>
+                                        <a class="dropdown-item" asp-action="CambiarIdioma" asp-controller="Home"
+                                           asp-route-culture="en"
+                                           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                                            🇺🇸 English
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                    @nombreUsuario
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="d-flex">
+                                                <div class="flex-grow-1 text-center">
+                                                    <span class="fw-semibold d-block">@Localizer["PerfilDe"] @nombreRol</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li><div class="dropdown-divider"></div></li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalCambiarCorreo">
+                                            <i class="bx bx-envelope me-2"></i>
+                                            <span class="align-middle">@Localizer["CambiarCorreo"]</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalCambiarContrasenia">
+                                            <i class="bx bx-key me-2"></i>
+                                            <span class="align-middle">@Localizer["CambiarContrasena"]</span>
+                                        </a>
+                                    </li>
+                                    <li><div class="dropdown-divider"></div></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-action="CerrarSesion" asp-controller="Home">
+                                            <i class="bx bx-power-off me-2"></i>
+                                            <span class="align-middle">@Localizer["CerrarSesion"]</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- Modal Cambiar Correo -->
+                <div class="modal fade" id="modalCambiarCorreo" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">@Localizer["CambiarCorreo"]</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form action="/Home/ActualizarCorreo" method="post">
+                                <div class="modal-body">
+                                    <input type="hidden" name="idUsuario" value="@id_Usuario" />
+                                    <div class="mb-3">
+                                        <label class="form-label">@Localizer["NewEmail"]</label>
+                                        <input type="email" class="form-control" name="nuevoCorreo" value="@correoUsuario" required />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                                    <button type="submit" class="btn btn-primary">@Localizer["Save"]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Cambiar Contraseña -->
+                <div class="modal fade" id="modalCambiarContrasenia" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">@Localizer["CambiarContrasena"]</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form method="post" id="formCambiarContrasenia">
+                                <div class="modal-body">
+                                    <input type="hidden" name="idUsuario" value="@id_Usuario" />
+
+                                    <!-- Contraseña Actual -->
+                                    <div class="mb-3">
+                                        <label class="form-label">@Localizer["CurrentPassword"]</label>
+                                        <div class="input-group">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   name="contraseniaActual"
+                                                   id="contraseniaActual"
+                                                   required />
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="togglePassword('contraseniaActual', 'iconActual')">
+                                                <i id="iconActual" class="bx bx-hide"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+
+                                    <!-- Confirmar Nueva Contraseña -->
+                                    <div class="mb-3">
+
+                                        <label class="form-label">@Localizer["NewPassword"]</label>
+                                        <div class="input-group">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   name="nuevaContrasenia"
+                                                   id="nuevaContrasenia"
+                                                   oninput="validarCoincidencia()"
+                                                   required
+                                                   minlength="8"
+                                                   maxlength="12" />
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="togglePassword('nuevaContrasenia', 'iconNueva')">
+                                                <i id="iconNueva" class="bx bx-hide"></i>
+                                            </button>
+                                        </div>
+
+                                        <label class="form-label">@Localizer["ConfirmNewPassword"]</label>
+                                        <div class="input-group">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="confirmarContrasenia"
+                                                   oninput="validarCoincidencia()"
+                                                   required
+                                                   minlength="8"
+                                                   maxlength="12" />
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="togglePassword('confirmarContrasenia', 'iconConfirmar')">
+                                                <i id="iconConfirmar" class="bx bx-hide"></i>
+                                            </button>
+                                        </div>
+                                        <!-- Mensaje de coincidencia -->
+                                        <small id="mensajeCoincidencia" class="mt-1 d-block"></small>
+
+                                        <!-- Requisitos de contraseña -->
+                                        <ul class="mt-2 ps-3" style="font-size: 0.8rem; color: gray;">
+                                            <li id="reqLongitud">@Localizer["ReqLongitud"]</li>
+                                            <li id="reqMayus">@Localizer["ReqMayus"]</li>
+                                            <li id="reqMinus">@Localizer["ReqMinus"]</li>
+                                            <li id="reqEspecial">@Localizer["ReqEspecial"]</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                                    <button type="submit" class="btn btn-primary" id="btnGuardarContrasenia" disabled>
+                                        @Localizer["Save"]
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Forzar Cambio de Contraseña -->
+                <div class="modal fade" id="modalForzarContrasenia" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="bx bx-shield-quarter me-2"></i>@Localizer["CambioContrasenaRequerido"]
+                                </h5>
+                                <!-- Sin botón de cerrar -->
+                            </div>
+                            <form method="post" id="formForzarContrasenia">
+                                <div class="modal-body">
+                                    <p class="text-muted">
+                                        @Localizer["CambioContrasenaMensaje"]
+                                    </p>
+                                    <input type="hidden" name="idUsuario" value="@id_Usuario" />
+
+                                    <div class="mb-3">
+                                        <label class="form-label">@Localizer["NewPassword"]</label>
+                                        <div class="input-group">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   name="nuevaContrasenia"
+                                                   id="nuevaContraseniaForzar"
+                                                   oninput="validarCoincidenciaForzar()"
+                                                   required
+                                                   minlength="8"
+                                                   maxlength="12" />
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="togglePassword('nuevaContraseniaForzar', 'iconNuevaForzar')">
+                                                <i id="iconNuevaForzar" class="bx bx-hide"></i>
+                                            </button>
+                                        </div>
+
+                                        <label class="form-label mt-2">@Localizer["ConfirmNewPassword"]</label>
+                                        <div class="input-group">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="confirmarContraseniaForzar"
+                                                   oninput="validarCoincidenciaForzar()"
+                                                   required
+                                                   minlength="8"
+                                                   maxlength="12" />
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="togglePassword('confirmarContraseniaForzar', 'iconConfirmarForzar')">
+                                                <i id="iconConfirmarForzar" class="bx bx-hide"></i>
+                                            </button>
+                                        </div>
+
+                                        <small id="mensajeCoincidenciaForzar" class="mt-1 d-block"></small>
+
+                                        <ul class="mt-2 ps-3" style="font-size: 0.8rem; color: gray;">
+                                            <li id="reqLongitudForzar">@Localizer["ReqLongitud"]</li>
+                                            <li id="reqMayusForzar">@Localizer["ReqMayus"]</li>
+                                            <li id="reqMinusForzar">@Localizer["ReqMinus"]</li>
+                                            <li id="reqEspecialForzar">@Localizer["ReqEspecial"]</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <!-- Sin botón Cancelar -->
+                                    <button type="submit" class="btn btn-primary w-100" id="btnGuardarForzar" disabled>
+                                        @Localizer["GuardarYContinuar"]
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-wrapper">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+
+                        @RenderBody()
+
+                    </div>
+                    <footer class="content-footer footer bg-footer-theme">
+                        <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                            <div class="mb-2 mb-md-0">
+                                © @DateTime.Now.Year, ThemeSelection
+                            </div>
+                        </div>
+                    </footer>
+
+                    <div class="content-backdrop fade"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+
+
+    <!-- Toast Éxito -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        @if (TempData["Mensaje"] != null)
+        {
+            <div id="toastMensaje" class="toast align-items-center border-0" role="alert"
+                 style="background-color: #28a745; color: white;">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bx bx-check-circle me-2"></i> @TempData["Mensaje"]
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div id="toastError" class="toast align-items-center border-0" role="alert"
+                 style="background-color: #dc3545; color: white;">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bx bx-x-circle me-2"></i> @TempData["Error"]
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- JS -->
+    <script src="~/lib/js/popper.js"></script>
+    <script src="~/lib/js/bootstrap.js"></script>
+    <script src="~/lib/js/perfect-scrollbar.js"></script>
+    <script src="~/lib/js/menu.js"></script>
+    <script src="~/lib/js/main.js"></script>
+    <script src="~/lib/js/apexchart.js"></script>
+
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/CambiarContrasenia.js"></script>
+
+    <script>
+            window.addEventListener("pageshow", function(event) {
+                if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+                    window.location.reload(true);
+                }
+            });
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const toastMensaje = document.getElementById("toastMensaje");
+                const toastError = document.getElementById("toastError");
+
+                if (toastMensaje) new bootstrap.Toast(toastMensaje, { delay: 4000 }).show();
+                if (toastError) new bootstrap.Toast(toastError, { delay: 4000 }).show();
+            });
+    </script>
+
+    <script>
+            window.configSesion = {
+                minutosSesion: @Configuration["Valores:TiempoSesionMinutos"],
+                urlRenovar: '@urlRenovar',
+                urlCerrar: '@urlCerrar'
+            };
+    </script>
+
+    <script>
+            @if (debeCambiarContrasena == 1)
+                {
+                    <text>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                                        var modalForzar = new bootstrap.Modal(document.getElementById('modalForzarContrasenia'));
+                            modalForzar.show();
+                                                        });
+                    </text>
+            }
+    </script>
+    <script src="~/js/GestionSesion.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
